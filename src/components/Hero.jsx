@@ -1,47 +1,73 @@
+const stats = [
+  { value: '500+', label: 'Proiecte Finalizate' },
+  { value: '15+',  label: 'Ani de Experiență' },
+  { value: '300+', label: 'Clienți Mulțumiți' },
+  { value: '2008', label: 'An Fondare' },
+]
+
 export default function Hero() {
   return (
     <section className="hero" id="acasa">
       <div className="hero-bg" />
 
-      <div className="container hero-content">
-        <div className="hero-badge">
-          <span className="hero-badge-dot" />
-          Companie de construcții fondată în 2008
-        </div>
+      <div className="container">
+        <div className="hero-inner">
 
-        <h1 className="hero-title">
-          Construim cu <span className="accent">Calitate</span>
-          <br />și Dedicare
-        </h1>
+          {/* ── Left column: text content ── */}
+          <div className="hero-left">
+            <div className="hero-badge">
+              <span className="hero-badge-dot" />
+              Companie de construcții fondată în 2008
+            </div>
 
-        <p className="hero-subtitle">
-          Danuvest este partenerul tău de încredere pentru proiecte de construcții
-          rezidențiale și comerciale în Republica Moldova. Calitate înaltă,
-          termene respectate, clienți mulțumiți.
-        </p>
+            <h1 className="hero-title">
+              Construim cu <span className="accent">Calitate</span>
+              <br />și Dedicare
+            </h1>
 
-        <div className="hero-actions">
-          <a href="#contact" className="btn btn-primary">
-            Solicită Ofertă Gratuită →
-          </a>
-          <a href="#proiecte" className="btn btn-outline">
-            Vezi Proiectele Noastre
-          </a>
-        </div>
+            <p className="hero-subtitle">
+              Danuvest este partenerul tău de încredere pentru proiecte de
+              construcții rezidențiale și comerciale în Republica Moldova.
+              Calitate înaltă, termene respectate, clienți mulțumiți.
+            </p>
 
-        <div className="hero-stats">
-          <div className="stat-item">
-            <div className="stat-value">500+</div>
-            <div className="stat-label">Proiecte Finalizate</div>
+            <div className="hero-actions">
+              <a href="#contact" className="btn btn-primary">
+                Solicită Ofertă Gratuită →
+              </a>
+              <a href="#misiune" className="btn btn-outline">
+                Află Mai Mult
+              </a>
+            </div>
+
+            <div className="hero-trust">
+              <div className="hero-trust-item">
+                <span className="trust-icon">✓</span>
+                Garanție pe lucrări
+              </div>
+              <div className="hero-trust-item">
+                <span className="trust-icon">✓</span>
+                Consultanță gratuită
+              </div>
+              <div className="hero-trust-item">
+                <span className="trust-icon">✓</span>
+                Termene respectate
+              </div>
+            </div>
           </div>
-          <div className="stat-item">
-            <div className="stat-value">15+</div>
-            <div className="stat-label">Ani de Experiență</div>
+
+          {/* ── Right column: stats grid ── */}
+          <div className="hero-right">
+            <div className="hero-stats-grid">
+              {stats.map(s => (
+                <div className="hero-stat-card" key={s.label}>
+                  <div className="stat-value">{s.value}</div>
+                  <div className="stat-label">{s.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="stat-item">
-            <div className="stat-value">100%</div>
-            <div className="stat-label">Clienți Mulțumiți</div>
-          </div>
+
         </div>
       </div>
 
