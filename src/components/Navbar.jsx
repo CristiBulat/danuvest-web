@@ -24,10 +24,14 @@ export default function Navbar() {
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : 'transparent'}`}>
         <div className="container navbar-inner">
+
+          {/* Logo + brand name */}
           <a href="#acasa" className="navbar-logo" onClick={closeMenu}>
             <img src="/logo.jpg" alt="Danuvest" className="navbar-logo-img" />
+            <span className="navbar-brand-name">DANU<span>VEST</span></span>
           </a>
 
+          {/* Desktop nav links — centered */}
           <ul className="navbar-links">
             {navLinks.map(link => (
               <li key={link.href}>
@@ -36,10 +40,12 @@ export default function Navbar() {
             ))}
           </ul>
 
+          {/* Desktop CTA */}
           <div className="navbar-cta">
             <a href="#contact" className="btn btn-primary">Solicită Ofertă</a>
           </div>
 
+          {/* Mobile hamburger */}
           <button
             className={`hamburger ${menuOpen ? 'open' : ''}`}
             onClick={() => setMenuOpen(prev => !prev)}
@@ -52,6 +58,7 @@ export default function Navbar() {
         </div>
       </nav>
 
+      {/* Mobile dropdown */}
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
         {navLinks.map(link => (
           <a
