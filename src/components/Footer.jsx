@@ -67,11 +67,11 @@ export default function Footer() {
             <h4>Contact</h4>
             <div className="footer-contact-item">
               <span className="footer-contact-icon">📍</span>
-              <span>Str. Mihai Eminescu 34,<br />Chișinău, MD-2012</span>
+              <span>Str. Constructorilor,<br />Stăuceni, MD-4839</span>
             </div>
             <div className="footer-contact-item">
               <span className="footer-contact-icon">📞</span>
-              <a href="tel:+37322345678">+373 22 345 678</a>
+              <a href="tel:+37369463435">+373 69 463 435</a>
             </div>
             <div className="footer-contact-item">
               <span className="footer-contact-icon">✉️</span>
@@ -86,7 +86,6 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Danuvest SRL. Toate drepturile rezervate.</span>
-          <span>Construit cu ❤️ în Moldova</span>
         </div>
       </div>
     </footer>

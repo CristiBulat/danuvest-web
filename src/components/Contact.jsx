@@ -1,16 +1,25 @@
 import { useState } from 'react'
 
+const services = [
+  'Construcții la Cheie',
+  'Construcții Rezidențiale',
+  'Construcții Comerciale',
+  'Renovări și Reabilitări',
+  'Lucrări de Finisare',
+  'Proiectare și Consultanță',
+]
+
 const contactInfo = [
   {
     icon: '📍',
     title: 'Adresă',
-    lines: ['Str. Mihai Eminescu 34', 'Chișinău, MD-2012', 'Republica Moldova'],
+    lines: ['Str. Constructorilor', 'Stăuceni, MD-4839', 'Republica Moldova'],
   },
   {
     icon: '📞',
     title: 'Telefon',
-    lines: ['+373 22 345 678', '+373 69 123 456'],
-    href: 'tel:+37322345678',
+    lines: ['+373 69 463 435', '+373 68 182 803'],
+    href: 'tel:+37369463435',
   },
   {
     icon: '✉️',
@@ -91,7 +100,7 @@ export default function Contact() {
               </div>
             ) : (
               <>
-                <h3>Solicită Ofertă Gratuită</h3>
+                <h3>Solicită Consultație Gratuită</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-row">
                     <div className="form-group">
@@ -133,21 +142,19 @@ export default function Contact() {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="service">Serviciu de Interes</label>
-                    <select
-                      id="service"
-                      name="service"
-                      value={form.service}
-                      onChange={handleChange}
-                    >
-                      <option value="">Selectează un serviciu</option>
-                      <option>Construcții la Cheie</option>
-                      <option>Construcții Rezidențiale</option>
-                      <option>Construcții Comerciale</option>
-                      <option>Renovări și Reabilitări</option>
-                      <option>Lucrări de Finisare</option>
-                      <option>Proiectare și Consultanță</option>
-                    </select>
+                    <label>Serviciu de Interes</label>
+                    <div className="service-selector">
+                      {services.map(s => (
+                        <button
+                          key={s}
+                          type="button"
+                          className={`service-chip${form.service === s ? ' active' : ''}`}
+                          onClick={() => setForm(prev => ({ ...prev, service: s }))}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="form-group">

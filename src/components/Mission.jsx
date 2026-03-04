@@ -12,14 +12,14 @@ export default function Mission() {
           <div className="mission-image">
             <div className="mission-image-inner">
               <img
-                src="https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=800&auto=format&fit=crop&q=80"
+                src="/contruction_mission.jpg"
                 alt="Echipa Danuvest la lucru pe un șantier"
                 loading="lazy"
               />
             </div>
             <div className="mission-badge">
-              <div className="mission-badge-value">2008</div>
-              <div className="mission-badge-text">An fondare</div>
+              <div className="mission-badge-value">500+</div>
+              <div className="mission-badge-text">Proiecte finalizate</div>
             </div>
           </div>
 

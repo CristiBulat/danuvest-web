@@ -44,7 +44,7 @@ export default function About() {
           <div className="about-visual">
             <div className="about-img-wrap">
               <img
-                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&auto=format&fit=crop&q=80"
+                src="/construction_info.jpg"
                 alt="Echipa Danuvest pe șantier"
                 loading="lazy"
               />
@@ -52,10 +52,6 @@ export default function About() {
             <div className="about-experience">
               <div className="exp-num">15+</div>
               <div className="exp-text">Ani pe piață</div>
-            </div>
-            <div className="about-cert">
-              <div className="cert-icon">🏅</div>
-              <div className="cert-text">Certificat<br />ISO 9001</div>
             </div>
           </div>
         </div>
