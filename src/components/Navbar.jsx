@@ -42,7 +42,7 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="navbar-cta">
-            <a href="#contact" className="btn btn-primary">Solicită Ofertă</a>
+            <a href="#contact" className="btn btn-primary">Solicită Consultație</a>
           </div>
 
           {/* Mobile hamburger */}
@@ -71,7 +71,7 @@ export default function Navbar() {
           </a>
         ))}
         <a href="#contact" className="btn btn-primary" onClick={closeMenu}>
-          Solicită Ofertă
+          Solicită Consultație
         </a>
       </div>
     </>

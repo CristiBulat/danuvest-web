@@ -33,7 +33,7 @@ export default function Hero() {
 
             <div className="hero-actions">
               <a href="#contact" className="btn btn-primary">
-                Solicită Ofertă Gratuită →
+                Solicită Consultație Gratuită →
               </a>
               <a href="#misiune" className="btn btn-outline">
                 Află Mai Mult
