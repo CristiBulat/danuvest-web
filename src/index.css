@@ -35,10 +35,15 @@
 /* =====================
    Global / Base
    ===================== */
+html {
+  overscroll-behavior: none;
+}
+
 body {
   font-family: var(--font);
   color: var(--text);
   background: var(--white);
+  overscroll-behavior: none;
 }
 
 .container {
@@ -1348,14 +1353,12 @@ body {
 
   /* Hidden until JS sets .mascot-visible */
   opacity: 0;
-  transform: translateY(40px);
   pointer-events: none;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease;
 }
 
 .mascot-wrapper.mascot-visible {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
 }
 
