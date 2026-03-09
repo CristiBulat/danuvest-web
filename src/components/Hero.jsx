@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 const stats = [
   { value: '500+', label: 'Proiecte Finalizate' },
   { value: '15+',  label: 'Ani de Experiență' },
@@ -6,6 +8,13 @@ const stats = [
 ]
 
 export default function Hero() {
+  const [bannerVisible, setBannerVisible] = useState(true)
+
+  useEffect(() => {
+    const t = setTimeout(() => setBannerVisible(false), 4000)
+    return () => clearTimeout(t)
+  }, [])
+
   return (
     <section className="hero" id="acasa">
       <div className="hero-bg" />
@@ -73,8 +82,8 @@ export default function Hero() {
 
       <div className="scroll-indicator">Scroll</div>
 
-      {/* Mobile-only welcome banner */}
-      <div className="mobile-welcome-banner">
+      {/* Mobile-only welcome banner — fixed at bottom, fades out after 4s */}
+      <div className={`mobile-welcome-banner${bannerVisible ? '' : ' banner-hidden'}`}>
         <span className="mobile-welcome-icon">🏗️</span>
         <div>
           <p className="mobile-welcome-title">Bun venit pe Danuvest!</p>

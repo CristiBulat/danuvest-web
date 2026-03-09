@@ -5,7 +5,7 @@ export default function Mascot() {
   const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 2500)
+    const t = setTimeout(() => setVisible(true), 5000)
     return () => clearTimeout(t)
   }, [])
 
