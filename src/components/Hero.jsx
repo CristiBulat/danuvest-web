@@ -72,6 +72,15 @@ export default function Hero() {
       </div>
 
       <div className="scroll-indicator">Scroll</div>
+
+      {/* Mobile-only welcome banner */}
+      <div className="mobile-welcome-banner">
+        <span className="mobile-welcome-icon">🏗️</span>
+        <div>
+          <p className="mobile-welcome-title">Bun venit pe Danuvest!</p>
+          <p className="mobile-welcome-sub">Derulați în jos pentru a descoperi proiectele noastre</p>
+        </div>
+      </div>
     </section>
   )
 }
