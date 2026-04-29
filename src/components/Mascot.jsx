@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
+import mascot from '../data/mascot.json'
 
 export default function Mascot() {
   const [visible, setVisible] = useState(false)
   const [hovered, setHovered] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 5000)
+    const t = setTimeout(() => setVisible(true), mascot.showAfterMs)
     return () => clearTimeout(t)
   }, [])
 
@@ -13,7 +14,7 @@ export default function Mascot() {
     <div className={`mascot-wrapper${visible ? ' mascot-visible' : ''}`}>
       {hovered && (
         <div className="mascot-bubble">
-          <p>👋 Bun venit la Danuvest!</p>
+          <p>{mascot.greeting}</p>
           <div className="mascot-bubble-tail" />
         </div>
       )}
@@ -22,11 +23,11 @@ export default function Mascot() {
         className="mascot-btn"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        aria-label="Mascota Danuvest"
+        aria-label={mascot.alt}
       >
         <img
-          src="/mascot.svg"
-          alt="Mascota Danuvest"
+          src={mascot.image}
+          alt={mascot.alt}
           className="mascot-img"
         />
       </button>

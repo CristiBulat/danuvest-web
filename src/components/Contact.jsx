@@ -1,38 +1,5 @@
 import { useState } from 'react'
-
-const services = [
-  'Construcții la Cheie',
-  'Construcții Rezidențiale',
-  'Construcții Comerciale',
-  'Renovări și Reabilitări',
-  'Lucrări de Finisare',
-  'Proiectare și Consultanță',
-]
-
-const contactInfo = [
-  {
-    icon: '📍',
-    title: 'Adresă',
-    lines: ['Str. Constructorilor', 'Stăuceni, MD-4839', 'Republica Moldova'],
-  },
-  {
-    icon: '📞',
-    title: 'Telefon',
-    lines: ['+373 69 463 435', '+373 68 182 803'],
-    href: 'tel:+37369463435',
-  },
-  {
-    icon: '✉️',
-    title: 'Email',
-    lines: ['contact@danuvest.md'],
-    href: 'mailto:contact@danuvest.md',
-  },
-  {
-    icon: '🕐',
-    title: 'Program de Lucru',
-    lines: ['Luni – Vineri: 08:00 – 18:00', 'Sâmbătă: 09:00 – 14:00'],
-  },
-]
+import contact from '../data/contact.json'
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -52,17 +19,16 @@ export default function Contact() {
     <section className="section contact" id="contact">
       <div className="container">
         <div className="section-header">
-          <span className="section-label">Contact</span>
-          <h2 className="section-title">Hai să discutăm proiectul tău</h2>
+          <span className="section-label">{contact.label}</span>
+          <h2 className="section-title">{contact.title}</h2>
           <p className="section-desc">
-            Contactează-ne pentru o consultație gratuită. Echipa noastră este
-            pregătită să răspundă tuturor întrebărilor tale.
+            {contact.description}
           </p>
         </div>
 
         <div className="contact-grid">
           <div className="contact-info">
-            {contactInfo.map(item => (
+            {contact.info.map(item => (
               <div className="contact-info-item" key={item.title}>
                 <div className="contact-icon">{item.icon}</div>
                 <div className="contact-detail">
@@ -95,12 +61,12 @@ export default function Contact() {
             {sent ? (
               <div className="form-success">
                 <div className="success-icon">✅</div>
-                <h3>Mesajul tău a fost trimis!</h3>
-                <p>Vă vom contacta în cel mai scurt timp posibil.</p>
+                <h3>{contact.successTitle}</h3>
+                <p>{contact.successMessage}</p>
               </div>
             ) : (
               <>
-                <h3>Solicită Consultație Gratuită</h3>
+                <h3>{contact.formTitle}</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-row">
                     <div className="form-group">
@@ -144,7 +110,7 @@ export default function Contact() {
                   <div className="form-group">
                     <label>Serviciu de Interes</label>
                     <div className="service-selector">
-                      {services.map(s => (
+                      {contact.services.map(s => (
                         <button
                           key={s}
                           type="button"
@@ -169,7 +135,7 @@ export default function Contact() {
                   </div>
 
                   <button type="submit" className="btn btn-primary form-submit">
-                    Trimite Solicitarea
+                    {contact.formSubmit}
                   </button>
                 </form>
               </>

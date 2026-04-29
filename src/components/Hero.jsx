@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react'
-
-const stats = [
-  { value: '500+', label: 'Proiecte Finalizate' },
-  { value: '15+',  label: 'Ani de Experiență' },
-  { value: '300+', label: 'Clienți Mulțumiți' },
-  { value: '2008', label: 'An Fondare' },
-]
+import hero from '../data/hero.json'
 
 export default function Hero() {
   const [bannerOpacity, setBannerOpacity] = useState(0)
@@ -27,49 +21,41 @@ export default function Hero() {
           <div className="hero-left">
             <div className="hero-badge">
               <span className="hero-badge-dot" />
-              Companie de construcții fondată în 2008
+              {hero.badge}
             </div>
 
             <h1 className="hero-title">
-              Construim cu <span className="accent">Calitate</span>
-              <br />și Dedicare
+              {hero.titleLead} <span className="accent">{hero.titleAccent}</span>
+              <br />{hero.titleTrail}
             </h1>
 
             <p className="hero-subtitle">
-              Danuvest este partenerul tău de încredere pentru proiecte de
-              construcții rezidențiale și comerciale în Republica Moldova.
-              Calitate înaltă, termene respectate, clienți mulțumiți.
+              {hero.subtitle}
             </p>
 
             <div className="hero-actions">
-              <a href="#contact" className="btn btn-primary">
-                Solicită Consultație Gratuită →
+              <a href={hero.ctaPrimary.href} className="btn btn-primary">
+                {hero.ctaPrimary.label}
               </a>
-              <a href="#misiune" className="btn btn-outline">
-                Află Mai Mult
+              <a href={hero.ctaSecondary.href} className="btn btn-outline">
+                {hero.ctaSecondary.label}
               </a>
             </div>
 
             <div className="hero-trust">
-              <div className="hero-trust-item">
-                <span className="trust-icon">✓</span>
-                Garanție pe lucrări
-              </div>
-              <div className="hero-trust-item">
-                <span className="trust-icon">✓</span>
-                Consultanță gratuită
-              </div>
-              <div className="hero-trust-item">
-                <span className="trust-icon">✓</span>
-                Termene respectate
-              </div>
+              {hero.trust.map(t => (
+                <div className="hero-trust-item" key={t}>
+                  <span className="trust-icon">✓</span>
+                  {t}
+                </div>
+              ))}
             </div>
           </div>
 
           {/* ── Right column: stats grid ── */}
           <div className="hero-right">
             <div className="hero-stats-grid">
-              {stats.map(s => (
+              {hero.stats.map(s => (
                 <div className="hero-stat-card" key={s.label}>
                   <div className="stat-value">{s.value}</div>
                   <div className="stat-label">{s.label}</div>
@@ -85,10 +71,10 @@ export default function Hero() {
 
       {/* Mobile-only welcome banner — fixed at bottom, fades out after 4s */}
       <div className="mobile-welcome-banner" style={{ opacity: bannerOpacity, pointerEvents: bannerOpacity === 0 ? 'none' : 'auto' }}>
-        <span className="mobile-welcome-icon">🏗️</span>
+        <span className="mobile-welcome-icon">{hero.mobileBanner.icon}</span>
         <div>
-          <p className="mobile-welcome-title">Bun venit pe Danuvest!</p>
-          <p className="mobile-welcome-sub">Derulați în jos pentru a descoperi proiectele noastre</p>
+          <p className="mobile-welcome-title">{hero.mobileBanner.title}</p>
+          <p className="mobile-welcome-sub">{hero.mobileBanner.subtitle}</p>
         </div>
       </div>
     </section>
