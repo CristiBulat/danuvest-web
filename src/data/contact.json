@@ -1,0 +1,41 @@
+{
+  "label": "Contact",
+  "title": "Hai să discutăm proiectul tău",
+  "description": "Contactează-ne pentru o consultație gratuită. Echipa noastră este pregătită să răspundă tuturor întrebărilor tale.",
+  "formTitle": "Solicită Consultație Gratuită",
+  "formSubmit": "Trimite Solicitarea",
+  "successTitle": "Mesajul tău a fost trimis!",
+  "successMessage": "Vă vom contacta în cel mai scurt timp posibil.",
+  "services": [
+    "Construcții la Cheie",
+    "Construcții Rezidențiale",
+    "Construcții Comerciale",
+    "Renovări și Reabilitări",
+    "Lucrări de Finisare",
+    "Proiectare și Consultanță"
+  ],
+  "info": [
+    {
+      "icon": "📍",
+      "title": "Adresă",
+      "lines": ["Str. Constructorilor", "Stăuceni, MD-4839", "Republica Moldova"]
+    },
+    {
+      "icon": "📞",
+      "title": "Telefon",
+      "lines": ["+373 69 463 435", "+373 68 182 803"],
+      "href": "tel:+37369463435"
+    },
+    {
+      "icon": "✉️",
+      "title": "Email",
+      "lines": ["contact@danuvest.md"],
+      "href": "mailto:contact@danuvest.md"
+    },
+    {
+      "icon": "🕐",
+      "title": "Program de Lucru",
+      "lines": ["Luni – Vineri: 08:00 – 18:00", "Sâmbătă: 09:00 – 14:00"]
+    }
+  ]
+}

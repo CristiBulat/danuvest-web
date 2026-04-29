@@ -1,0 +1,15 @@
+{
+  "label": "Misiunea Companiei",
+  "title": "Construim mai mult|decât simple clădiri",
+  "image": "/contruction_mission.jpg",
+  "imageAlt": "Echipa Danuvest la lucru pe un șantier",
+  "badgeValue": "500+",
+  "badgeText": "Proiecte finalizate",
+  "quote": "Ne dedicăm să oferim cele mai înalte standarde de calitate în construcții, respectând fiecare termen și fiecare detaliu al proiectelor încredințate nouă de clienții noștri.",
+  "description": "Fondată în 2008, Danuvest a crescut pentru a deveni una dintre companiile de construcții de referință din Republica Moldova. Cu o echipă de profesioniști dedicați și o experiență vastă, transformăm viziunile clienților noștri în realitate concretă, durabilă și estetică.",
+  "values": [
+    { "icon": "🏆", "title": "Calitate" },
+    { "icon": "🤝", "title": "Integritate" },
+    { "icon": "⚡", "title": "Profesionalism" }
+  ]
+}
