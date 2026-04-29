@@ -1,0 +1,18 @@
+{
+  "label": "Despre Noi",
+  "title": "Experiența noastră|vorbește de la sine",
+  "paragraphs": [
+    "Fondată în 2008, Danuvest s-a impus ca un lider în industria construcțiilor din Republica Moldova. Specializați în proiecte rezidențiale și comerciale de mici și mijlocii dimensiuni, ne mândrim cu o abordare care îmbină tradiția meșteșugărească cu tehnologiile moderne de construcție.",
+    "Fiecare proiect este tratat cu aceeași dedicare și atenție față de detalii, indiferent de dimensiune sau complexitate. Suntem certificați conform standardelor naționale și europene în domeniu și ne angajăm să respectăm întotdeauna termenele și bugetele stabilite."
+  ],
+  "stats": [
+    { "num": "500+", "text": "Proiecte Finalizate" },
+    { "num": "15+",  "text": "Ani de Experiență" },
+    { "num": "300+", "text": "Clienți Mulțumiți" },
+    { "num": "50+",  "text": "Specialiști în Echipă" }
+  ],
+  "image": "/construction_info.jpg",
+  "imageAlt": "Echipa Danuvest pe șantier",
+  "experienceNum": "15+",
+  "experienceText": "Ani pe piață"
+}

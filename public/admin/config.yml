@@ -1,0 +1,275 @@
+# Decap CMS configuration for Danuvest
+# Docs: https://decapcms.org/docs/configuration-options/
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Use a local proxy server during development (`npm run cms`)
+# so editors can preview CMS changes without GitHub credentials.
+local_backend: true
+
+publish_mode: editorial_workflow
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+site_url: https://danuvest.md
+display_url: https://danuvest.md
+logo_url: /logo.jpg
+
+collections:
+  - name: "site"
+    label: "Site & Navigation"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "site"
+        label: "Site Settings"
+        file: "src/data/site.json"
+        format: "json"
+        fields:
+          - { name: brandName, label: "Brand Name", widget: string }
+          - { name: brandSplit, label: "Brand Split (use | between two parts)", widget: string, hint: "e.g. DANU|VEST renders DANU + styled VEST" }
+          - { name: logo, label: "Logo", widget: image }
+          - { name: metaTitle, label: "Meta Title (browser tab)", widget: string }
+          - { name: metaDescription, label: "Meta Description (SEO)", widget: text }
+          - name: navLinks
+            label: "Navigation Links"
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Anchor / URL", widget: string }
+          - { name: ctaLabel, label: "Header CTA Button Label", widget: string }
+
+  - name: "hero"
+    label: "Hero Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "hero"
+        label: "Hero"
+        file: "src/data/hero.json"
+        format: "json"
+        fields:
+          - { name: badge, label: "Badge Text", widget: string }
+          - { name: titleLead, label: "Title — leading text", widget: string }
+          - { name: titleAccent, label: "Title — accent (gold) word", widget: string }
+          - { name: titleTrail, label: "Title — trailing line", widget: string }
+          - { name: subtitle, label: "Subtitle", widget: text }
+          - name: ctaPrimary
+            label: "Primary CTA"
+            widget: object
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Anchor / URL", widget: string }
+          - name: ctaSecondary
+            label: "Secondary CTA"
+            widget: object
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Anchor / URL", widget: string }
+          - name: trust
+            label: "Trust Bullets"
+            widget: list
+            field: { name: text, label: Bullet, widget: string }
+          - name: stats
+            label: "Stat Cards"
+            widget: list
+            fields:
+              - { name: value, label: Value, widget: string }
+              - { name: label, label: Label, widget: string }
+          - name: mobileBanner
+            label: "Mobile Welcome Banner"
+            widget: object
+            fields:
+              - { name: icon, label: "Icon (emoji)", widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: subtitle, label: Subtitle, widget: string }
+
+  - name: "mission"
+    label: "Mission Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "mission"
+        label: "Mission"
+        file: "src/data/mission.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: "Title (use | for line break)", widget: string }
+          - { name: image, label: "Image", widget: image }
+          - { name: imageAlt, label: "Image Alt Text", widget: string }
+          - { name: badgeValue, label: "Badge Value (e.g. 500+)", widget: string }
+          - { name: badgeText, label: "Badge Text", widget: string }
+          - { name: quote, label: "Mission Quote", widget: text }
+          - { name: description, label: "Description", widget: text }
+          - name: values
+            label: "Company Values"
+            widget: list
+            fields:
+              - { name: icon, label: "Icon (emoji)", widget: string }
+              - { name: title, label: Title, widget: string }
+
+  - name: "services"
+    label: "Services Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "services"
+        label: "Services"
+        file: "src/data/services.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: Title, widget: string }
+          - { name: description, label: Description, widget: text }
+          - name: items
+            label: "Service Cards"
+            widget: list
+            fields:
+              - { name: icon, label: "Icon (emoji)", widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: desc, label: Description, widget: text }
+
+  - name: "projects"
+    label: "Projects Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "projects"
+        label: "Projects"
+        file: "src/data/projects.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: Title, widget: string }
+          - { name: description, label: Description, widget: text }
+          - { name: ctaLabel, label: "CTA Button Label", widget: string }
+          - { name: ctaHref, label: "CTA Anchor / URL", widget: string }
+          - name: items
+            label: "Project Cards"
+            widget: list
+            fields:
+              - { name: img, label: "Image URL", widget: string }
+              - { name: category, label: Category, widget: string }
+              - { name: name, label: Name, widget: string }
+              - { name: year, label: Year, widget: string }
+              - { name: desc, label: Description, widget: text }
+
+  - name: "about"
+    label: "About Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "about"
+        label: "About"
+        file: "src/data/about.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: "Title (use | for line break)", widget: string }
+          - name: paragraphs
+            label: "Body Paragraphs"
+            widget: list
+            field: { name: text, label: Paragraph, widget: text }
+          - name: stats
+            label: "Stats"
+            widget: list
+            fields:
+              - { name: num, label: Number, widget: string }
+              - { name: text, label: Label, widget: string }
+          - { name: image, label: "Image", widget: image }
+          - { name: imageAlt, label: "Image Alt Text", widget: string }
+          - { name: experienceNum, label: "Experience Number", widget: string }
+          - { name: experienceText, label: "Experience Label", widget: string }
+
+  - name: "contact"
+    label: "Contact Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "contact"
+        label: "Contact"
+        file: "src/data/contact.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: Title, widget: string }
+          - { name: description, label: Description, widget: text }
+          - { name: formTitle, label: "Form Title", widget: string }
+          - { name: formSubmit, label: "Submit Button Label", widget: string }
+          - { name: successTitle, label: "Success Title", widget: string }
+          - { name: successMessage, label: "Success Message", widget: string }
+          - name: services
+            label: "Service Chips"
+            widget: list
+            field: { name: name, label: Service, widget: string }
+          - name: info
+            label: "Contact Info Cards"
+            widget: list
+            fields:
+              - { name: icon, label: "Icon (emoji)", widget: string }
+              - { name: title, label: Title, widget: string }
+              - name: lines
+                label: "Lines"
+                widget: list
+                field: { name: line, label: Line, widget: string }
+              - { name: href, label: "Link (optional, e.g. tel: or mailto:)", widget: string, required: false }
+
+  - name: "footer"
+    label: "Footer"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "footer"
+        label: "Footer"
+        file: "src/data/footer.json"
+        format: "json"
+        fields:
+          - { name: logo, label: "Logo", widget: image }
+          - { name: tagline, label: Tagline, widget: text }
+          - name: social
+            label: "Social Links"
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: short, label: "Short (2 chars displayed)", widget: string }
+              - { name: href, label: URL, widget: string }
+          - { name: navTitle, label: "Nav Column Title", widget: string }
+          - name: navLinks
+            label: "Nav Column Links"
+            widget: list
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: href, label: "Anchor / URL", widget: string }
+          - { name: servicesTitle, label: "Services Column Title", widget: string }
+          - name: serviceLinks
+            label: "Services Column Links"
+            widget: list
+            field: { name: name, label: Service, widget: string }
+          - { name: contactTitle, label: "Contact Column Title", widget: string }
+          - name: contactItems
+            label: "Contact Items"
+            widget: list
+            fields:
+              - { name: icon, label: "Icon (emoji)", widget: string }
+              - { name: text, label: "Text (use | for line break)", widget: string }
+              - { name: href, label: "Link (optional)", widget: string, required: false }
+          - { name: copyright, label: "Copyright Line", widget: string }
+
+  - name: "mascot"
+    label: "Mascot"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "mascot"
+        label: "Mascot"
+        file: "src/data/mascot.json"
+        format: "json"
+        fields:
+          - { name: image, label: "Image", widget: image }
+          - { name: alt, label: "Alt Text", widget: string }
+          - { name: greeting, label: "Greeting Text", widget: string }
+          - { name: showAfterMs, label: "Delay before showing (ms)", widget: number }

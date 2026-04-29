@@ -1,38 +1,24 @@
-const stats = [
-  { num: '500+', text: 'Proiecte Finalizate' },
-  { num: '15+',  text: 'Ani de Experiență' },
-  { num: '300+', text: 'Clienți Mulțumiți' },
-  { num: '50+',  text: 'Specialiști în Echipă' },
-]
+import about from '../data/about.json'
 
 export default function About() {
+  const [titleA, titleB] = about.title.split('|')
+
   return (
     <section className="section about" id="despre">
       <div className="container">
         <div className="about-grid">
           <div className="about-content">
-            <span className="section-label">Despre Noi</span>
+            <span className="section-label">{about.label}</span>
             <h2 className="section-title">
-              Experiența noastră<br />vorbește de la sine
+              {titleA}{titleB && <><br />{titleB}</>}
             </h2>
 
-            <p className="about-text">
-              Fondată în 2008, Danuvest s-a impus ca un lider în industria
-              construcțiilor din Republica Moldova. Specializați în proiecte
-              rezidențiale și comerciale de mici și mijlocii dimensiuni, ne mândrim
-              cu o abordare care îmbină tradiția meșteșugărească cu tehnologiile
-              moderne de construcție.
-            </p>
-
-            <p className="about-text">
-              Fiecare proiect este tratat cu aceeași dedicare și atenție față de
-              detalii, indiferent de dimensiune sau complexitate. Suntem certificați
-              conform standardelor naționale și europene în domeniu și ne angajăm să
-              respectăm întotdeauna termenele și bugetele stabilite.
-            </p>
+            {about.paragraphs.map((p, i) => (
+              <p className="about-text" key={i}>{p}</p>
+            ))}
 
             <div className="about-stats">
-              {stats.map(s => (
+              {about.stats.map(s => (
                 <div className="about-stat" key={s.text}>
                   <div className="stat-num">{s.num}</div>
                   <div className="stat-text">{s.text}</div>
@@ -44,14 +30,14 @@ export default function About() {
           <div className="about-visual">
             <div className="about-img-wrap">
               <img
-                src="/construction_info.jpg"
-                alt="Echipa Danuvest pe șantier"
+                src={about.image}
+                alt={about.imageAlt}
                 loading="lazy"
               />
             </div>
             <div className="about-experience">
-              <div className="exp-num">15+</div>
-              <div className="exp-text">Ani pe piață</div>
+              <div className="exp-num">{about.experienceNum}</div>
+              <div className="exp-text">{about.experienceText}</div>
             </div>
           </div>
         </div>

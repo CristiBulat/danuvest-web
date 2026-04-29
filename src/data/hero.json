@@ -1,0 +1,25 @@
+{
+  "badge": "Companie de construcții fondată în 2008",
+  "titleLead": "Construim cu",
+  "titleAccent": "Calitate",
+  "titleTrail": "și Dedicare",
+  "subtitle": "Danuvest este partenerul tău de încredere pentru proiecte de construcții rezidențiale și comerciale în Republica Moldova. Calitate înaltă, termene respectate, clienți mulțumiți.",
+  "ctaPrimary": { "label": "Solicită Consultație Gratuită →", "href": "#contact" },
+  "ctaSecondary": { "label": "Află Mai Mult", "href": "#misiune" },
+  "trust": [
+    "Garanție pe lucrări",
+    "Consultanță gratuită",
+    "Termene respectate"
+  ],
+  "stats": [
+    { "value": "500+", "label": "Proiecte Finalizate" },
+    { "value": "15+",  "label": "Ani de Experiență" },
+    { "value": "300+", "label": "Clienți Mulțumiți" },
+    { "value": "2008", "label": "An Fondare" }
+  ],
+  "mobileBanner": {
+    "icon": "🏗️",
+    "title": "Bun venit pe Danuvest!",
+    "subtitle": "Derulați în jos pentru a descoperi proiectele noastre"
+  }
+}

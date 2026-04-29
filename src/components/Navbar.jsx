@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react'
-
-const navLinks = [
-  { href: '#acasa',   label: 'Acasă' },
-  { href: '#misiune', label: 'Misiune' },
-  { href: '#servicii', label: 'Servicii' },
-  { href: '#despre',  label: 'Despre Noi' },
-  { href: '#contact', label: 'Contact' },
-]
+import site from '../data/site.json'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -20,6 +13,8 @@ export default function Navbar() {
 
   const closeMenu = () => setMenuOpen(false)
 
+  const [brandLeft, brandRight] = site.brandSplit.split('|')
+
   return (
     <>
       <nav className={`navbar ${scrolled ? 'scrolled' : 'transparent'}`}>
@@ -27,13 +22,13 @@ export default function Navbar() {
 
           {/* Logo + brand name */}
           <a href="#acasa" className="navbar-logo" onClick={closeMenu}>
-            <img src="/logo.jpg" alt="Danuvest" className="navbar-logo-img" />
-            <span className="navbar-brand-name">DANU<span>VEST</span></span>
+            <img src={site.logo} alt={site.brandName} className="navbar-logo-img" />
+            <span className="navbar-brand-name">{brandLeft}<span>{brandRight}</span></span>
           </a>
 
           {/* Desktop nav links — centered */}
           <ul className="navbar-links">
-            {navLinks.map(link => (
+            {site.navLinks.map(link => (
               <li key={link.href}>
                 <a href={link.href} className="nav-link">{link.label}</a>
               </li>
@@ -42,7 +37,7 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="navbar-cta">
-            <a href="#contact" className="btn btn-primary">Solicită Consultație</a>
+            <a href="#contact" className="btn btn-primary">{site.ctaLabel}</a>
           </div>
 
           {/* Mobile hamburger */}
@@ -60,7 +55,7 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-        {navLinks.map(link => (
+        {site.navLinks.map(link => (
           <a
             key={link.href}
             href={link.href}
@@ -71,7 +66,7 @@ export default function Navbar() {
           </a>
         ))}
         <a href="#contact" className="btn btn-primary" onClick={closeMenu}>
-          Solicită Consultație
+          {site.ctaLabel}
         </a>
       </div>
     </>

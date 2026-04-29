@@ -1,19 +1,4 @@
-const navLinks = [
-  { label: 'Acasă',              href: '#acasa' },
-  { label: 'Misiunea Companiei', href: '#misiune' },
-  { label: 'Servicii',           href: '#servicii' },
-  { label: 'Despre Noi',         href: '#despre' },
-  { label: 'Contact',            href: '#contact' },
-]
-
-const serviceLinks = [
-  'Construcții la Cheie',
-  'Construcții Rezidențiale',
-  'Construcții Comerciale',
-  'Renovări și Reabilitări',
-  'Lucrări de Finisare',
-  'Proiectare și Consultanță',
-]
+import footer from '../data/footer.json'
 
 export default function Footer() {
   return (
@@ -24,25 +9,24 @@ export default function Footer() {
           <div className="footer-brand">
             <div className="footer-brand-logo">
               <a href="#acasa">
-                <img src="/logo.jpg" alt="Danuvest" className="navbar-logo-img" />
+                <img src={footer.logo} alt="Danuvest" className="navbar-logo-img" />
               </a>
             </div>
             <p className="footer-tagline">
-              Partenerul tău de încredere în construcții din 2008.
-              Calitate, profesionalism și seriozitate în fiecare proiect.
+              {footer.tagline}
             </p>
             <div className="footer-social">
-              <a href="#" className="social-btn" aria-label="Facebook">fb</a>
-              <a href="#" className="social-btn" aria-label="Instagram">ig</a>
-              <a href="#" className="social-btn" aria-label="LinkedIn">in</a>
+              {footer.social.map(s => (
+                <a key={s.label} href={s.href} className="social-btn" aria-label={s.label}>{s.short}</a>
+              ))}
             </div>
           </div>
 
           {/* Navigation */}
           <div className="footer-col">
-            <h4>Navigare</h4>
+            <h4>{footer.navTitle}</h4>
             <ul className="footer-links">
-              {navLinks.map(l => (
+              {footer.navLinks.map(l => (
                 <li key={l.label}>
                   <a href={l.href}>{l.label}</a>
                 </li>
@@ -52,9 +36,9 @@ export default function Footer() {
 
           {/* Services */}
           <div className="footer-col">
-            <h4>Servicii</h4>
+            <h4>{footer.servicesTitle}</h4>
             <ul className="footer-links">
-              {serviceLinks.map(label => (
+              {footer.serviceLinks.map(label => (
                 <li key={label}>
                   <a href="#servicii">{label}</a>
                 </li>
@@ -64,28 +48,27 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="footer-col">
-            <h4>Contact</h4>
-            <div className="footer-contact-item">
-              <span className="footer-contact-icon">📍</span>
-              <span>Str. Constructorilor,<br />Stăuceni, MD-4839</span>
-            </div>
-            <div className="footer-contact-item">
-              <span className="footer-contact-icon">📞</span>
-              <a href="tel:+37369463435">+373 69 463 435</a>
-            </div>
-            <div className="footer-contact-item">
-              <span className="footer-contact-icon">✉️</span>
-              <a href="mailto:contact@danuvest.md">contact@danuvest.md</a>
-            </div>
-            <div className="footer-contact-item">
-              <span className="footer-contact-icon">🕐</span>
-              <span>Luni – Vineri: 08:00 – 18:00</span>
-            </div>
+            <h4>{footer.contactTitle}</h4>
+            {footer.contactItems.map((item, i) => {
+              const lines = item.text.split('|')
+              const content = lines.map((line, j) => (
+                <span key={j}>
+                  {line}
+                  {j < lines.length - 1 && <br />}
+                </span>
+              ))
+              return (
+                <div className="footer-contact-item" key={i}>
+                  <span className="footer-contact-icon">{item.icon}</span>
+                  {item.href ? <a href={item.href}>{content}</a> : <span>{content}</span>}
+                </div>
+              )
+            })}
           </div>
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Danuvest SRL. Toate drepturile rezervate.</span>
+          <span>© {new Date().getFullYear()} {footer.copyright}</span>
         </div>
       </div>
     </footer>

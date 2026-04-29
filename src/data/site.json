@@ -1,0 +1,15 @@
+{
+  "brandName": "DANUVEST",
+  "brandSplit": "DANU|VEST",
+  "logo": "/logo.jpg",
+  "metaTitle": "Danuvest | Construcții de Calitate",
+  "metaDescription": "Danuvest — companie de construcții din Republica Moldova cu experiență de peste 15 ani. Construcții rezidențiale și comerciale de calitate înaltă, termene respectate.",
+  "navLinks": [
+    { "label": "Acasă", "href": "#acasa" },
+    { "label": "Misiune", "href": "#misiune" },
+    { "label": "Servicii", "href": "#servicii" },
+    { "label": "Despre Noi", "href": "#despre" },
+    { "label": "Contact", "href": "#contact" }
+  ],
+  "ctaLabel": "Solicită Consultație"
+}
