@@ -2,57 +2,69 @@
 
 Landing page pentru compania de construcții **Danuvest** din Republica Moldova.
 
-## Despre Proiect
+## Despre proiect
 
-Danuvest este o companie de construcții fondată în 2008, specializată în proiecte rezidențiale și comerciale de mici și mijlocii dimensiuni. Acest website prezintă serviciile, portofoliul și informațiile de contact ale companiei.
+Danuvest este o companie de construcții fondată în 2008, specializată în
+proiecte rezidențiale și comerciale de mici și medii dimensiuni. Site-ul
+prezintă serviciile, valorile și datele de contact ale companiei.
 
 ## Secțiuni
 
 | Secțiune | Descriere |
 |---|---|
-| **Acasă** | Hero cu titlu, subtitlu, CTA și statistici cheie |
-| **Misiunea Companiei** | Valorile și misiunea companiei Danuvest |
-| **Servicii** | Gamă completă de servicii de construcție (6 servicii) |
-| **Proiecte** | Portofoliu de proiecte finalizate (6 proiecte) |
-| **Despre Noi** | Istoria companiei, cifre și echipă |
-| **Contact** | Formular de ofertă și informații de contact |
+| **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și patru indicatori cheie |
+| **Misiunea Companiei** | Valorile și misiunea companiei |
+| **Servicii** | Șase servicii de construcție |
+| **Despre Noi** | Istoria companiei, cifre, echipă |
+| **Contact** | Date de contact + butoane directe (telefon, WhatsApp, Viber, email) |
 
-## Tehnologii (Lab 4)
+> Secțiunea **Proiecte** există în cod (`src/components/Projects.astro`) dar
+> **nu este publicată**. Cele șase intrări sunt fotografii stock cu denumiri
+> inventate — nu pot apărea sub titlul „Proiectele noastre". Înlocuiește-le cu
+> proiecte reale, apoi importă componenta în `src/pages/index.astro`.
 
-- **[Astro](https://astro.build/) 4** — Static Site Generator (SSG); pre-randează HTML la build
-- **React 18** — componente UI hidratate selectiv (`client:load` / `client:idle`)
+## Tehnologii
+
+- **[Astro](https://astro.build/) 4** — generator de site static (SSG)
+- **CSS3** — variabile CSS, Grid, Flexbox
 - **[Decap CMS](https://decapcms.org/)** — CMS git-based, montat la `/admin`
-- **CSS3** — variabile CSS, Grid, Flexbox, animații (CSS framework din Lab 3)
-- HTML5 semantic
+- **Inter Variable** — font self-hosted (subseturile latin + latin-ext)
+
+**Zero JavaScript de framework.** Site-ul nu încarcă React, Preact sau altceva
+similar. Singurul script din pagină are ~40 de linii și se ocupă de bara de
+navigație (fundal la scroll + meniul mobil).
 
 ### Arhitectură
 
 ```
 src/
-├── data/           ← surse de adevăr editabile prin CMS (JSON)
-│   ├── site.json     site & navigation
-│   ├── hero.json     hero section
-│   ├── mission.json  mission section
-│   ├── services.json services section
-│   ├── projects.json projects portfolio
-│   ├── about.json    about section
-│   ├── contact.json  contact section + form labels
-│   ├── footer.json   footer
-│   └── mascot.json   mascot widget
-├── components/     ← componente React (importă date din src/content)
+├── assets/         ← imagini procesate la build (astro:assets)
+├── data/           ← conținut editabil prin CMS (JSON)
+│   ├── site.json      site & navigație
+│   ├── hero.json      secțiunea hero
+│   ├── mission.json   misiune
+│   ├── services.json  servicii
+│   ├── projects.json  portofoliu (nepublicat)
+│   ├── about.json     despre noi
+│   ├── contact.json   contact + butoane directe
+│   └── footer.json    footer
+├── components/     ← componente .astro
+│   └── Icon.astro     set SVG inline (vezi docs/icon-map.md)
 ├── layouts/
-│   └── Base.astro    layout HTML principal
-└── pages/
-    └── index.astro   pagina home (compoziție SSG)
+│   └── Base.astro     shell HTML + meta
+├── pages/
+│   └── index.astro    compoziția paginii
+└── styles/         ← un fișier per secțiune, intrare: main.css
 
 public/
 ├── admin/          ← Decap CMS
-│   ├── index.html
-│   └── config.yml
-└── ...             ← assets statice (logo, imagini, mascot)
+├── favicon.png, apple-touch-icon.png, robots.txt, CNAME
 ```
 
-Componentele React **nu au fost rescrise** — își păstrează state-ul (`useState`/`useEffect`), animațiile (mascot, banner mobil, navbar scroll) și formularul de contact. Singura modificare: array-urile de date hard-codate au fost mutate în `src/data/*.json`, astfel încât CMS-ul să le poată edita.
+**Imaginile nu se pun în `public/`.** Fișierele din `public/` sunt copiate ca
+atare, neoptimizate — așa a ajuns site-ul să livreze cândva un JPEG de 6,3 MB.
+Imaginile se pun în `src/assets/` și se randează cu `<Image />` din
+`astro:assets`, care generează automat WebP/AVIF redimensionat.
 
 ## Rulare locală
 
@@ -61,50 +73,79 @@ npm install
 npm run dev
 ```
 
-Aplicația va fi disponibilă la `http://localhost:4321`.
+Aplicația pornește la `http://localhost:4321`.
+
+| Comandă | Ce face |
+|---|---|
+| `npm run dev` | server de dezvoltare |
+| `npm run build` | generează `dist/` |
+| `npm run preview` | servește local `dist/` |
+| `npm run check` | verificare de tipuri (`astro check`) |
+| `npm run cms` | proxy local pentru CMS |
 
 ## CMS local
 
-Pentru a edita conținutul prin interfața CMS în dezvoltare locală (fără autentificare GitHub/Netlify):
+Pentru editare prin interfața CMS fără autentificare GitHub/Netlify:
 
 ```bash
-# terminal 1
-npm run cms     # pornește decap-server pe :8081 (proxy backend)
-
-# terminal 2
-npm run dev     # pornește Astro pe :4321
+npm run cms
 ```
-
-Apoi accesează `http://localhost:4321/admin/`. Modificările salvate se scriu direct în fișierele `src/data/*.json`.
-
-## Build pentru producție
 
 ```bash
-npm run build      # generează dist/ (HTML static pre-randat)
-npm run preview    # servește local dist/ pe :4321
+npm run dev
 ```
+
+Apoi deschide `http://localhost:4321/admin/`. Modificările se scriu direct în
+`src/data/*.json`.
+
+Câmpurile de tip iconiță sunt liste derulante, nu text liber: `Icon.astro`
+oprește build-ul la o denumire necunoscută, iar o listă previne greșelile de
+tastare. Vezi [docs/icon-map.md](docs/icon-map.md).
 
 ## Deploy
 
-### Opțiunea 1 — Netlify (recomandat pentru CMS în producție)
+Sunt configurate două ținte. **Un domeniu apex poate indica un singur host**,
+deci `danuvest.md` aparține Netlify, iar GitHub Pages rămâne o oglindă.
 
-1. Conectează repo-ul la Netlify (build command `npm run build`, publish dir `dist` — deja configurate în `netlify.toml`).
-2. Activează **Netlify Identity** (Site settings → Identity → Enable).
-3. Activează **Git Gateway** (Identity → Services → Git Gateway → Enable).
-4. Invită utilizatori prin Identity → Invite users.
-5. Editorii accesează `https://<site>/admin/`, se loghează, și commit-urile generate de CMS apar direct în repo.
+### Netlify — principal
 
-### Opțiunea 2 — GitHub Pages
+Servește `danuvest.md` și este **singurul loc unde CMS-ul se poate autentifica**
+(are nevoie de Netlify Identity + Git Gateway).
 
-```bash
-npm run deploy     # build + push în branch-ul gh-pages
-```
+1. Conectează repo-ul (build `npm run build`, publish `dist` — deja în `netlify.toml`).
+2. Site settings → Identity → Enable.
+3. Identity → Services → Git Gateway → Enable.
+4. Identity → Invite users.
+5. Editorii intră pe `https://danuvest.md/admin/`.
 
-(CMS-ul nu va putea autentifica pe GitHub Pages fără un OAuth provider extern; folosește varianta locală pentru editare în acest scenariu.)
+`netlify.toml` setează cache pe un an pentru `/assets/*` (numele conțin hash) și
+antete de securitate. Nu are `Content-Security-Policy` — motivul, detaliat, este
+scris în fișier.
 
-## Live Demo
+### GitHub Pages — oglindă
 
-> Link de adăugat după deployment
+`.github/workflows/deploy-pages.yml` publică la
+`<user>.github.io/danuvest-web` la fiecare push pe `main`. Build-ul rulează cu
+`DEPLOY_TARGET=gh-pages`, ceea ce schimbă `site` și `base` în `astro.config.mjs`,
+iar `CNAME` este eliminat din artefact ca să nu revendice domeniul Netlify.
+
+## CI
+
+`.github/workflows/ci.yml` rulează `astro check` + `astro build` și **oprește
+build-ul dacă `dist/` depășește 2 MB**, listând cele mai mari zece fișiere.
+Garda există pentru un motiv concret: site-ul livra la un moment dat 12 MB, din
+care 10,2 MB erau două fotografii neredimensionate.
+
+## Întreținere
+
+- **Astro 4 are vulnerabilități raportate.** Actualizarea la Astro 7 este o
+  migrare majoră, separată de această versiune. Majoritatea problemelor privesc
+  SSR/middleware, pe care acest site static nu le folosește; cea relevantă este
+  citirea de fișiere prin serverul de dezvoltare.
+- `@astrojs/sitemap` este fixat la **3.2.1**. Versiunile 3.7+ folosesc un hook
+  disponibil doar în Astro 5 și opresc build-ul pe Astro 4.
+- Cele șase servicii sunt scrise în trei locuri (`services.json`,
+  `footer.json`, iar denumirile revin în `contact.json`). Modifică-le peste tot.
 
 ---
 
