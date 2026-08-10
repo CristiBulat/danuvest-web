@@ -7,11 +7,50 @@
     <title>Danuvest CMS</title>
   </head>
   <body>
-    <!-- Include the Netlify Identity widget for git-gateway auth on Netlify -->
+    <!--
+      Netlify Identity widget for git-gateway auth on Netlify.
+
+      Left UNPINNED and WITHOUT a Subresource Integrity hash, on purpose:
+        - This is a first-party Netlify domain (identity.netlify.com), not a
+          third-party CDN mirror like unpkg — Netlify controls both this
+          script and the auth backend it talks to.
+        - The "v1" segment is Netlify's own markup-API version, not a package
+          version pinned via semver range; there is no versioned/pinned
+          alternative URL that Netlify documents or supports for it.
+        - identity.netlify.com does not send Access-Control-Allow-Origin, so
+          the browser cannot even fetch it in CORS mode. Adding an
+          `integrity` attribute would force CORS mode and make the browser
+          refuse to run the script at all, breaking every CMS login
+          (verified 2026-08-07 via `curl -sI`: no access-control-* headers
+          in the response; consistent with netlify/netlify-identity-widget
+          GitHub issue #122, "Not able to generate SRI hash").
+        - This script *is* the auth handshake for git-gateway; if Netlify
+          ships an urgent fix here we want it immediately, not frozen to a
+          snapshot re-hosted on a third-party CDN.
+      Re-evaluate only if Netlify starts publishing a versioned, CORS-enabled
+      URL for this widget.
+    -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-    <!-- Decap CMS app (open-source successor of Netlify CMS) -->
-    <script src="https://unpkg.com/decap-cms@^3.4.0/dist/decap-cms.js"></script>
+    <!--
+      Decap CMS app (open-source successor of Netlify CMS), pinned to an
+      exact version with Subresource Integrity instead of the previous
+      `decap-cms@^3.4.0` floating range. That range let any future 3.x
+      release (the package is already up to 3.15.x upstream) replace this
+      bundle with zero review, on a script tag that holds git-gateway commit
+      rights to this repo. The SRI hash below was computed locally on
+      2026-08-07 from the exact bytes served at this pinned URL
+      (`curl https://unpkg.com/decap-cms@3.4.0/dist/decap-cms.js | openssl
+      dgst -sha384 -binary | openssl base64 -A`) — unpkg serves immutable
+      per-version content straight from the npm tarball, so this hash should
+      stay stable for this URL. Bump both the version and the hash together
+      after reviewing the corresponding decap-cms release notes.
+    -->
+    <script
+      src="https://unpkg.com/decap-cms@3.4.0/dist/decap-cms.js"
+      integrity="sha384-9aCA3HQvQb59VAacc0CeePxMbrsryyatV5hYlxKazR/TC7T4qtuj1b2h0Ujyjpmv"
+      crossorigin="anonymous"
+    ></script>
 
     <script>
       // When user logs in via Netlify Identity, redirect back to /admin
