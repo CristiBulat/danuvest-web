@@ -1,0 +1,170 @@
+/* =====================
+   Hero
+   ===================== */
+/* The hero used to be a hard `min-height: 100vh`, which measured 853px of
+   content inside a 720px laptop viewport and 867px inside an 812px phone
+   — pushing both CTAs below the fold on the most common screens. Capping
+   the floor and trimming the vertical padding keeps the primary CTA
+   visible without scrolling. */
+.hero {
+  position: relative;
+  min-height: min(100vh, 760px);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* The background image is supplied by the Hero component through the
+   --hero-bg custom property, so it goes through astro:assets (hashed,
+   converted to WebP/AVIF, responsive) instead of being a hardcoded URL.
+   It was previously hotlinked straight from images.unsplash.com — an
+   uncontrolled third party on the critical path for the LCP element. */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-bg);
+  background-size: cover;
+  background-position: center 30%;
+  background-color: var(--primary);
+  z-index: 0;
+}
+
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(15, 15, 20, 0.90) 0%, rgba(28, 28, 36, 0.82) 100%);
+}
+
+.hero > .container {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 64px;
+  width: 100%;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border-radius: 50px;
+  margin-bottom: 28px;
+}
+
+.hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.4); }
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 5.5vw, 4.6rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.07;
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+
+.hero-title .accent {
+  color: var(--accent);
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 540px;
+  line-height: 1.72;
+  margin-bottom: 44px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.hero-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.hero-stat-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  transition: var(--ease);
+}
+
+.hero-stat-card:hover {
+  background: rgba(201, 168, 76, 0.09);
+  border-color: rgba(201, 168, 76, 0.45);
+}
+
+.stat-value {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.58);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.83rem;
+}
+
+.trust-icon {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 1rem;
+}
+

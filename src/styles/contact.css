@@ -1,0 +1,163 @@
+/* =====================
+   Contact
+   ===================== */
+.contact {
+  background: var(--white);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: var(--light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-info-item:hover {
+  border-color: rgba(201, 168, 76, 0.45);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(201, 168, 76, 0.12);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-dark);
+  flex-shrink: 0;
+}
+
+.contact-detail h4 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 3px;
+}
+
+.contact-detail p,
+.contact-detail a {
+  font-size: 0.88rem;
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.52;
+}
+
+.contact-detail a:hover {
+  color: var(--accent-dark);
+}
+
+/* =====================
+   Direct-contact actions
+
+   Replaces the old contact form. The form posted nowhere — it set a
+   "message sent" state client-side and discarded the lead. These are
+   real links (tel:, viber:, whatsapp, mailto:) so they cannot silently
+   fail, they work with zero JavaScript, and they need no personal-data
+   handling or consent flow.
+   ===================== */
+.contact-actions {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.contact-action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 64px;
+  padding: 14px 20px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.contact-action:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.contact-action-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius);
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-action-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contact-action-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-light);
+}
+
+.contact-action-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  overflow-wrap: anywhere;
+}
+
+/* Primary variant — the phone number, which is how most clients in this
+   market will actually get in touch. */
+.contact-action--primary {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.contact-action--primary:hover {
+  background: var(--primary-light);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+.contact-action--primary .contact-action-icon {
+  background: rgba(201, 168, 76, 0.2);
+  color: var(--accent);
+}
+
+.contact-action--primary .contact-action-label {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.contact-action--primary .contact-action-value {
+  color: var(--white);
+}
