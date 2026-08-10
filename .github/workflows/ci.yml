@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Nothing here writes to the repo or deploys anywhere.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Type-check, build, and guard page weight
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      # This project previously shipped a 12 MB dist/, almost all of it two
+      # unresized JPEGs (one was 9360x6240, displayed at 327px wide on a
+      # phone). That is the single regression most likely to come back — a
+      # well-meaning editor drops a photo straight off a DSLR into the repo
+      # and nothing complains. This guard is here specifically to complain.
+      - name: Guard total page weight
+        run: |
+          LIMIT_KB=2048
+          SIZE_KB=$(du -sk dist | cut -f1)
+          echo "dist/ is ${SIZE_KB} KB (limit ${LIMIT_KB} KB)"
+          echo ""
+          echo "10 largest files:"
+          find dist -type f -exec du -k {} + | sort -rn | head -10 \
+            | awk '{printf "  %6s KB  %s\n", $1, $2}'
+          echo ""
+          if [ "$SIZE_KB" -gt "$LIMIT_KB" ]; then
+            echo "::error::dist/ is ${SIZE_KB} KB, over the ${LIMIT_KB} KB budget."
+            echo "Large images belong in src/assets/ and must be rendered with"
+            echo "astro:assets (<Image />), which emits resized WebP/AVIF."
+            echo "Files dropped into public/ are copied verbatim, unoptimized."
+            exit 1
+          fi
+          echo "Within budget."

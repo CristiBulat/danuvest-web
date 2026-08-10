@@ -1,0 +1,114 @@
+---
+// src/components/Seo.astro
+// Owns every "shareable link" concern: canonical URL, Open Graph, Twitter
+// Card, the robots meta tag, and LocalBusiness JSON-LD. Base.astro renders
+// this once per page and forwards the same title/description it puts in
+// <title>/<meta name="description">, so the two never drift apart.
+import { getImage } from 'astro:assets'
+import defaultShareImage from '../assets/hero-bg.jpg'
+import site from '../data/site.json'
+
+interface Props {
+  title?: string
+  description?: string
+  /** Relative path or absolute URL. Defaults to the hero image. */
+  image?: string
+  /** Set to false for pages that should not be indexed (none exist today). */
+  index?: boolean
+}
+
+const {
+  title = site.metaTitle,
+  description = site.metaDescription,
+  image,
+  index = true,
+} = Astro.props
+
+// Astro.site comes from the `site` key in astro.config.mjs
+// (https://danuvest.md). Astro.url is the current page's URL. Both social
+// crawlers (WhatsApp/Facebook/Twitter) and <link rel="canonical"> require a
+// fully-qualified absolute URL, not a root-relative path.
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
+// The GitHub Pages mirror serves the same content on a different host. Left
+// indexable it would compete with danuvest.md as duplicate content and split
+// the site's ranking signals, so the mirror is marked noindex at build time.
+const isMirror = (Astro.site?.hostname ?? '').endsWith('github.io')
+
+// Only process the default asset through Astro's image pipeline when the
+// caller didn't supply one — an author-supplied `image` prop is an
+// arbitrary path/URL we can't safely (or need to) probe here.
+let resolvedImage: string
+let defaultImageMeta: Awaited<ReturnType<typeof getImage>> | null = null
+
+if (image) {
+  resolvedImage = new URL(image, Astro.site).href
+} else {
+  defaultImageMeta = await getImage({ src: defaultShareImage, width: 1200 })
+  resolvedImage = new URL(defaultImageMeta.src, Astro.site).href
+}
+---
+
+<link rel="canonical" href={canonicalURL} />
+<meta name="robots" content={index && !isMirror ? 'index, follow' : 'noindex, nofollow'} />
+
+<!-- Open Graph (Facebook, WhatsApp, Viber link previews) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={resolvedImage} />
+{defaultImageMeta && <meta property="og:image:width" content={String(defaultImageMeta.attributes.width)} />}
+{defaultImageMeta && <meta property="og:image:height" content={String(defaultImageMeta.attributes.height)} />}
+<meta property="og:locale" content="ro_RO" />
+<meta property="og:site_name" content={site.brandName} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={resolvedImage} />
+
+<!--
+  LocalBusiness JSON-LD (GeneralContractor subtype). Every field below is
+  sourced from src/data/contact.json / src/data/footer.json. No rating,
+  review count, price range, or geo coordinates are included because none
+  exist in the site's data — fabricating them is a Google penalty risk.
+-->
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'GeneralContractor',
+    name: 'Danuvest SRL',
+    foundingDate: '2008',
+    url: 'https://danuvest.md',
+    email: 'contact@danuvest.md',
+    telephone: ['+373 69 463 435', '+373 68 182 803'],
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Str. Constructorilor',
+      addressLocality: 'Stăuceni',
+      postalCode: 'MD-4839',
+      addressCountry: 'MD',
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Republica Moldova',
+    },
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '08:00',
+        closes: '18:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Saturday'],
+        opens: '09:00',
+        closes: '14:00',
+      },
+    ],
+  })}
+/>

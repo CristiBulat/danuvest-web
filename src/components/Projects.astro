@@ -1,0 +1,45 @@
+---
+// DORMANT: not imported by src/pages/index.astro, and must stay that way.
+// The six items in src/data/projects.json are Unsplash stock photos with
+// invented project names — they cannot ship as "our projects". This file
+// only exists so the CMS collection has something valid to point at, and
+// so the codebase compiles now that React (and .jsx) is gone. Do not wire
+// this into the page and do not touch projects.json.
+import projects from '../data/projects.json'
+---
+
+<section class="section projects" id="proiecte">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">{projects.label}</span>
+      <h2 class="section-title">{projects.title}</h2>
+      <p class="section-desc">
+        {projects.description}
+      </p>
+    </div>
+
+    <div class="projects-grid">
+      {projects.items.map((p) => (
+        <div class="project-card">
+          <div class="project-img">
+            <img src={p.img} alt={p.name} width="600" height="450" loading="lazy" />
+            <div class="project-overlay">
+              <span class="project-overlay-text">{p.desc}</span>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-category">{p.category}</div>
+            <div class="project-name">{p.name}</div>
+            <div class="project-year">{p.year}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="projects-more">
+      <a href={projects.ctaHref} class="btn btn-outline-dark">
+        {projects.ctaLabel}
+      </a>
+    </div>
+  </div>
+</section>

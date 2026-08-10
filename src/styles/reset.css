@@ -12,7 +12,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  scroll-padding-top: 72px;
+  scroll-padding-top: var(--nav-h, 72px);
 }
 
 body {

@@ -1,0 +1,70 @@
+---
+import Icon from './Icon.astro'
+import contact from '../data/contact.json'
+---
+
+<section class="section contact" id="contact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">{contact.label}</span>
+      <h2 class="section-title">{contact.title}</h2>
+      <p class="section-desc">
+        {contact.description}
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        {contact.info.map((item) => (
+          <div class="contact-info-item">
+            <div class="contact-icon"><Icon name={item.icon} size={22} /></div>
+            <div class="contact-detail">
+              <h4>{item.title}</h4>
+              {item.href ? (
+                <a href={item.href}>
+                  {item.lines.map((line, i) => (
+                    <span>
+                      {line}
+                      {i < item.lines.length - 1 && <br />}
+                    </span>
+                  ))}
+                </a>
+              ) : (
+                <p>
+                  {item.lines.map((line, i) => (
+                    <span>
+                      {line}
+                      {i < item.lines.length - 1 && <br />}
+                    </span>
+                  ))}
+                </p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!--
+        Direct-contact links. Replaces the old form, which posted nowhere
+        (handleSubmit just called setSent(true) and threw the lead away).
+        These are real tel:/wa.me/viber:/mailto: links — they can't
+        silently fail, need no JS, and need no personal-data handling.
+      -->
+      <div class="contact-actions">
+        {contact.actions.map((action) => (
+          <a
+            class:list={['contact-action', { 'contact-action--primary': action.primary }]}
+            href={action.href}
+            {...(action.external ? { target: '_blank', rel: 'noopener' } : {})}
+          >
+            <span class="contact-action-icon"><Icon name={action.icon} size={22} /></span>
+            <span class="contact-action-text">
+              <span class="contact-action-label">{action.label}</span>
+              <span class="contact-action-value">{action.value}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro'
+import services from '../data/services.json'
+---
+
+<section class="section services" id="servicii">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">{services.label}</span>
+      <h2 class="section-title">{services.title}</h2>
+      <p class="section-desc">
+        {services.description}
+      </p>
+    </div>
+
+    <div class="services-grid">
+      {services.items.map((s) => (
+        <div class="service-card">
+          <div class="service-icon"><Icon name={s.icon} size={28} /></div>
+          <h3 class="service-title">{s.title}</h3>
+          <p class="service-desc">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

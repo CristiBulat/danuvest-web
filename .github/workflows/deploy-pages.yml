@@ -1,0 +1,66 @@
+name: Deploy GitHub Pages mirror
+
+# Netlify is the primary host: it serves danuvest.md and is the only target
+# where the Decap CMS at /admin can authenticate (Netlify Identity + Git
+# Gateway). This workflow publishes a secondary, build-verified mirror to
+# <user>.github.io/danuvest-web.
+#
+# The mirror deliberately does NOT claim the apex domain — a DNS apex record
+# can only point at one host, and pointing it here would take danuvest.md away
+# from Netlify and break the CMS. public/CNAME is therefore stripped from the
+# Pages artifact below, and the build runs with DEPLOY_TARGET=gh-pages so Astro
+# emits the /danuvest-web base path.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two Pages deploys race; drop superseded runs rather than
+# cancelling one mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build with the Pages base path
+        env:
+          DEPLOY_TARGET: gh-pages
+        run: npm run build
+
+      # CNAME belongs to the Netlify deployment. If it were published here,
+      # GitHub would try to serve danuvest.md and fight Netlify for the domain.
+      - name: Strip the custom domain from the mirror
+        run: rm -f dist/CNAME
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

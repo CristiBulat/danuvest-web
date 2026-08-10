@@ -1,0 +1,114 @@
+---
+import { Image } from 'astro:assets'
+import logo from '../assets/logo.jpg'
+import site from '../data/site.json'
+
+const [brandLeft, brandRight] = site.brandSplit.split('|')
+---
+
+<nav class="navbar transparent" aria-label="Navigare principală">
+  <div class="container navbar-inner">
+
+    <!-- Logo + brand name -->
+    <a href="#acasa" class="navbar-logo">
+      <Image src={logo} alt={site.brandName} width={44} height={44} class="navbar-logo-img" />
+      <span class="navbar-brand-name">{brandLeft}<span>{brandRight}</span></span>
+    </a>
+
+    <!-- Desktop nav links — centered -->
+    <ul class="navbar-links">
+      {site.navLinks.map((link) => (
+        <li>
+          <a href={link.href} class="nav-link">{link.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Desktop CTA -->
+    <div class="navbar-cta">
+      <a href="#contact" class="btn btn-primary">{site.ctaLabel}</a>
+    </div>
+
+    <!-- Mobile hamburger -->
+    <button
+      type="button"
+      class="hamburger"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Deschide meniu"
+    >
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile dropdown -->
+<div class="mobile-menu" id="mobile-menu">
+  {site.navLinks.map((link) => (
+    <a href={link.href} class="nav-link">{link.label}</a>
+  ))}
+  <a href="#contact" class="btn btn-primary">{site.ctaLabel}</a>
+</div>
+
+<script>
+  // Reimplements the two behaviours the old React Navbar drove with
+  // useState/useEffect: (a) toggling `scrolled`/`transparent` on the navbar
+  // past a scroll threshold, and (b) opening/closing the mobile menu.
+  const navbar = document.querySelector('.navbar')
+  const hamburger = document.querySelector('.hamburger')
+  const mobileMenu = document.getElementById('mobile-menu')
+
+  const SCROLL_THRESHOLD = 60
+  const LABEL_CLOSED = 'Deschide meniu'
+  const LABEL_OPEN = 'Închide meniu'
+
+  function handleScroll() {
+    if (!navbar) return
+    const scrolled = window.scrollY > SCROLL_THRESHOLD
+    navbar.classList.toggle('scrolled', scrolled)
+    navbar.classList.toggle('transparent', !scrolled)
+  }
+
+  // Sync immediately (module scripts run after parsing, so the page may
+  // already be scrolled — e.g. reload with scroll restoration, or a direct
+  // link to an anchor) and then keep in sync as the user scrolls.
+  handleScroll()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+
+  function closeMenu() {
+    if (!hamburger || !mobileMenu) return
+    hamburger.classList.remove('open')
+    mobileMenu.classList.remove('open')
+    hamburger.setAttribute('aria-expanded', 'false')
+    hamburger.setAttribute('aria-label', LABEL_CLOSED)
+  }
+
+  function openMenu() {
+    if (!hamburger || !mobileMenu) return
+    hamburger.classList.add('open')
+    mobileMenu.classList.add('open')
+    hamburger.setAttribute('aria-expanded', 'true')
+    hamburger.setAttribute('aria-label', LABEL_OPEN)
+  }
+
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      if (hamburger.classList.contains('open')) {
+        closeMenu()
+      } else {
+        openMenu()
+      }
+    })
+
+    // Clicking any link inside the mobile menu (nav links or the CTA) closes it.
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu)
+    })
+
+    // Clicking the logo also closes it (matches the original component,
+    // which reused the same closeMenu handler here).
+    document.querySelector('.navbar-logo')?.addEventListener('click', closeMenu)
+  }
+</script>

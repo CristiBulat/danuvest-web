@@ -10,3 +10,65 @@
   from = "/admin/*"
   to = "/admin/index.html"
   status = 200
+
+# -----------------------------------------------------------------------------
+# Headers
+# -----------------------------------------------------------------------------
+
+# Astro writes every build-processed file under /assets/ with a content hash
+# in the filename (see build.assets = "assets" in astro.config.mjs) — a
+# changed file always gets a new URL, so caching these forever is safe.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Everything else — the HTML document(s), the CMS admin shell, and any
+# unfingerprinted file served straight from public/ (logo, CMS uploads,
+# CNAME, etc.) — must keep revalidating so visitors and editors always get
+# the latest deploy rather than a stale page pointing at old asset hashes.
+# This also carries the sitewide security headers.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+# Keep the CMS out of search results — belt-and-suspenders alongside the
+# <meta name="robots" content="noindex"> already in public/admin/index.html
+# (the header also covers non-HTML requests under /admin/*).
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# -----------------------------------------------------------------------------
+# Content-Security-Policy: intentionally NOT set. Do not add one without
+# re-checking the points below against the then-current build:
+#
+#   - src/index.css (.hero-bg) loads a *live, currently-rendered* background
+#     image straight from https://images.unsplash.com — a default-src/img-src
+#     'self' policy breaks the hero section immediately. There may be other
+#     external origins in flight too; src/ is being actively edited by other
+#     agents as part of the React-to-Astro migration and wasn't safe for this
+#     change to inspect exhaustively or build against.
+#   - src/components/Seo.astro emits a per-page inline
+#     <script type="application/ld+json"> block. Astro 4.16 (the version
+#     pinned in package.json) has no built-in CSP nonce support (that's an
+#     Astro 5 feature), so a strict script-src needs either 'unsafe-inline'
+#     (which undercuts the point of the allowlist) or a content hash — and a
+#     hash breaks silently the next time anyone edits that file, with no
+#     build-time warning.
+#   - /admin/* independently needs to allow unpkg (Decap CMS), Netlify
+#     Identity, and Decap's own inline bootstrap script/blob/worker usage —
+#     stacking a possibly-wrong policy on top of an already-uncertain one
+#     doubles the chance of silently locking editors out of the CMS.
+#
+# Net effect: neither "sitewide" nor "scoped to non-admin paths" is safe to
+# ship without verifying against a real build, which wasn't possible while
+# src/ was mid-migration. Revisit once the migration lands and the page's
+# actual external dependencies (fonts, images, analytics, etc.) are final.
+# -----------------------------------------------------------------------------

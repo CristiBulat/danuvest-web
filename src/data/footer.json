@@ -1,10 +1,9 @@
 {
-  "logo": "/logo.jpg",
   "tagline": "Partenerul tău de încredere în construcții din 2008. Calitate, profesionalism și seriozitate în fiecare proiect.",
   "social": [
-    { "label": "Facebook", "short": "fb", "href": "#" },
-    { "label": "Instagram", "short": "ig", "href": "#" },
-    { "label": "LinkedIn", "short": "in", "href": "#" }
+    { "label": "Facebook", "icon": "facebook", "href": "#" },
+    { "label": "Instagram", "icon": "instagram", "href": "#" },
+    { "label": "LinkedIn", "icon": "linkedin", "href": "#" }
   ],
   "navTitle": "Navigare",
   "navLinks": [
@@ -25,10 +24,10 @@
   ],
   "contactTitle": "Contact",
   "contactItems": [
-    { "icon": "📍", "text": "Str. Constructorilor,|Stăuceni, MD-4839" },
-    { "icon": "📞", "text": "+373 69 463 435", "href": "tel:+37369463435" },
-    { "icon": "✉️", "text": "contact@danuvest.md", "href": "mailto:contact@danuvest.md" },
-    { "icon": "🕐", "text": "Luni – Vineri: 08:00 – 18:00" }
+    { "icon": "pin", "text": "Str. Constructorilor,|Stăuceni, MD-4839" },
+    { "icon": "phone", "text": "+373 69 463 435", "href": "tel:+37369463435" },
+    { "icon": "mail", "text": "contact@danuvest.md", "href": "mailto:contact@danuvest.md" },
+    { "icon": "clock", "text": "Luni – Vineri: 08:00 – 18:00" }
   ],
   "copyright": "Danuvest SRL. Toate drepturile rezervate."
 }

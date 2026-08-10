@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets'
+import aboutImg from '../assets/about.jpg'
+import about from '../data/about.json'
+
+const [titleA, titleB] = about.title.split('|')
+---
+
+<section class="section about" id="despre">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-content">
+        <span class="section-label">{about.label}</span>
+        <h2 class="section-title">{titleA}{titleB && <br />}{titleB}</h2>
+
+        {about.paragraphs.map((paragraph) => (
+          <p class="about-text">{paragraph}</p>
+        ))}
+
+        <div class="about-stats">
+          {about.stats.map((stat) => (
+            <div class="about-stat">
+              <div class="stat-num">{stat.num}</div>
+              <div class="stat-text">{stat.text}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="about-visual">
+        <div class="about-img-wrap">
+          <Image src={aboutImg} alt={about.imageAlt} widths={[400, 700, 1100]} loading="lazy" />
+        </div>
+        <div class="about-experience">
+          <div class="exp-num">{about.experienceNum}</div>
+          <div class="exp-text">{about.experienceText}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

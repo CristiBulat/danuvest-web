@@ -6,4 +6,3 @@ src/env.d.ts
 *.local
 .env
 .env.*
-public/uploads
