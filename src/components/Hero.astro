@@ -1,0 +1,68 @@
+---
+import { getImage } from 'astro:assets'
+import heroBg from '../assets/hero-bg.jpg'
+import Icon from './Icon.astro'
+import hero from '../data/hero.json'
+
+// LCP background image — routed through astro:assets so it's hashed,
+// compressed, and served as WebP instead of being a hardcoded /assets/...
+// path or a hotlinked third-party URL.
+const bg = await getImage({ src: heroBg, width: 1920, format: 'webp' })
+---
+
+<section class="hero" id="acasa">
+  <div class="hero-bg" style={`--hero-bg: url(${bg.src})`} />
+
+  <div class="container">
+    <div class="hero-inner">
+
+      {/* ── Left column: text content ── */}
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot" />
+          {hero.badge}
+        </div>
+
+        <h1 class="hero-title">
+          {hero.titleLead} <span class="accent">{hero.titleAccent}</span>
+          <br />{hero.titleTrail}
+        </h1>
+
+        <p class="hero-subtitle">
+          {hero.subtitle}
+        </p>
+
+        <div class="hero-actions">
+          <a href={hero.ctaPrimary.href} class="btn btn-primary">
+            {hero.ctaPrimary.label} <Icon name="arrow-right" />
+          </a>
+          <a href={hero.ctaSecondary.href} class="btn btn-outline">
+            {hero.ctaSecondary.label}
+          </a>
+        </div>
+
+        <div class="hero-trust">
+          {hero.trust.map((t) => (
+            <div class="hero-trust-item">
+              <span class="trust-icon"><Icon name="check" size={16} /></span>
+              {t}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Right column: stats grid ── */}
+      <div class="hero-right">
+        <div class="hero-stats-grid">
+          {hero.stats.map((s) => (
+            <div class="hero-stat-card">
+              <div class="stat-value">{s.value}</div>
+              <div class="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

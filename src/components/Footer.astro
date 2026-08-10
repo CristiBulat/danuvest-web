@@ -1,0 +1,88 @@
+---
+import { Image } from 'astro:assets'
+import Icon from './Icon.astro'
+import logo from '../assets/logo.jpg'
+import footer from '../data/footer.json'
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Brand -->
+      <div class="footer-brand">
+        <div class="footer-brand-logo">
+          <a href="#acasa">
+            <Image src={logo} alt="Danuvest" width={48} height={48} class="navbar-logo-img" />
+          </a>
+        </div>
+        <p class="footer-tagline">
+          {footer.tagline}
+        </p>
+        <!--
+          Social links are intentionally not rendered. Every entry in
+          footer.json's social[] currently has href "#" — there are no real
+          Danuvest Facebook/Instagram/LinkedIn profile URLs to link to yet,
+          and shipping "#" would be a dead link. Once real profile URLs
+          exist, set them on footer.json's social[].href values and
+          uncomment this block:
+
+          <div class="footer-social">
+            {footer.social.map((s) => (
+              <a href={s.href} class="social-btn" aria-label={s.label}>
+                <Icon name={s.icon} />
+              </a>
+            ))}
+          </div>
+        -->
+      </div>
+
+      <!-- Navigation -->
+      <div class="footer-col">
+        <h4>{footer.navTitle}</h4>
+        <ul class="footer-links">
+          {footer.navLinks.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div class="footer-col">
+        <h4>{footer.servicesTitle}</h4>
+        <ul class="footer-links">
+          {footer.serviceLinks.map((label) => (
+            <li>
+              <a href="#servicii">{label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="footer-col">
+        <h4>{footer.contactTitle}</h4>
+        {footer.contactItems.map((item) => {
+          const lines = item.text.split('|')
+          const content = lines.map((line, j) => (
+            <span>
+              {line}
+              {j < lines.length - 1 && <br />}
+            </span>
+          ))
+          return (
+            <div class="footer-contact-item">
+              <Icon name={item.icon} size={16} class="footer-contact-icon" />
+              {item.href ? <a href={item.href}>{content}</a> : <span>{content}</span>}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© {new Date().getFullYear()} {footer.copyright}</span>
+    </div>
+  </div>
+</footer>
