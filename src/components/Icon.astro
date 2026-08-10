@@ -1,0 +1,291 @@
+---
+/**
+ * Icon.astro — zero-runtime-JS inline SVG icon system.
+ *
+ * Renders a single 24x24 SVG icon by name. Outline icons inherit colour via
+ * `stroke="currentColor"`; the two brand marks (whatsapp, viber) render as
+ * solid `fill="currentColor"` shapes instead. Nothing here ships any JS to
+ * the client — this is pure build-time/SSR markup.
+ *
+ * Usage:
+ *   ---
+ *   import Icon from './Icon.astro'
+ *   ---
+ *   <Icon name="crane" />
+ *   <Icon name="phone" size={24} class="contact-action-icon" />
+ *
+ * See docs/icon-map.md for the full emoji → icon-name migration table and
+ * source attribution for adapted icons.
+ */
+
+export interface Props {
+  /** Icon name — must be one of the keys in ICONS below. */
+  name: string
+  /** Width/height in pixels. Both viewBox axes are 24, so this scales uniformly. */
+  size?: number
+  /** Passed through to the rendered <svg class="..."> attribute. */
+  class?: string
+}
+
+type IconKind = 'stroke' | 'fill'
+
+interface IconDef {
+  kind: IconKind
+  /** Inner SVG markup (paths/shapes only — the wrapping <svg> is rendered below). */
+  body: string
+}
+
+// ---------------------------------------------------------------------------
+// Icon set. 24x24 viewBox, round linecap/linejoin, ~2px optical stroke weight.
+//
+// 19 of 21 icons are adapted from Lucide (ISC licence) and Simple Icons
+// (CC0-1.0) — both permit unrestricted reuse/adaptation. `crane` is hand
+// authored (no equivalent exists in either set). Full attribution table:
+// docs/icon-map.md.
+// ---------------------------------------------------------------------------
+const ICONS: Record<string, IconDef> = {
+  // ── Services ──────────────────────────────────────────────────────────
+  crane: {
+    kind: 'stroke',
+    // Hand authored: mast + jib + counter-jib + brace + hoist cable + hook.
+    body: `
+      <path d="M6 21h7" />
+      <path d="M8 21V4" />
+      <path d="M8 4h13" />
+      <path d="M8 4 3 6" />
+      <path d="M8 9l7-5" />
+      <path d="M18 4v8" />
+      <path d="m16 12 2 3 2-3" />
+    `,
+  },
+  homes: {
+    kind: 'stroke',
+    // Adapted from Lucide "home".
+    body: `
+      <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+      <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    `,
+  },
+  building: {
+    kind: 'stroke',
+    // Adapted from Lucide "building".
+    body: `
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+      <path d="M8 6h.01" />
+      <path d="M12 6h.01" />
+      <path d="M16 6h.01" />
+      <path d="M8 10h.01" />
+      <path d="M12 10h.01" />
+      <path d="M16 10h.01" />
+      <path d="M8 14h.01" />
+      <path d="M12 14h.01" />
+      <path d="M16 14h.01" />
+    `,
+  },
+  wrench: {
+    kind: 'stroke',
+    // Adapted from Lucide "wrench".
+    body: `
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" />
+    `,
+  },
+  brush: {
+    kind: 'stroke',
+    // Adapted from Lucide "paintbrush".
+    body: `
+      <path d="m14.622 17.897-10.68-2.913" />
+      <path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z" />
+      <path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15" />
+    `,
+  },
+  ruler: {
+    kind: 'stroke',
+    // Adapted from Lucide "ruler".
+    body: `
+      <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z" />
+      <path d="m14.5 12.5 2-2" />
+      <path d="m11.5 9.5 2-2" />
+      <path d="m8.5 6.5 2-2" />
+      <path d="m17.5 15.5 2-2" />
+    `,
+  },
+
+  // ── Mission values ───────────────────────────────────────────────────
+  trophy: {
+    kind: 'stroke',
+    // Adapted from Lucide "trophy".
+    body: `
+      <path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2" />
+      <path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2" />
+      <path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3" />
+      <path d="M4 22h16" />
+      <path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z" />
+      <path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3" />
+    `,
+  },
+  handshake: {
+    kind: 'stroke',
+    // Adapted from Lucide "handshake".
+    body: `
+      <path d="m11 17 2 2a1 1 0 1 0 3-3" />
+      <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
+      <path d="m21 3 1 11h-2" />
+      <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
+      <path d="M3 4h8" />
+    `,
+  },
+  bolt: {
+    kind: 'stroke',
+    // Adapted from Lucide "zap".
+    body: `
+      <path d="M15.914 4a1.5 1.5 0 0 0-2.474-1.561l-9 9A1.5 1.5 0 0 0 5.5 14h4.002a.5.5 0 0 1 .471.666L8.086 20a1.5 1.5 0 0 0 2.475 1.56l9-9A1.5 1.5 0 0 0 18.5 10h-3.997a.5.5 0 0 1-.472-.667z" />
+    `,
+  },
+
+  // ── Contact info ─────────────────────────────────────────────────────
+  pin: {
+    kind: 'stroke',
+    // Adapted from Lucide "map-pin".
+    body: `
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+      <circle cx="12" cy="10" r="3" />
+    `,
+  },
+  phone: {
+    kind: 'stroke',
+    // Adapted from Lucide "phone".
+    body: `
+      <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384" />
+    `,
+  },
+  mail: {
+    kind: 'stroke',
+    // Adapted from Lucide "mail".
+    body: `
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+    `,
+  },
+  clock: {
+    kind: 'stroke',
+    // Adapted from Lucide "clock".
+    body: `
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v6l4 2" />
+    `,
+  },
+
+  // ── Hero trust marks ─────────────────────────────────────────────────
+  check: {
+    kind: 'stroke',
+    // Adapted from Lucide "check".
+    body: `
+      <path d="M20 6 9 17l-5-5" />
+    `,
+  },
+
+  // ── Social ────────────────────────────────────────────────────────────
+  facebook: {
+    kind: 'stroke',
+    // Adapted from Lucide "facebook".
+    body: `
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    `,
+  },
+  instagram: {
+    kind: 'stroke',
+    // Adapted from Lucide "instagram".
+    body: `
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    `,
+  },
+  linkedin: {
+    kind: 'stroke',
+    // Adapted from Lucide "linkedin".
+    body: `
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" cy="4" r="2" />
+    `,
+  },
+
+  // ── Direct-contact CTAs (brand marks, solid fill) ────────────────────
+  whatsapp: {
+    kind: 'fill',
+    // Adapted from Simple Icons "whatsapp" (CC0-1.0).
+    body: `
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+    `,
+  },
+  viber: {
+    kind: 'fill',
+    // Adapted from Simple Icons "viber" (CC0-1.0).
+    body: `
+      <path d="M11.4 0C9.473.028 5.333.344 3.02 2.467 1.302 4.187.696 6.7.633 9.817.57 12.933.488 18.776 6.12 20.36h.003l-.004 2.416s-.037.977.61 1.177c.777.242 1.234-.5 1.98-1.302.407-.44.972-1.084 1.397-1.58 3.85.326 6.812-.416 7.15-.525.776-.252 5.176-.816 5.892-6.657.74-6.02-.36-9.83-2.34-11.546-.596-.55-3.006-2.3-8.375-2.323 0 0-.395-.025-1.037-.017zm.058 1.693c.545-.004.88.017.88.017 4.542.02 6.717 1.388 7.222 1.846 1.675 1.435 2.53 4.868 1.906 9.897v.002c-.604 4.878-4.174 5.184-4.832 5.395-.28.09-2.882.737-6.153.524 0 0-2.436 2.94-3.197 3.704-.12.12-.26.167-.352.144-.13-.033-.166-.188-.165-.414l.02-4.018c-4.762-1.32-4.485-6.292-4.43-8.895.054-2.604.543-4.738 1.996-6.173 1.96-1.773 5.474-2.018 7.11-2.03zm.38 2.602c-.167 0-.303.135-.304.302 0 .167.133.303.3.305 1.624.01 2.946.537 4.028 1.592 1.073 1.046 1.62 2.468 1.633 4.334.002.167.14.3.307.3.166-.002.3-.138.3-.304-.014-1.984-.618-3.596-1.816-4.764-1.19-1.16-2.692-1.753-4.447-1.765zm-3.96.695c-.19-.032-.4.005-.616.117l-.01.002c-.43.247-.816.562-1.146.932-.002.004-.006.004-.008.008-.267.323-.42.638-.46.948-.008.046-.01.093-.007.14 0 .136.022.27.065.4l.013.01c.135.48.473 1.276 1.205 2.604.42.768.903 1.5 1.446 2.186.27.344.56.673.87.984l.132.132c.31.308.64.6.984.87.686.543 1.418 1.027 2.186 1.447 1.328.733 2.126 1.07 2.604 1.206l.01.014c.13.042.265.064.402.063.046.002.092 0 .138-.008.31-.036.627-.19.948-.46.004 0 .003-.002.008-.005.37-.33.683-.72.93-1.148l.003-.01c.225-.432.15-.842-.18-1.12-.004 0-.698-.58-1.037-.83-.36-.255-.73-.492-1.113-.71-.51-.285-1.032-.106-1.248.174l-.447.564c-.23.283-.657.246-.657.246-3.12-.796-3.955-3.955-3.955-3.955s-.037-.426.248-.656l.563-.448c.277-.215.456-.737.17-1.248-.217-.383-.454-.756-.71-1.115-.25-.34-.826-1.033-.83-1.035-.137-.165-.31-.265-.502-.297zm4.49.88c-.158.002-.29.124-.3.282-.01.167.115.312.282.324 1.16.085 2.017.466 2.645 1.15.63.688.93 1.524.906 2.57-.002.168.13.306.3.31.166.003.305-.13.31-.297.025-1.175-.334-2.193-1.067-2.994-.74-.81-1.777-1.253-3.05-1.346h-.024zm.463 1.63c-.16.002-.29.127-.3.287-.008.167.12.31.288.32.523.028.875.175 1.113.422.24.245.388.62.416 1.164.01.167.15.295.318.287.167-.008.295-.15.287-.317-.03-.644-.215-1.178-.58-1.557-.367-.378-.893-.574-1.52-.607h-.018z" />
+    `,
+  },
+
+  // ── UI ────────────────────────────────────────────────────────────────
+  'arrow-right': {
+    kind: 'stroke',
+    // Adapted from Lucide "arrow-right".
+    body: `
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    `,
+  },
+  menu: {
+    kind: 'stroke',
+    // Adapted from Lucide "menu".
+    body: `
+      <path d="M4 5h16" />
+      <path d="M4 12h16" />
+      <path d="M4 19h16" />
+    `,
+  },
+  close: {
+    kind: 'stroke',
+    // Adapted from Lucide "x".
+    body: `
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    `,
+  },
+}
+
+const { name, size = 20, class: className } = Astro.props as Props
+
+if (!name) {
+  throw new Error('Icon.astro: the "name" prop is required, e.g. <Icon name="crane" />')
+}
+
+const icon = ICONS[name]
+
+if (!icon) {
+  const known = Object.keys(ICONS).sort().join(', ')
+  throw new Error(
+    `Icon.astro: unknown icon name "${name}". Valid names are: ${known}. ` +
+    `See docs/icon-map.md for the emoji → icon-name reference.`
+  )
+}
+
+const isFill = icon.kind === 'fill'
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill={isFill ? 'currentColor' : 'none'}
+  stroke={isFill ? 'none' : 'currentColor'}
+  stroke-width={isFill ? undefined : 2}
+  stroke-linecap={isFill ? undefined : 'round'}
+  stroke-linejoin={isFill ? undefined : 'round'}
+  class={className}
+  aria-hidden="true"
+  focusable="false"
+  set:html={icon.body}
+/>
