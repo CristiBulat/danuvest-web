@@ -114,18 +114,13 @@
   gap: 14px;
 }
 
+/* A <div>, not a link — no hover. See services.css. */
 .hero-stat-card {
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(201, 168, 76, 0.2);
   border-radius: var(--radius-lg);
   padding: 28px 20px;
-  transition: var(--ease);
-}
-
-.hero-stat-card:hover {
-  background: rgba(201, 168, 76, 0.09);
-  border-color: rgba(201, 168, 76, 0.45);
 }
 
 .stat-value {

@@ -34,12 +34,6 @@
   background: var(--light);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.contact-info-item:hover {
-  border-color: rgba(201, 168, 76, 0.45);
-  box-shadow: var(--shadow-sm);
 }
 
 .contact-icon {
