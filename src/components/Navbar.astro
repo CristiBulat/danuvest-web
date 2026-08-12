@@ -62,9 +62,9 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
   // useState/useEffect: (a) toggling `scrolled`/`transparent` on the navbar
   // past a scroll threshold, and (b) opening/closing the mobile menu.
   const navbar = document.querySelector('.navbar')
-  const hamburger = document.querySelector('.hamburger')
+  const hamburger = document.querySelector<HTMLButtonElement>('.hamburger')
   const mobileMenu = document.getElementById('mobile-menu')
-  const scrim = document.querySelector('.mobile-menu-scrim')
+  const scrim = document.querySelector<HTMLElement>('.mobile-menu-scrim')
 
   const SCROLL_THRESHOLD = 60
   const LABEL_CLOSED = 'Deschide meniu'
