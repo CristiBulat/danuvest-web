@@ -71,8 +71,20 @@
   line-height: 1.52;
 }
 
+/* <a> and <p> here were styled identically, so the only thing marking a link
+   as a link was a hover colour — which does not exist on touch, where most
+   of this site's traffic is. Give links a persistent, non-colour affordance.
+   Both remaining `info` entries are currently hrefless <p>s, but `href` is
+   CMS-editable and a link can come back at any time. */
+.contact-detail a {
+  text-decoration: underline;
+  text-decoration-color: rgba(168, 136, 56, 0.5);
+  text-underline-offset: 3px;
+}
+
 .contact-detail a:hover {
   color: var(--accent-dark);
+  text-decoration-color: currentColor;
 }
 
 /* =====================
