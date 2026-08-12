@@ -121,9 +121,19 @@ body {
    nothing replaced it, leaving keyboard and switch users with no visible
    position on the page. :focus-visible only paints for keyboard-style
    interaction, so pointer users never see a ring on click.
+
+   SC 1.4.11 holds a focus indicator to 3:1 against its adjacent colour.
+   --accent is 2.29:1 on --white and 2.13:1 on --light, so the ring was
+   invisible-by-the-standard on every light section; --accent-dark measures
+   3.36:1 and 3.14:1 and clears both.
+
+   The adjacent colour is the page background, not the focused element's
+   own fill, because outline-offset opens a 3px gap of page background
+   inside the ring — which is why a gold ring around a gold .btn-primary
+   still complies. Do not remove the offset.
    ===================== */
 :focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--accent-dark);
   outline-offset: 3px;
   border-radius: 4px;
 }
