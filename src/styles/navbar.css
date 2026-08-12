@@ -143,3 +143,22 @@
   margin-top: 12px;
   justify-content: center;
 }
+
+/* 998 is deliberate: below .mobile-menu (999) so the panel stays above the
+   dim, and below .navbar (1000) so the hamburger stays clickable to close.
+   Starting at var(--nav-h) means it never covers the navbar in the first
+   place. Do not raise it. */
+.mobile-menu-scrim {
+  position: fixed;
+  inset: var(--nav-h) 0 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.mobile-menu-scrim[hidden] {
+  display: none;
+}
+
+html.nav-open {
+  overflow: hidden;
+}
