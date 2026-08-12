@@ -23,6 +23,16 @@
     height: 360px;
   }
 
+  /* Above 1101px the mission grid is two columns, the image sits inboard,
+     and the badge's -20px overhang is decorative. Once the grid collapses
+     the image spans the container and that overhang pushes the badge
+     through the container's 24px padding and off the layout. Same idiom as
+     .about-experience { left: 0 } below, which handles the identical
+     pattern in About. */
+  .mission-badge {
+    right: 0;
+  }
+
   /* WAS: .about-visual { display: none } — hid the team photo and the
      "15+ ani pe piață" badge on every tablet and phone. Now it reflows:
      the portrait crop becomes a landscape band and stays centred. */
