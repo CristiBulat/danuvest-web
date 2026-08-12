@@ -9,7 +9,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
-  align-items: start;
+  /* WAS: align-items: start. The left column holds two supporting cards and
+     the right holds four action buttons, so start-alignment left the two
+     columns ending 115px apart. Stretching the row and letting the two cards
+     share the height lands both columns on the same baseline. Below 1101px
+     the grid is a single column, so each row stretches to its own content
+     height and this is inert. */
+  align-items: stretch;
 }
 
 .contact-info {
@@ -19,6 +25,8 @@
 }
 
 .contact-info-item {
+  /* Share the stretched column height evenly — see .contact-grid above. */
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -78,7 +86,8 @@
    ===================== */
 .contact-actions {
   display: grid;
-  gap: 12px;
+  /* Matches .contact-info's 14px so the two columns' rows line up. */
+  gap: 14px;
   align-content: start;
 }
 
