@@ -7,6 +7,11 @@
   --accent:        #c9a84c;
   --accent-light:  #debb68;
   --accent-dark:   #a88838;
+  /* Gold dark enough for small text on the light grounds: 5.25:1 on --white,
+     4.89:1 on --light. --accent itself is 2.29:1 / 2.13:1 and fails AA there.
+     Derived from the brand gold, not a new colour — on dark grounds the
+     sections keep using --accent, which already passes. */
+  --accent-ink:    #7f6a2e;
   --white:         #ffffff;
   --light:         #f8f7f2;
   --light-alt:     #f0eeea;
