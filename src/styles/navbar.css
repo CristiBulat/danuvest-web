@@ -55,6 +55,22 @@
   color: var(--accent);
 }
 
+/* While the navbar overlays the hero, two solid-gold .btn-primary CTAs are
+   on screen at once and neither reads as the single next action. Demote the
+   navbar's to an outline for exactly as long as it is transparent; once
+   scrolled the hero is gone and it becomes the primary action legitimately.
+   .transparent / .scrolled are already toggled by the existing script. */
+.navbar.transparent .navbar-cta .btn-primary {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.65);
+  color: var(--white);
+}
+
+.navbar.transparent .navbar-cta .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
