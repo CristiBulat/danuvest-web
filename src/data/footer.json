@@ -8,7 +8,6 @@
   "navTitle": "Navigare",
   "navLinks": [
     { "label": "Acasă", "href": "#acasa" },
-    { "label": "Misiunea Companiei", "href": "#misiune" },
     { "label": "Servicii", "href": "#servicii" },
     { "label": "Despre Noi", "href": "#despre" },
     { "label": "Contact", "href": "#contact" }

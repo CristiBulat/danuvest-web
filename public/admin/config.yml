@@ -94,33 +94,6 @@ collections:
               - { name: value, label: Value, widget: string }
               - { name: label, label: Label, widget: string }
 
-  - name: "mission"
-    label: "Mission Section"
-    delete: false
-    editor: { preview: false }
-    files:
-      - name: "mission"
-        label: "Mission"
-        file: "src/data/mission.json"
-        format: "json"
-        fields:
-          - { name: label, label: "Section label", widget: string }
-          - { name: title, label: "Title (use | for line break)", widget: string }
-          - { name: imageAlt, label: "Image Alt Text", widget: string, hint: "Describes the photo for screen readers and search engines. The photo itself is set in code." }
-          - { name: badgeValue, label: "Badge Value (e.g. 500+)", widget: string }
-          - { name: badgeText, label: "Badge Text", widget: string }
-          - { name: quote, label: "Mission Quote", widget: text }
-          - { name: description, label: "Description", widget: text }
-          - name: values
-            label: "Company Values"
-            widget: list
-            fields:
-              - name: icon
-                label: Icon
-                widget: select
-                options: [trophy, handshake, bolt, check, crane, homes, building, wrench, brush, ruler]
-              - { name: title, label: Title, widget: string }
-
   - name: "services"
     label: "Services Section"
     delete: false
