@@ -76,8 +76,14 @@
     display: flex;
   }
 
+  /* The cap is the desktop curve evaluated at this breakpoint: 768 * 0.055
+     = 42.24px = 2.64rem. At 2.8rem the two clamps were discontinuous — 768px
+     resolved to the 44.8px cap while 769px fell to the desktop 5.5vw =
+     42.30px, so the headline shrank as the viewport grew. Deleting this
+     override instead would drop 375px onto the desktop min of 2.4rem
+     (38.4px), a 20% jump on the narrowest screens. */
   .hero-title {
-    font-size: clamp(2rem, 7vw, 2.8rem);
+    font-size: clamp(2rem, 7vw, 2.64rem);
   }
 
   .hero-actions {
