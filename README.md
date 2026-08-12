@@ -13,7 +13,6 @@ prezintă serviciile, valorile și datele de contact ale companiei.
 | Secțiune | Descriere |
 |---|---|
 | **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și patru indicatori cheie |
-| **Misiunea Companiei** | Valorile și misiunea companiei |
 | **Servicii** | Șase servicii de construcție |
 | **Despre Noi** | Istoria companiei, cifre, echipă |
 | **Contact** | Date de contact + butoane directe (telefon, WhatsApp, Viber, email) |
@@ -42,7 +41,6 @@ src/
 ├── data/           ← conținut editabil prin CMS (JSON)
 │   ├── site.json      site & navigație
 │   ├── hero.json      secțiunea hero
-│   ├── mission.json   misiune
 │   ├── services.json  servicii
 │   ├── projects.json  portofoliu (nepublicat)
 │   ├── about.json     despre noi
