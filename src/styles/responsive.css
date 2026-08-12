@@ -80,13 +80,9 @@
     justify-content: center;
   }
 
-  .hero-trust {
-    gap: 12px 20px;
-  }
-
-  /* WAS: .hero-right { display: none } — removed all four stat cards
-     (500+ proiecte, 15+ ani, 300+ clienți, 2008) on mobile, where most
-     of this site's traffic is. They stay, in a tighter 2x2. */
+  /* WAS: .hero-right { display: none } — removed every stat card on mobile,
+     where most of this site's traffic is. They stay; the lead card spans
+     both columns and the other two share the row below. */
   .hero-stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -126,11 +122,5 @@
     flex-direction: column;
     gap: 8px;
     text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-badge {
-    font-size: 0.7rem;
   }
 }

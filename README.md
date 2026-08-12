@@ -12,7 +12,7 @@ prezintă serviciile, valorile și datele de contact ale companiei.
 
 | Secțiune | Descriere |
 |---|---|
-| **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și patru indicatori cheie |
+| **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și trei indicatori cheie |
 | **Servicii** | Șase servicii de construcție |
 | **Despre Noi** | Istoria companiei, cifre, echipă |
 | **Contact** | Date de contact + butoane directe (telefon, WhatsApp, Viber, email) |

@@ -65,7 +65,6 @@ collections:
         file: "src/data/hero.json"
         format: "json"
         fields:
-          - { name: badge, label: "Badge Text", widget: string }
           - { name: titleLead, label: "Title — leading text", widget: string }
           - { name: titleAccent, label: "Title — accent (gold) word", widget: string }
           - { name: titleTrail, label: "Title — trailing line", widget: string }
@@ -82,10 +81,6 @@ collections:
             fields:
               - { name: label, label: Label, widget: string }
               - { name: href, label: "Anchor / URL", widget: string }
-          - name: trust
-            label: "Trust Bullets"
-            widget: list
-            field: { name: text, label: Bullet, widget: string }
           - name: stats
             label: "Stat Cards"
             widget: list

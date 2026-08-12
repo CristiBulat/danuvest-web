@@ -18,11 +18,6 @@ const bg = await getImage({ src: heroBg, width: 1920, format: 'webp' })
 
       {/* ── Left column: text content ── */}
       <div class="hero-left">
-        <div class="hero-badge">
-          <span class="hero-badge-dot" />
-          {hero.badge}
-        </div>
-
         <h1 class="hero-title">
           {hero.titleLead} <span class="accent">{hero.titleAccent}</span>
           <br />{hero.titleTrail}
@@ -39,15 +34,6 @@ const bg = await getImage({ src: heroBg, width: 1920, format: 'webp' })
           <a href={hero.ctaSecondary.href} class="btn btn-outline">
             {hero.ctaSecondary.label}
           </a>
-        </div>
-
-        <div class="hero-trust">
-          {hero.trust.map((t) => (
-            <div class="hero-trust-item">
-              <span class="trust-icon"><Icon name="check" size={16} /></span>
-              {t}
-            </div>
-          ))}
         </div>
       </div>
 

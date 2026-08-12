@@ -51,35 +51,6 @@
   align-items: center;
 }
 
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(201, 168, 76, 0.15);
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  color: var(--accent-light);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 8px 18px;
-  border-radius: 50px;
-  margin-bottom: 28px;
-}
-
-.hero-badge-dot {
-  width: 7px;
-  height: 7px;
-  background: var(--accent);
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.45; transform: scale(1.4); }
-}
-
 .hero-title {
   font-size: clamp(2.4rem, 5.5vw, 4.6rem);
   font-weight: 900;
@@ -108,10 +79,17 @@
   margin-bottom: 0;
 }
 
+/* Three cards, not four. The first spans the full width so "500+ Proiecte"
+   reads as the headline number instead of one of four equal tiles, and the
+   odd card count doesn't leave an empty cell. */
 .hero-stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+}
+
+.hero-stat-card:first-child {
+  grid-column: 1 / -1;
 }
 
 /* A <div>, not a link — no hover. See services.css. */
@@ -137,29 +115,5 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   line-height: 1.4;
-}
-
-.hero-trust {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-top: 36px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  flex-wrap: wrap;
-}
-
-.hero-trust-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.62);
-  font-size: 0.83rem;
-}
-
-.trust-icon {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 1rem;
 }
 
