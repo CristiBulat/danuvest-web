@@ -1,6 +1,21 @@
 ---
 import Icon from './Icon.astro'
 import contact from '../data/contact.json'
+
+// `href` is optional on an info entry — public/admin/config.yml declares it
+// required: false — but TypeScript infers the shape from whatever happens to
+// be in contact.json today. Since F3 removed the phone and email entries,
+// nothing left carries an href and the inferred type lost the property.
+// Declaring the contract keeps the optional branch below type-checking
+// whether or not an editor has set a link.
+interface ContactInfoItem {
+  icon: string
+  title: string
+  lines: string[]
+  href?: string
+}
+
+const info: ContactInfoItem[] = contact.info
 ---
 
 <section class="section contact" id="contact">
@@ -15,7 +30,7 @@ import contact from '../data/contact.json'
 
     <div class="contact-grid">
       <div class="contact-info">
-        {contact.info.map((item) => (
+        {info.map((item) => (
           <div class="contact-info-item">
             <div class="contact-icon"><Icon name={item.icon} size={22} /></div>
             <div class="contact-detail">

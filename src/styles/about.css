@@ -39,6 +39,9 @@
   line-height: 1.78;
   margin-bottom: 20px;
   font-size: 0.98rem;
+  /* Never had a measure cap. Invisible in the two-column grid, but below
+     1101px the grid collapses and these paragraphs ran the full container. */
+  max-width: 68ch;
 }
 
 .about-stats {

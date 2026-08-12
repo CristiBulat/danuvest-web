@@ -55,6 +55,22 @@
   color: var(--accent);
 }
 
+/* While the navbar overlays the hero, two solid-gold .btn-primary CTAs are
+   on screen at once and neither reads as the single next action. Demote the
+   navbar's to an outline for exactly as long as it is transparent; once
+   scrolled the hero is gone and it becomes the primary action legitimately.
+   .transparent / .scrolled are already toggled by the existing script. */
+.navbar.transparent .navbar-cta .btn-primary {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.65);
+  color: var(--white);
+}
+
+.navbar.transparent .navbar-cta .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -126,4 +142,23 @@
 .mobile-menu .btn {
   margin-top: 12px;
   justify-content: center;
+}
+
+/* 998 is deliberate: below .mobile-menu (999) so the panel stays above the
+   dim, and below .navbar (1000) so the hamburger stays clickable to close.
+   Starting at var(--nav-h) means it never covers the navbar in the first
+   place. Do not raise it. */
+.mobile-menu-scrim {
+  position: fixed;
+  inset: var(--nav-h) 0 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+
+.mobile-menu-scrim[hidden] {
+  display: none;
+}
+
+html.nav-open {
+  overflow: hidden;
 }

@@ -9,18 +9,6 @@
       "lines": ["Str. Constructorilor", "Stăuceni, MD-4839", "Republica Moldova"]
     },
     {
-      "icon": "phone",
-      "title": "Telefon",
-      "lines": ["+373 69 463 435", "+373 68 182 803"],
-      "href": "tel:+37369463435"
-    },
-    {
-      "icon": "mail",
-      "title": "Email",
-      "lines": ["contact@danuvest.md"],
-      "href": "mailto:contact@danuvest.md"
-    },
-    {
       "icon": "clock",
       "title": "Program de Lucru",
       "lines": ["Luni – Vineri: 08:00 – 18:00", "Sâmbătă: 09:00 – 14:00"]

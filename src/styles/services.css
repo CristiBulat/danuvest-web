@@ -11,35 +11,19 @@
   gap: 24px;
 }
 
+/* .service-card is a <div> with no href, role or tabindex. It had the
+   strongest hover in the page — white lift, shadow, a gold bar wiping up the
+   left edge, and an icon-tint change — promising an interaction that does not
+   exist. Hover now belongs to <a> and <button> only. The ::before that drew
+   the gold bar went with it: height was 0 in every state that remains, so it
+   could never paint again. */
 .service-card {
   background: var(--light);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 36px 28px;
-  transition: var(--ease);
   position: relative;
   overflow: hidden;
-}
-
-.service-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 0;
-  background: var(--accent);
-  transition: height 0.35s ease;
-}
-
-.service-card:hover {
-  background: var(--white);
-  box-shadow: var(--shadow-md);
-  border-color: transparent;
-}
-
-.service-card:hover::before {
-  height: 100%;
 }
 
 .service-icon {
@@ -52,11 +36,6 @@
   justify-content: center;
   font-size: 1.55rem;
   margin-bottom: 20px;
-  transition: var(--ease);
-}
-
-.service-card:hover .service-icon {
-  background: rgba(201, 168, 76, 0.22);
 }
 
 .service-title {

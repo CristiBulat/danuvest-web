@@ -60,7 +60,11 @@
 
 .mission-content .section-desc {
   margin-bottom: 28px;
-  max-width: none;
+  /* WAS: none, which opted out of the 600px cap in base.css. Harmless in the
+     two-column grid, but between 769 and 1100px the grid collapses and this
+     stretched to the full 976px container. ch tracks the font, so the
+     constraint stays correct if the type scale changes. */
+  max-width: 68ch;
 }
 
 .mission-quote {
@@ -89,17 +93,11 @@
   text-align: center;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
-  transition: var(--ease);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-width: 0;
-}
-
-.value-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--accent);
 }
 
 .value-icon {

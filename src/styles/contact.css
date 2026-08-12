@@ -9,7 +9,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
-  align-items: start;
+  /* WAS: align-items: start. The left column holds two supporting cards and
+     the right holds four action buttons, so start-alignment left the two
+     columns ending 115px apart. Stretching the row and letting the two cards
+     share the height lands both columns on the same baseline. Below 1101px
+     the grid is a single column, so each row stretches to its own content
+     height and this is inert. */
+  align-items: stretch;
 }
 
 .contact-info {
@@ -19,6 +25,8 @@
 }
 
 .contact-info-item {
+  /* Share the stretched column height evenly — see .contact-grid above. */
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -26,12 +34,6 @@
   background: var(--light);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.contact-info-item:hover {
-  border-color: rgba(201, 168, 76, 0.45);
-  box-shadow: var(--shadow-sm);
 }
 
 .contact-icon {
@@ -63,8 +65,20 @@
   line-height: 1.52;
 }
 
+/* <a> and <p> here were styled identically, so the only thing marking a link
+   as a link was a hover colour — which does not exist on touch, where most
+   of this site's traffic is. Give links a persistent, non-colour affordance.
+   Both remaining `info` entries are currently hrefless <p>s, but `href` is
+   CMS-editable and a link can come back at any time. */
+.contact-detail a {
+  text-decoration: underline;
+  text-decoration-color: rgba(168, 136, 56, 0.5);
+  text-underline-offset: 3px;
+}
+
 .contact-detail a:hover {
   color: var(--accent-dark);
+  text-decoration-color: currentColor;
 }
 
 /* =====================
@@ -78,7 +92,8 @@
    ===================== */
 .contact-actions {
   display: grid;
-  gap: 12px;
+  /* Matches .contact-info's 14px so the two columns' rows line up. */
+  gap: 14px;
   align-content: start;
 }
 

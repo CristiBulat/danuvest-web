@@ -44,6 +44,11 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
   </div>
 </nav>
 
+<!-- Scrim. Sits at z-index 998, below both the menu (999) and the navbar
+     (1000), and starts below the navbar, so the panel stays legible and the
+     hamburger stays clickable to close. -->
+<div class="mobile-menu-scrim" hidden></div>
+
 <!-- Mobile dropdown -->
 <div class="mobile-menu" id="mobile-menu">
   {site.navLinks.map((link) => (
@@ -57,8 +62,9 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
   // useState/useEffect: (a) toggling `scrolled`/`transparent` on the navbar
   // past a scroll threshold, and (b) opening/closing the mobile menu.
   const navbar = document.querySelector('.navbar')
-  const hamburger = document.querySelector('.hamburger')
+  const hamburger = document.querySelector<HTMLButtonElement>('.hamburger')
   const mobileMenu = document.getElementById('mobile-menu')
+  const scrim = document.querySelector<HTMLElement>('.mobile-menu-scrim')
 
   const SCROLL_THRESHOLD = 60
   const LABEL_CLOSED = 'Deschide meniu'
@@ -83,6 +89,8 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
     mobileMenu.classList.remove('open')
     hamburger.setAttribute('aria-expanded', 'false')
     hamburger.setAttribute('aria-label', LABEL_CLOSED)
+    if (scrim) scrim.hidden = true
+    document.documentElement.classList.remove('nav-open')
   }
 
   function openMenu() {
@@ -91,6 +99,8 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
     mobileMenu.classList.add('open')
     hamburger.setAttribute('aria-expanded', 'true')
     hamburger.setAttribute('aria-label', LABEL_OPEN)
+    if (scrim) scrim.hidden = false
+    document.documentElement.classList.add('nav-open')
   }
 
   if (hamburger && mobileMenu) {
@@ -110,5 +120,16 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
     // Clicking the logo also closes it (matches the original component,
     // which reused the same closeMenu handler here).
     document.querySelector('.navbar-logo')?.addEventListener('click', closeMenu)
+
+    // Escape and a click on the scrim both dismiss it. Without these the
+    // panel could only be closed by finding the hamburger again.
+    scrim?.addEventListener('click', closeMenu)
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && mobileMenu.classList.contains('open')) {
+        closeMenu()
+        hamburger.focus()
+      }
+    })
   }
 </script>
