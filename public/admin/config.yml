@@ -216,7 +216,6 @@ collections:
         file: "src/data/footer.json"
         format: "json"
         fields:
-          - { name: tagline, label: Tagline, widget: text }
           # The social block is commented out in Footer.astro because all three
           # links are placeholders. Put real profile URLs in here and ask a
           # developer to uncomment it. Dead social icons read as an abandoned
@@ -231,19 +230,6 @@ collections:
                 widget: select
                 options: [facebook, instagram, linkedin]
               - { name: href, label: URL, widget: string }
-          - { name: navTitle, label: "Nav Column Title", widget: string }
-          - name: navLinks
-            label: "Nav Column Links"
-            widget: list
-            fields:
-              - { name: label, label: Label, widget: string }
-              - { name: href, label: "Anchor / URL", widget: string }
-          - { name: servicesTitle, label: "Services Column Title", widget: string }
-          - name: serviceLinks
-            label: "Services Column Links"
-            widget: list
-            field: { name: name, label: Service, widget: string }
-          - { name: contactTitle, label: "Contact Column Title", widget: string }
           - name: contactItems
             label: "Contact Items"
             widget: list
@@ -252,6 +238,6 @@ collections:
                 label: Icon
                 widget: select
                 options: [pin, phone, mail, clock]
-              - { name: text, label: "Text (use | for line break)", widget: string }
+              - { name: text, label: Text, widget: string }
               - { name: href, label: "Link (optional)", widget: string, required: false }
           - { name: copyright, label: "Copyright Line", widget: string }

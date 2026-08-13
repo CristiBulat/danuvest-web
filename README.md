@@ -142,8 +142,8 @@ care 10,2 MB erau două fotografii neredimensionate.
   citirea de fișiere prin serverul de dezvoltare.
 - `@astrojs/sitemap` este fixat la **3.2.1**. Versiunile 3.7+ folosesc un hook
   disponibil doar în Astro 5 și opresc build-ul pe Astro 4.
-- Cele șase servicii sunt scrise în trei locuri (`services.json`,
-  `footer.json`, iar denumirile revin în `contact.json`). Modifică-le peste tot.
+- Cele șase servicii sunt scrise în `services.json`; denumirile revin și în
+  `contact.json`. Modifică-le peste tot.
 
 ---
 
