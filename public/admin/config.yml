@@ -8,7 +8,7 @@
 # an invalid icon unselectable. When you add an icon to Icon.astro, add its
 # name to the relevant `options` list below.
 #
-# IMAGES: the hero, mission, about and logo images are no longer editable
+# IMAGES: the hero, about and logo images are no longer editable
 # here. They now live in src/assets/ and are processed at build time by
 # astro:assets (resized, converted to WebP/AVIF, content-hashed). A CMS
 # `image` widget writes into public/, which Astro copies verbatim and does
@@ -65,7 +65,6 @@ collections:
         file: "src/data/hero.json"
         format: "json"
         fields:
-          - { name: badge, label: "Badge Text", widget: string }
           - { name: titleLead, label: "Title — leading text", widget: string }
           - { name: titleAccent, label: "Title — accent (gold) word", widget: string }
           - { name: titleTrail, label: "Title — trailing line", widget: string }
@@ -82,10 +81,6 @@ collections:
             fields:
               - { name: label, label: Label, widget: string }
               - { name: href, label: "Anchor / URL", widget: string }
-          - name: trust
-            label: "Trust Bullets"
-            widget: list
-            field: { name: text, label: Bullet, widget: string }
           - name: stats
             label: "Stat Cards"
             widget: list
@@ -93,33 +88,6 @@ collections:
             fields:
               - { name: value, label: Value, widget: string }
               - { name: label, label: Label, widget: string }
-
-  - name: "mission"
-    label: "Mission Section"
-    delete: false
-    editor: { preview: false }
-    files:
-      - name: "mission"
-        label: "Mission"
-        file: "src/data/mission.json"
-        format: "json"
-        fields:
-          - { name: label, label: "Section label", widget: string }
-          - { name: title, label: "Title (use | for line break)", widget: string }
-          - { name: imageAlt, label: "Image Alt Text", widget: string, hint: "Describes the photo for screen readers and search engines. The photo itself is set in code." }
-          - { name: badgeValue, label: "Badge Value (e.g. 500+)", widget: string }
-          - { name: badgeText, label: "Badge Text", widget: string }
-          - { name: quote, label: "Mission Quote", widget: text }
-          - { name: description, label: "Description", widget: text }
-          - name: values
-            label: "Company Values"
-            widget: list
-            fields:
-              - name: icon
-                label: Icon
-                widget: select
-                options: [trophy, handshake, bolt, check, crane, homes, building, wrench, brush, ruler]
-              - { name: title, label: Title, widget: string }
 
   - name: "services"
     label: "Services Section"
@@ -133,7 +101,6 @@ collections:
         fields:
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: Title, widget: string }
-          - { name: description, label: Description, widget: text }
           - name: items
             label: "Service Cards"
             widget: list
@@ -192,15 +159,7 @@ collections:
             label: "Body Paragraphs"
             widget: list
             field: { name: text, label: Paragraph, widget: text }
-          - name: stats
-            label: "Stats"
-            widget: list
-            fields:
-              - { name: num, label: Number, widget: string }
-              - { name: text, label: Label, widget: string }
           - { name: imageAlt, label: "Image Alt Text", widget: string, hint: "The photo itself is set in code." }
-          - { name: experienceNum, label: "Experience Number", widget: string }
-          - { name: experienceText, label: "Experience Label", widget: string }
 
   - name: "contact"
     label: "Contact Section"
@@ -257,7 +216,6 @@ collections:
         file: "src/data/footer.json"
         format: "json"
         fields:
-          - { name: tagline, label: Tagline, widget: text }
           # The social block is commented out in Footer.astro because all three
           # links are placeholders. Put real profile URLs in here and ask a
           # developer to uncomment it. Dead social icons read as an abandoned
@@ -272,19 +230,6 @@ collections:
                 widget: select
                 options: [facebook, instagram, linkedin]
               - { name: href, label: URL, widget: string }
-          - { name: navTitle, label: "Nav Column Title", widget: string }
-          - name: navLinks
-            label: "Nav Column Links"
-            widget: list
-            fields:
-              - { name: label, label: Label, widget: string }
-              - { name: href, label: "Anchor / URL", widget: string }
-          - { name: servicesTitle, label: "Services Column Title", widget: string }
-          - name: serviceLinks
-            label: "Services Column Links"
-            widget: list
-            field: { name: name, label: Service, widget: string }
-          - { name: contactTitle, label: "Contact Column Title", widget: string }
           - name: contactItems
             label: "Contact Items"
             widget: list
@@ -293,6 +238,6 @@ collections:
                 label: Icon
                 widget: select
                 options: [pin, phone, mail, clock]
-              - { name: text, label: "Text (use | for line break)", widget: string }
+              - { name: text, label: Text, widget: string }
               - { name: href, label: "Link (optional)", widget: string, required: false }
           - { name: copyright, label: "Copyright Line", widget: string }

@@ -12,8 +12,7 @@ prezintă serviciile, valorile și datele de contact ale companiei.
 
 | Secțiune | Descriere |
 |---|---|
-| **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și patru indicatori cheie |
-| **Misiunea Companiei** | Valorile și misiunea companiei |
+| **Acasă** | Hero cu titlu, subtitlu, două CTA-uri și trei indicatori cheie |
 | **Servicii** | Șase servicii de construcție |
 | **Despre Noi** | Istoria companiei, cifre, echipă |
 | **Contact** | Date de contact + butoane directe (telefon, WhatsApp, Viber, email) |
@@ -42,7 +41,6 @@ src/
 ├── data/           ← conținut editabil prin CMS (JSON)
 │   ├── site.json      site & navigație
 │   ├── hero.json      secțiunea hero
-│   ├── mission.json   misiune
 │   ├── services.json  servicii
 │   ├── projects.json  portofoliu (nepublicat)
 │   ├── about.json     despre noi
@@ -144,8 +142,8 @@ care 10,2 MB erau două fotografii neredimensionate.
   citirea de fișiere prin serverul de dezvoltare.
 - `@astrojs/sitemap` este fixat la **3.2.1**. Versiunile 3.7+ folosesc un hook
   disponibil doar în Astro 5 și opresc build-ul pe Astro 4.
-- Cele șase servicii sunt scrise în trei locuri (`services.json`,
-  `footer.json`, iar denumirile revin în `contact.json`). Modifică-le peste tot.
+- Cele șase servicii sunt scrise într-un singur loc, `services.json`. Lista din
+  subsol a fost eliminată odată cu restrângerea subsolului la un singur rând.
 
 ---
 
