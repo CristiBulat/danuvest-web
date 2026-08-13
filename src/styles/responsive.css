@@ -18,13 +18,12 @@
     gap: 52px;
   }
 
-  /* WAS: .about-visual { display: none } — hid the team photo and the
-     "15+ ani pe piață" badge on every tablet and phone. Now it reflows:
-     the portrait crop becomes a landscape band and stays centred. */
+  /* WAS: .about-visual { display: none } — hid the team photo on every
+     tablet and phone. Now it reflows: the portrait crop becomes a
+     landscape band and stays centred. */
   .about-visual {
     max-width: 560px;
     margin: 0 auto;
-    padding-right: 28px;
   }
 
   .about-img-wrap {
@@ -99,18 +98,6 @@
   .services-grid,
   .projects-grid {
     grid-template-columns: 1fr;
-  }
-
-  .about-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .about-visual {
-    padding-right: 0;
-  }
-
-  .about-experience {
-    left: 0;
   }
 
   .footer-grid {

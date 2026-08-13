@@ -160,15 +160,7 @@ collections:
             label: "Body Paragraphs"
             widget: list
             field: { name: text, label: Paragraph, widget: text }
-          - name: stats
-            label: "Stats"
-            widget: list
-            fields:
-              - { name: num, label: Number, widget: string }
-              - { name: text, label: Label, widget: string }
           - { name: imageAlt, label: "Image Alt Text", widget: string, hint: "The photo itself is set in code." }
-          - { name: experienceNum, label: "Experience Number", widget: string }
-          - { name: experienceText, label: "Experience Label", widget: string }
 
   - name: "contact"
     label: "Contact Section"
