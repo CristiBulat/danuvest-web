@@ -46,9 +46,15 @@ free text — so an invalid name cannot be entered in the first place.
 | 🎨 | `brush` | Lucrări de Finisare |
 | 📐 | `ruler` | Proiectare și Consultanță |
 
-### Mission values — `src/data/mission.json` → `values[].icon`
+### Mission values — *section removed*
 
-| Was | Now | Value |
+The Mission section and `src/data/mission.json` were deleted when the page was
+cut down to at most two renders per fact. These three icons still exist in
+`Icon.astro` and remain selectable in the Services icon dropdown in
+`public/admin/config.yml`, so they are not dead — they simply no longer have a
+dedicated section.
+
+| Was | Now | Value it carried |
 |---|---|---|
 | 🏆 | `trophy` | Calitate |
 | 🤝 | `handshake` | Integritate |
@@ -63,7 +69,11 @@ free text — so an invalid name cannot be entered in the first place.
 | ✉️ | `mail` | Email |
 | 🕐 | `clock` | Opening hours |
 
-### Hero trust marks — `hero.json` → `trust[]`
+### Hero trust marks — *removed*
+
+The hero's `trust[]` bullets were deleted: they restated the subtitle above them
+and the CTA label below them. `check` still exists in `Icon.astro` and remains
+selectable in the Services icon dropdown.
 
 | Was | Now |
 |---|---|
