@@ -1,0 +1,27 @@
+# Mirrors the [[headers]] blocks in netlify.toml.
+#
+# netlify.toml only applies when Netlify runs the build itself from git. This
+# site is also deployed by uploading the built dist/ directly through the API,
+# and that path never sees netlify.toml — so the rules live here as well, where
+# they travel with the build output. Netlify and Cloudflare both read this
+# format natively, which also keeps the site portable between the two.
+#
+# Order matters: both hosts apply matching rules top-down and let later, more
+# specific matches win. Keep /* first.
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# Astro writes every build-processed file under /assets/ with a content hash in
+# the filename, so a changed file always gets a new URL — caching forever is safe.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Keep the CMS out of search results, alongside the noindex meta tag already in
+# public/admin/index.html. The header also covers non-HTML requests under /admin/.
+/admin/*
+  X-Robots-Tag: noindex

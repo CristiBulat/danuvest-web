@@ -1,0 +1,7 @@
+# Mirrors the [[redirects]] block in netlify.toml, for the same reason as
+# _headers: direct dist/ uploads never read netlify.toml.
+#
+# SPA-style fallback so Decap CMS's client-side routes under /admin resolve to
+# its shell instead of 404ing. Status 200 rewrites rather than redirects, so the
+# URL the editor sees stays intact.
+/admin/*  /admin/index.html  200
