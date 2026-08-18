@@ -110,22 +110,42 @@ deci `danuvest.md` aparține Netlify, iar GitHub Pages rămâne o oglindă.
 Servește `danuvest.md` și este **singurul loc unde CMS-ul se poate autentifica**
 (are nevoie de Netlify Identity + Git Gateway).
 
-1. Conectează repo-ul (build `npm run build`, publish `dist` — deja în `netlify.toml`).
-2. Site settings → Identity → Enable.
-3. Identity → Services → Git Gateway → Enable.
-4. Identity → Invite users.
-5. Editorii intră pe `https://danuvest.md/admin/`.
+Deploy-ul este automat. `.github/workflows/deploy-netlify.yml` rulează la fiecare
+push pe `main` — deci și la orice merge, inclusiv squash și rebase — construiește
+`dist/`, îl arhivează și îl încarcă prin `POST /api/v1/sites/{site_id}/deploys`.
+Poate fi pornit și manual din Actions → **Deploy to Netlify** → *Run workflow*.
+Tokenul stă în secretul de repo `NETLIFY_AUTH_TOKEN`.
 
-`netlify.toml` setează cache pe un an pentru `/assets/*` (numele conțin hash) și
-antete de securitate. Nu are `Content-Security-Policy` — motivul, detaliat, este
-scris în fișier.
+> **Nu conecta repo-ul la integrarea git a Netlify.** Site-ul este deliberat
+> neconectat — `build_settings` sunt goale — iar workflow-ul de mai sus presupune
+> că rămâne așa. Conectarea ar reactiva `netlify.toml` *peste* `public/_headers`,
+> adică două surse paralele de antete care se pot desincroniza tăcut.
+
+Configurare CMS, o singură dată, din dashboard-ul Netlify:
+
+1. Site settings → Identity → Enable.
+2. Identity → Services → Git Gateway → Enable.
+3. Identity → Invite users.
+4. Editorii intră pe `https://danuvest.md/admin/`.
+
+**`netlify.toml` nu este citit pe această cale.** Nu ajunge niciodată la Netlify:
+se arhivează doar `dist/`, iar fișierul stă în rădăcina repo-ului. Ce se aplică
+efectiv sunt `public/_headers` și `public/_redirects`, pe care Astro le copiază
+verbatim în `dist/` — de acolo vin cache-ul de un an pentru `/assets/*` (numele
+conțin hash), antetele de securitate și rescrierea SPA pentru `/admin/*`.
+Workflow-ul verifică la fiecare rulare că ambele au ajuns în `dist/` și
+eșuează dacă lipsesc. Ține-le totuși sincronizate cu `netlify.toml`: acesta
+redevine autoritar în clipa în care cineva conectează deploy-urile prin git.
+Nu există `Content-Security-Policy` — motivul, detaliat, este scris în
+`netlify.toml`.
 
 ### GitHub Pages — oglindă
 
 `.github/workflows/deploy-pages.yml` publică la
-`<user>.github.io/danuvest-web` la fiecare push pe `main`. Build-ul rulează cu
-`DEPLOY_TARGET=gh-pages`, ceea ce schimbă `site` și `base` în `astro.config.mjs`,
-iar `CNAME` este eliminat din artefact ca să nu revendice domeniul Netlify.
+`cristibulat.github.io/danuvest-web` la fiecare push pe `main`. Build-ul rulează
+cu `DEPLOY_TARGET=gh-pages`, ceea ce schimbă `site` și `base` în
+`astro.config.mjs`, iar `CNAME` este eliminat din artefact ca să nu revendice
+domeniul Netlify.
 
 ## CI
 

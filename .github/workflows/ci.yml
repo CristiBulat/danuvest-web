@@ -17,9 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # .nvmrc is the single source of truth for the Node version, shared with
+      # deploy-pages.yml and deploy-netlify.yml. Keep netlify.toml's
+      # build.environment.NODE_VERSION in step with it.
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
