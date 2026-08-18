@@ -1,0 +1,181 @@
+name: Deploy to Netlify
+
+# Netlify is the primary host for danuvest.md. It is NOT connected to this repo
+# via Netlify's own git integration — verified 2026-08-18, the site's
+# build_settings are entirely null (no repo_url, no provider, no build command).
+# Netlify therefore never runs a build and never sees this repository.
+#
+# The consequence that governs this whole file: **netlify.toml is never read.**
+# It is not in the deploy payload (only dist/ is zipped, and netlify.toml lives
+# at the repo root), and there is no git link that would let Netlify fetch it.
+# The rules that actually take effect in production are public/_headers and
+# public/_redirects, which Astro copies verbatim into dist/ and which therefore
+# travel inside the zip. The "Verify the served config" step below asserts that
+# invariant on every run rather than trusting it.
+#
+# Keep netlify.toml and public/_headers / public/_redirects in sync anyway:
+# netlify.toml becomes authoritative the moment anyone connects git deploys.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Fires on every push to main, which covers merge commits, squash merges and
+# rebase merges alike — a `pull_request: closed` + `if: merged` trigger would
+# miss direct pushes to main, and squash/rebase merges do not always look like
+# what people expect from the PR event.
+
+# Read-only. Nothing here writes to the repo.
+permissions:
+  contents: read
+
+# Two merges landing close together must not publish out of order. The older
+# run is cancelled so the newest commit is always the one that ends up live.
+concurrency:
+  group: deploy-netlify-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Not a secret: a site id is safe to expose and is useless without the token.
+  NETLIFY_SITE_ID: e8b0d006-ecad-415f-ad61-569a31baa01e
+
+jobs:
+  deploy:
+    name: Build and publish dist/ to Netlify
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # The entire header/redirect story depends on these two files reaching
+      # dist/. If someone moves them out of public/, the site keeps building and
+      # deploying but silently loses its cache policy, its security headers and
+      # the /admin SPA rewrite. Fail here instead of finding out in production.
+      - name: Verify the served config survived the build
+        run: |
+          set -euo pipefail
+          missing=0
+          for f in _headers _redirects; do
+            if [ ! -f "dist/$f" ]; then
+              echo "::error::dist/$f is missing."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "netlify.toml is NOT read by this deploy path — it is not in"
+            echo "the zip and Netlify has no git link to this repo. public/_headers"
+            echo "and public/_redirects are the only things that take effect."
+            exit 1
+          fi
+          echo "dist/_headers and dist/_redirects present."
+
+      # Netlify expects the site files at the root of the archive, not nested
+      # inside a dist/ directory — hence zipping from inside dist/.
+      - name: Package dist/ as a zip
+        run: |
+          set -euo pipefail
+          if [ ! -d dist ]; then
+            echo "::error::dist/ does not exist after the build."
+            exit 1
+          fi
+          cd dist
+          zip -r -q ../site.zip .
+          cd ..
+          echo "site.zip is $(du -h site.zip | cut -f1) across $(unzip -Z1 site.zip | wc -l | tr -d ' ') entries."
+
+      - name: Deploy to Netlify
+        env:
+          # Account-wide token. Never echo it, never pass it on a command line
+          # where it would land in the process list — only via curl -H from env.
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${NETLIFY_AUTH_TOKEN:-}" ]; then
+            echo "::error::NETLIFY_AUTH_TOKEN is empty. Set it under"
+            echo "Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          echo "Uploading site.zip to site ${NETLIFY_SITE_ID}..."
+          code=$(curl -sS -o deploy.json -w '%{http_code}' \
+            -X POST \
+            -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+            -H "Content-Type: application/zip" \
+            --data-binary "@site.zip" \
+            "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}/deploys")
+
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "::error::Netlify returned HTTP ${code} for the deploy request."
+            # The response body carries Netlify's error text and no credentials.
+            cat deploy.json
+            exit 1
+          fi
+
+          deploy_id=$(jq -er '.id' deploy.json)
+          echo "Created deploy ${deploy_id} (HTTP ${code})."
+
+          # A 2xx only means the deploy was accepted. It still has to finish
+          # processing, and it can fail after acceptance — poll until it is
+          # genuinely live rather than reporting a false success.
+          state=""
+          for _ in $(seq 1 60); do
+            code=$(curl -sS -o state.json -w '%{http_code}' \
+              -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+              "https://api.netlify.com/api/v1/deploys/${deploy_id}")
+
+            if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+              echo "::error::Netlify returned HTTP ${code} while polling deploy ${deploy_id}."
+              cat state.json
+              exit 1
+            fi
+
+            state=$(jq -er '.state' state.json)
+            echo "  state: ${state}"
+
+            case "$state" in
+              ready)
+                break
+                ;;
+              error)
+                echo "::error::Deploy ${deploy_id} failed: $(jq -r '.error_message // "no error message"' state.json)"
+                exit 1
+                ;;
+            esac
+            sleep 5
+          done
+
+          if [ "$state" != "ready" ]; then
+            echo "::error::Deploy ${deploy_id} did not reach 'ready' within 5 minutes (last state: ${state})."
+            exit 1
+          fi
+
+          deploy_url=$(jq -r '.deploy_ssl_url' state.json)
+          site_url=$(jq -r '.ssl_url // empty' state.json)
+
+          echo "Deploy ${deploy_id} is live."
+          {
+            echo "### Netlify deploy published"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Deploy id | \`${deploy_id}\` |"
+            echo "| Permalink | ${deploy_url} |"
+            echo "| Live site | ${site_url:-https://danuvest.md} |"
+            echo "| Commit | \`${GITHUB_SHA}\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # dist/ and site.zip are build outputs and are never committed; the
+      # runner is discarded after the job, so nothing needs cleaning up here.
