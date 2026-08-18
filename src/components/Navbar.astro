@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets'
-import logo from '../assets/logo.jpg'
+import BrandMark from './BrandMark.astro'
 import site from '../data/site.json'
 
 const [brandLeft, brandRight] = site.brandSplit.split('|')
@@ -9,9 +8,10 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
 <nav class="navbar transparent" aria-label="Navigare principală">
   <div class="container navbar-inner">
 
-    <!-- Logo + brand name -->
-    <a href="#acasa" class="navbar-logo">
-      <Image src={logo} alt={site.brandName} width={44} height={44} class="navbar-logo-img" />
+    <!-- Mark + wordmark. The mark is aria-hidden and the wordmark beside it
+         carries the accessible name, so the link reads once as "Danuvest". -->
+    <a href="#acasa" class="navbar-logo" aria-label={site.brandName}>
+      <BrandMark size={38} class="navbar-logo-mark" />
       <span class="navbar-brand-name">{brandLeft}<span>{brandRight}</span></span>
     </a>
 
