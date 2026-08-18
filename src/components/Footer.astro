@@ -1,7 +1,6 @@
 ---
-import { Image } from 'astro:assets'
 import Icon from './Icon.astro'
-import logo from '../assets/logo.jpg'
+import BrandMark from './BrandMark.astro'
 import footer from '../data/footer.json'
 ---
 
@@ -30,8 +29,8 @@ import footer from '../data/footer.json'
       </div>
     -->
     <div class="footer-grid">
-      <a href="#acasa" class="footer-brand-logo">
-        <Image src={logo} alt="Danuvest" width={40} height={40} class="navbar-logo-img" />
+      <a href="#acasa" class="footer-brand-logo" aria-label="Danuvest">
+        <BrandMark size={34} class="footer-logo-mark" id="footer-mark" />
       </a>
 
       <div class="footer-contact-row">

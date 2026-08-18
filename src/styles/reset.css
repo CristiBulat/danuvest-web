@@ -12,7 +12,9 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  scroll-padding-top: var(--nav-h, 72px);
+  /* nav-h alone lands an anchored section's first line flush against the
+     bottom of the fixed navbar. The extra 24px is the clearance. */
+  scroll-padding-top: calc(var(--nav-h, 72px) + 24px);
 }
 
 body {

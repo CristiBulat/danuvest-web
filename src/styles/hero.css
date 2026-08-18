@@ -3,12 +3,18 @@
    ===================== */
 /* The hero used to be a hard `min-height: 100vh`, which measured 853px of
    content inside a 720px laptop viewport and 867px inside an 812px phone
-   — pushing both CTAs below the fold on the most common screens. Capping
-   the floor and trimming the vertical padding keeps the primary CTA
-   visible without scrolling. */
+   — pushing both CTAs below the fold on the most common screens. Trimming
+   the vertical padding (below) is what fixed that; the 760px cap that came
+   with it was doing the opposite job. `min(100vh, 760px)` is inert on short
+   screens — at 720vh it resolves to 720 — and only bites on tall ones, where
+   it ended the hero 190px short of the fold on a 950px viewport and exposed
+   a bare white band of the next section. The hero now fills the viewport at
+   every height. svh is the small viewport (mobile URL bar showing), so iOS
+   Safari cannot push the CTAs under the browser chrome. */
 .hero {
   position: relative;
-  min-height: min(100vh, 760px);
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -36,11 +42,19 @@
   background: linear-gradient(160deg, rgba(15, 15, 20, 0.90) 0%, rgba(28, 28, 36, 0.82) 100%);
 }
 
+/* The navbar overlays the hero, so the space the content actually sits in
+   runs from the navbar's bottom edge to the hero's, not from 0. `.hero`
+   centres this box, which means the content is only optically centred in
+   that space when padding-top − padding-bottom equals the navbar height.
+   It was 104 − 64 = 40px against a 72px navbar, leaving the block sitting
+   32px low: 99px of air above it and 131px below on a 950px viewport.
+   112 − 40 = 72 balances it exactly at every viewport height. Keep the two
+   in step if either changes. */
 .hero > .container {
   position: relative;
   z-index: 1;
-  padding-top: calc(var(--nav-h) + 32px);
-  padding-bottom: 64px;
+  padding-top: calc(var(--nav-h) + 40px);
+  padding-bottom: 40px;
   width: 100%;
 }
 

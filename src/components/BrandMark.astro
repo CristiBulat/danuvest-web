@@ -1,0 +1,64 @@
+---
+/**
+ * BrandMark.astro — the Danuvest building glyph, inline and zero-runtime-JS.
+ *
+ * Source: brand/danuvest-mark.svg. This is the mark on its own, without the
+ * wordmark. src/assets/logo.jpg — the square badge previously used in the
+ * navbar and footer — has "DANUVEST" baked into the artwork, which at a 40px
+ * render is an illegible smudge sitting immediately beside the real wordmark
+ * in .navbar-brand-name. The name read twice, once unreadably.
+ *
+ * Inline rather than <Image>: the mark is one path, so inlining costs less
+ * than the request it replaces, stays sharp at any size, and lets the gold
+ * gradient be defined in the same document.
+ *
+ * The gradient needs a document-unique id — two instances render on every
+ * page (navbar and footer) and duplicate ids resolve to whichever came
+ * first. Pass `id` when rendering more than one.
+ *
+ * Usage:
+ *   <BrandMark size={38} class="navbar-logo-mark" />
+ *   <BrandMark size={34} class="footer-logo-mark" id="footer-mark" />
+ */
+
+export interface Props {
+  /** Rendered height in pixels. Width follows the 810:945 aspect ratio. */
+  size?: number
+  /** Passed through to the rendered <svg class="..."> attribute. */
+  class?: string
+  /** Prefix for the gradient id. Must be unique per instance on a page. */
+  id?: string
+}
+
+const { size = 44, class: className, id = 'brand-mark' } = Astro.props as Props
+
+// Intrinsic viewBox of brand/danuvest-mark.svg.
+const VB_W = 810
+const VB_H = 945
+
+const height = size
+const width = Math.round((size * VB_W) / VB_H)
+const gradId = `${id}-gold`
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={`0 0 ${VB_W} ${VB_H}`}
+  width={width}
+  height={height}
+  class={className}
+  role="img"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={VB_W} y2={VB_H}>
+      <stop offset="0" stop-color="#ecc97a" />
+      <stop offset=".45" stop-color="#cca059" />
+      <stop offset="1" stop-color="#9e7333" />
+    </linearGradient>
+  </defs>
+  <path
+    fill={`url(#${gradId})`}
+    d="M465 890L385 890L385 175L285 230L285 330L195 390L195 205L465 5ZM50 535L205 432L205 535L125 587L125 865L50 865ZM200 430L285 373L285 865L200 865ZM500 30L685 255L685 795L500 795ZM720 598L810 688L810 890L720 890ZM385 830L810 830L810 945L0 945L0 888L385 888Z"
+  />
+</svg>

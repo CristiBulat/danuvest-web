@@ -28,18 +28,72 @@
   height: 100%;
 }
 
+/* `justify-content: space-between` across three unequal children never
+   centred the links: the row's midpoint sits (cta − logo) / 2 = 24px left
+   of the container's, so the "centered" links in Navbar.astro read visibly
+   off-axis. A 1fr auto 1fr grid centres column 2 on the container regardless
+   of how wide the logo and CTA are. Only above the mobile breakpoint — below
+   it the links and CTA are display:none and the hamburger would fall into
+   the centre column. */
+@media (min-width: 769px) {
+  .navbar-inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  /* Without this the <a> stretches across the whole 1fr column and the dead
+     space beside the wordmark becomes clickable. */
+  .navbar-logo {
+    justify-self: start;
+  }
+
+  .navbar-cta {
+    justify-self: end;
+  }
+}
+
+/* Just above the hamburger breakpoint the three columns nearly fill the bar:
+   at 769px the logo (165) + links (337) + CTA (212) leave 7px of free space,
+   so the links ended up touching the CTA and could not centre. Because the
+   middle column is centred, the two gaps differ by exactly (cta − logo), and
+   an even 24px of clearance needs ~857px of viewport. Trimming the link and
+   button padding across this band buys that back instead of handing tablets
+   a hamburger. Above 900px the default padding has room and this lifts.
+
+   The lift is a step, not a curve: the gap goes 89px at 900 to 46px at 901.
+   That is inherent — the tightened row is a fixed 44px narrower than the
+   default one at every width, so no breakpoint makes the two regimes meet.
+   900 is chosen because it leaves the largest post-step gap. Unlike the
+   .hero-title clamp discontinuity this one repositions nothing and inverts
+   no type size; only internal padding changes. */
+@media (min-width: 769px) and (max-width: 900px) {
+  .nav-link {
+    padding: 8px 10px;
+  }
+
+  .navbar-cta .btn {
+    padding: 12px 18px;
+    font-size: 0.88rem;
+  }
+}
+
 /* Logo using the actual image */
 .navbar-logo {
   display: flex;
   align-items: center;
+  /* The mark and the wordmark were touching edge to edge — the flex row had
+     no gap at all, so the logo tile's right border ran straight into the "D". */
+  gap: 12px;
   flex-shrink: 0;
 }
 
-.navbar-logo-img {
-  height: 44px;
-  width: 44px;
-  object-fit: cover;
-  border-radius: 6px;
+/* The mark is transparent artwork, not a tile: no border-radius and no
+   background, so it sits directly on the hero and on the scrolled charcoal
+   bar. 38px against the 29px wordmark box gives the glyph the slight optical
+   lead a mark should have without crowding the 72px bar. */
+.navbar-logo-mark {
+  height: 38px;
+  width: auto;
   display: block;
   flex-shrink: 0;
 }
@@ -91,11 +145,20 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
+/* The bars are 24 × 16px and 8px of padding took the button to 40 × 32 —
+   under the 44 × 44 minimum target size, and the only control in the mobile
+   navbar. Centring the bars inside a 44px box pushes the box's right edge
+   10px past the container gutter, so pull it back with a negative margin:
+   the bars stay optically flush with the content edge above and below. */
 .hamburger {
   display: none;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
-  padding: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  margin-right: -10px;
   background: none;
   border: none;
   cursor: pointer;

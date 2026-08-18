@@ -20,8 +20,16 @@
 
   /* WAS: .about-visual { display: none } — hid the team photo on every
      tablet and phone. Now it reflows: the portrait crop becomes a
-     landscape band and stays centred. */
+     landscape band and stays centred.
+
+     width: 100% is load-bearing, not redundant. An auto inline-axis margin
+     on a grid item suppresses stretch alignment, so with `margin: 0 auto`
+     alone the item shrink-wrapped its content instead of filling the column
+     up to its own cap — 375px inside a 721px column at 769px wide, well
+     under the 560px it was allowed. Giving it a definite width restores the
+     cap; the auto margins still do the centring. */
   .about-visual {
+    width: 100%;
     max-width: 560px;
     margin: 0 auto;
   }
@@ -95,9 +103,27 @@
     grid-template-columns: 1fr;
   }
 
+  /* Six single-column cards ran the services section to 2036px on a 375px
+     phone. The desktop 36/28 padding and 54px icon are sized for a 368px
+     card sharing a row, not one spanning the full gutter-to-gutter width. */
+  .service-card {
+    padding: 26px 22px;
+  }
+
+  .service-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 1.35rem;
+    margin-bottom: 16px;
+  }
+
+  /* WAS: text-align: center. .footer-grid above it stays left-aligned when it
+     wraps to a stack, so centring only the bottom bar split the footer down
+     two different axes. Everything hangs off the same left edge now. */
   .footer-bottom {
     flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
-    text-align: center;
+    text-align: left;
   }
 }

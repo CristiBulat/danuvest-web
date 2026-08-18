@@ -24,10 +24,10 @@
   flex-shrink: 0;
 }
 
-.footer-brand-logo .navbar-logo-img {
-  height: 40px;
+.footer-logo-mark {
+  height: 34px;
   width: auto;
-  border-radius: var(--radius);
+  display: block;
 }
 
 .footer-contact-row {
@@ -80,8 +80,11 @@
   color: var(--primary);
 }
 
+/* 20px left the copyright line sitting almost against the bottom of the
+   document. Asymmetric on purpose: the rule above already provides the
+   optical space overhead. */
 .footer-bottom {
-  padding: 20px 0;
+  padding: 20px 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
