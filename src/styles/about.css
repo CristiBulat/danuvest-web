@@ -19,10 +19,12 @@
   pointer-events: none;
 }
 
+/* 80px was the widest gutter in the page against 64px in the hero and 48px
+   in contact; 64px puts the two-column sections on one measure. */
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 64px;
   align-items: center;
 }
 
@@ -48,10 +50,15 @@
   position: relative;
 }
 
+/* A 3/4 portrait made the photo 715px tall beside 435px of text. Because the
+   grid is centre-aligned that 280px difference became 140px of dead charcoal
+   above and below the copy, and stretched the section to 907px to carry 435px
+   of content. Square keeps the photo the taller of the two — it should
+   anchor the row — without opening a gap the text cannot fill. */
 .about-img-wrap {
   border-radius: var(--radius-lg);
   overflow: hidden;
-  aspect-ratio: 3/4;
+  aspect-ratio: 1 / 1;
 }
 
 .about-img-wrap img {
