@@ -10,8 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "cms": "decap-server",
-    "deploy": "npm run build && gh-pages -d dist"
+    "cms": "decap-server"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.2.1",
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "decap-server": "^3.1.4",
-    "gh-pages": "^6.3.0",
     "typescript": "^5.7.2"
   }
 }
