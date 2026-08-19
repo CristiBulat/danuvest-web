@@ -9,12 +9,38 @@
    screens — at 720vh it resolves to 720 — and only bites on tall ones, where
    it ended the hero 190px short of the fold on a 950px viewport and exposed
    a bare white band of the next section. The hero now fills the viewport at
-   every height. svh is the small viewport (mobile URL bar showing), so iOS
-   Safari cannot push the CTAs under the browser chrome. */
+   every height.
+
+   UNIT: dvh, deliberately, over svh and lvh.
+
+   svh is the *small* viewport — the height with the mobile URL bar showing.
+   It was the previous choice and it reintroduced the very bug the 760px cap
+   caused: the moment the URL bar retracts on scroll the visual viewport
+   grows to lvh (roughly +80px on an iPhone), a hero pinned at 100svh no
+   longer reaches the bottom, and the white Services section shows through
+   below it. Guaranteed gap, on every scroll, on every iOS phone.
+
+   lvh is the *large* viewport. It never leaves a gap, but the hero is then
+   taller than what is actually on screen at rest, and because .hero centres
+   its content the whole block sits (lvh − svh) / 2 too low on load — about
+   40px down on a 390x844 phone, straight off the bottom of the CTAs on the
+   short phones this fix is for.
+
+   dvh tracks the real viewport, so the hero is exactly right at both URL-bar
+   states and there is never a gap. The accepted cost: the hero box does
+   resize while the bar retracts, and since the content is centred it drifts
+   by half that delta (~40px on a 390x844 phone) during that scroll. That is
+   a one-off shift as the user is already scrolling the hero away, which is
+   cheaper than either a permanent gap (svh) or content under the chrome on
+   first paint (lvh).
+
+   min-height, never height: the content must be allowed to exceed the
+   viewport rather than be clipped. On the shortest screens it still does —
+   see the height queries at the foot of responsive.css. */
 .hero {
   position: relative;
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -49,7 +75,16 @@
    It was 104 − 64 = 40px against a 72px navbar, leaving the block sitting
    32px low: 99px of air above it and 131px below on a 950px viewport.
    112 − 40 = 72 balances it exactly at every viewport height. Keep the two
-   in step if either changes. */
+   in step if either changes.
+
+   Written as `--nav-h + X` over `X` so the invariant holds for any X — the
+   short-viewport override in responsive.css drops X from 40 to 20 and stays
+   balanced for free. Worth knowing why that override is safe on tall screens
+   too: when the container is shorter than the hero it is centred, so content
+   top = (hero − container) / 2 + padding-top, and substituting the two
+   paddings gives (hero − content) / 2 + 36 — X cancels out entirely. The
+   padding only changes anything once the content is taller than the viewport,
+   which is exactly when we want it smaller. */
 .hero > .container {
   position: relative;
   z-index: 1;
@@ -63,6 +98,18 @@
   grid-template-columns: 1.15fr 0.85fr;
   gap: 64px;
   align-items: center;
+}
+
+/* An `fr` track is floored at its content's min-content width, so a column
+   whose contents cannot shrink takes more than its share and starves the
+   other one. Invisible at desktop widths — 1200px of container splits
+   625.6/462.4, exactly the 1.15/0.85 asked for — but at the 667px of a phone
+   in landscape the two stat cards' min-content width pushed the *right*
+   column to 314.5px and left the text column 272.5px, i.e. the narrower of
+   the two. The subtitle then wrapped to four lines and the hero grew rather
+   than shrank. min-width: 0 lets the tracks resolve to their real ratio. */
+.hero-inner > * {
+  min-width: 0;
 }
 
 .hero-title {
