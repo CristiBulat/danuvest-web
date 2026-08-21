@@ -127,3 +127,181 @@
     text-align: left;
   }
 }
+
+/* =====================
+   Hero — height overrides
+
+   Everything above this line queries width. These three query height,
+   because the hero's problem is a height problem: its content needs a fixed
+   vertical budget and short screens do not have it. Measured content height
+   of `.hero > .container` before these blocks existed:
+
+     1440 x 900   610.0   fits            (two-column)
+     1280 x 800   599.7   fits            (two-column)
+     1024 x 768   797.3   OVER by  29.3   (one column, side-by-side CTAs)
+      768 x 1024  733.9   fits
+      430 x 932   739.5   fits
+      390 x 844   789.9   fits, 54 spare
+      375 x 667   789.9   OVER by 122.9   (iPhone SE / 8)
+      360 x 640   817.4   OVER by 177.4   (subtitle wraps to four lines)
+      844 x 390   736.8   OVER by 346.8   (any phone in landscape)
+
+   Note 1024x768 — a small laptop and every tablet in landscape, not on the
+   original bug report, but it overflows for the same reason.
+
+   Thresholds are set above the nominal device heights on purpose. A CSS
+   `height` media query on iOS resolves against the *large* viewport (the
+   value with the URL bar hidden), so a 390x844 iPhone reports 844 here while
+   only ~763px is actually on screen at rest. Querying at 900px rather than
+   844px is what makes these blocks fire on the phones that need them.
+   ===================== */
+
+/* Tier 1 — the hero is one column (< 1100px) on a screen under 900px tall.
+   Soft trims only, no layout change. Recovers 88px:
+     container padding  40  (40px top and bottom -> 20px, invariant intact)
+     .hero-inner gap    20  (48 -> 28)
+     subtitle margin    20  (44 -> 24)
+     title margin        8  (24 -> 16)
+   That alone clears 1024x768 (needs 29.3) and 390x844, and takes 375x667
+   and 360x640 most of the way. */
+@media (max-width: 1100px) and (max-height: 900px) {
+  .hero > .container {
+    padding-top: calc(var(--nav-h) + 20px);
+    padding-bottom: 20px;
+  }
+
+  .hero-inner {
+    gap: 28px;
+  }
+
+  .hero-title {
+    margin-bottom: 16px;
+  }
+
+  .hero-subtitle {
+    margin-bottom: 24px;
+  }
+}
+
+/* Tier 2 — phone portrait under 740px tall (iPhone SE/8 at 667, older
+   Android at 640). Tier 1 leaves these still over by 34.9 and 89.4, and
+   there is no soft padding left to give, so the stats block changes shape:
+   three across in one row instead of a full-width lead card over a pair.
+
+   That gives up the emphasis hero.css buys by spanning the first card — but
+   the point of that card is that "500+ Proiecte" gets seen, and at 640px the
+   two-row block put the bottom row 137px below the fold. Three smaller cards
+   that are all visible beat one prominent card that is not. It is also the
+   same argument the .hero-stats-grid block above rests on: these are the
+   site's strongest credibility signals and hiding them is the worst outcome.
+   The odd-count/empty-cell problem that shaped the desktop layout does not
+   arise here either — three cards fill three columns exactly. */
+@media (max-width: 768px) and (max-height: 740px) {
+  .hero-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  /* Undo the full-width lead card from hero.css. */
+  .hero-stat-card:first-child {
+    grid-column: auto;
+  }
+
+  .hero-stat-card {
+    padding: 12px 10px;
+  }
+
+  .stat-value {
+    font-size: 1.45rem;
+  }
+
+  /* 0.62rem is 9.92px. Small, but these are uppercase labels next to a
+     number that carries the meaning, not running text — and the tighter
+     tracking is what keeps "Specialiști în Echipă" to two lines in a
+     ~79px card instead of three. */
+  .stat-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    margin-top: 6px;
+  }
+
+  /* The two CTAs are stacked full-width at this width (see the 768px block),
+     so they cost 128.6px. Trimming the button padding and the gap between
+     them returns 18px without shrinking the type. */
+  .hero-actions {
+    gap: 10px;
+  }
+
+  .hero-actions .btn {
+    padding: 11px 20px;
+  }
+}
+
+/* Tier 3 — phones in landscape. 844x390 leaves 318px below the navbar
+   against a one-column hero that wants 736.8px; no amount of padding
+   trimming closes a 347px gap. What does close it is the layout the hero
+   already has above 1100px: text and stats side by side rather than stacked.
+   The 1100px breakpoint is a *measure* rule — it exists so the paragraph
+   column does not get too wide — and at 844px the two columns come out 439px
+   and 325px, both comfortable. So the collapse is re-collapsed here.
+
+   min-width: 600px keeps this off portrait phones, where two columns would
+   leave a ~150px text measure.
+
+   Two columns on their own got 844x390 from 736.8 to 516.7 — still 127px
+   over. The remainder is all in the text column (404.7 of the 516.7), and it
+   takes three more things:
+
+     - The title is the single biggest item at 149px. The desktop curve gives
+       5.5vw = 46.4px here, sized for a viewport 900px tall, and wraps to
+       three lines in a 439px column. 3.4vw brings it to 28.7px and two lines.
+     - The CTAs cost 128.6px because 484px of intrinsic button width does not
+       fit a 439px column, so .hero-actions wraps them. Trimming the button
+       padding to 11/18 brings the pair to ~437px and they sit on one row.
+       flex-wrap stays on: if a narrower landscape phone still cannot fit
+       them, wrapping is the correct fallback, which is why this sets
+       flex-direction back to row rather than forcing nowrap.
+     - The stats column is compacted so it stays the shorter of the two
+       columns and never becomes the constraint itself. */
+@media (max-height: 520px) and (min-width: 600px) {
+  .hero-inner {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .hero-title {
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    margin-bottom: 12px;
+  }
+
+  .hero-subtitle {
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* Undoes the column stack from the 768px block for the landscape phones
+     that fall under both — stacked full-width CTAs are a portrait pattern. */
+  .hero-actions {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-actions .btn {
+    padding: 11px 18px;
+  }
+
+  .hero-stat-card {
+    padding: 12px 14px;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .stat-label {
+    font-size: 0.66rem;
+    margin-top: 6px;
+  }
+}

@@ -12,9 +12,27 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  /* nav-h alone lands an anchored section's first line flush against the
-     bottom of the fixed navbar. The extra 24px is the clearance. */
-  scroll-padding-top: calc(var(--nav-h, 72px) + 24px);
+  /* Exactly --nav-h, and nothing more. This must equal the navbar height so
+     an anchored section's top edge lands on the navbar's bottom edge.
+
+     8a58c53 made this `+ 24px` to give the section "clearance". It does the
+     opposite: the section's top edge parks at y=96 while the navbar's bottom
+     edge is at y=72, so a 24px band of the *previous* section paints in the
+     gap. The sections alternate grounds (white services → charcoal about →
+     white contact), so that band reads as a stripe of the wrong colour.
+
+     The premise was wrong too — nothing was ever flush. Every section carries
+     --section-py of its own top padding, so the first line of text already
+     sits well clear of the navbar with no offset at all. Measured at 1280px
+     with scroll-padding-top: var(--nav-h): #servicii and #contact put their
+     section label 100.5px below the navbar's bottom edge, #despre 158.7px
+     (its grid is centre-aligned and the photo is the taller column). At 375px
+     --section-py drops to 64px and the label still clears by 68.5px.
+
+     Do not re-add an offset here. If a section ever does need breathing room
+     under the navbar, that is its own padding-top, not everyone's scroll
+     padding. */
+  scroll-padding-top: var(--nav-h, 72px);
 }
 
 body {
