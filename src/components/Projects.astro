@@ -25,10 +25,6 @@ const items = projects.items.map((p) => ({
   count: p.photos.length,
 }))
 
-// Counted, not authored. Both numbers used to live in the filter chips;
-// with the filters gone they belong in the header, and a hand-written
-// "6 obiecte" would go stale the first time someone adds a project.
-const photoCount = items.reduce((n, p) => n + p.count, 0)
 const [titleLead, titleTrail] = projects.title.split('|')
 
 // The lightbox needs plain URLs it can assign to img.src, so the gallery
@@ -72,23 +68,7 @@ const gallery = await Promise.all(
         </h2>
       </div>
 
-      <div class="projects-head-side">
-        <p class="projects-lede">{projects.description}</p>
-        <dl class="projects-stats">
-          <div>
-            <dt>{items.length}</dt>
-            <dd>{projects.statProjectsLabel}</dd>
-          </div>
-          <div>
-            <dt>{photoCount}</dt>
-            <dd>{projects.statPhotosLabel}</dd>
-          </div>
-          <div>
-            <dt>{projects.statSpan}</dt>
-            <dd>{projects.statSpanLabel}</dd>
-          </div>
-        </dl>
-      </div>
+      <p class="projects-lede">{projects.description}</p>
     </div>
 
     <div class="projects-grid">

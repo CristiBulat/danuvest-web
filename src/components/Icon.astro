@@ -38,10 +38,10 @@ interface IconDef {
 // ---------------------------------------------------------------------------
 // Icon set. 24x24 viewBox, round linecap/linejoin, ~2px optical stroke weight.
 //
-// 19 of 21 icons are adapted from Lucide (ISC licence) and Simple Icons
-// (CC0-1.0) — both permit unrestricted reuse/adaptation. `crane` is hand
-// authored (no equivalent exists in either set). Full attribution table:
-// docs/icon-map.md.
+// 20 of 22 icons are adapted from Lucide (ISC licence) and Simple Icons
+// (CC0-1.0) — both permit unrestricted reuse/adaptation. `crane` and
+// `excavator` are hand authored (no equivalent exists in either set). Full
+// attribution table: docs/icon-map.md.
 // ---------------------------------------------------------------------------
 const ICONS: Record<string, IconDef> = {
   // ── Services ──────────────────────────────────────────────────────────
@@ -97,6 +97,19 @@ const ICONS: Record<string, IconDef> = {
       <path d="m14.622 17.897-10.68-2.913" />
       <path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z" />
       <path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15" />
+    `,
+  },
+  excavator: {
+    kind: 'stroke',
+    // Hand authored: tracks, house, boom, stick, bucket. Neither Lucide nor
+    // Simple Icons has an excavator, and a generic tool icon would have read
+    // as maintenance rather than earthworks.
+    body: `
+      <rect x="2" y="17" width="11" height="4" rx="2" />
+      <path d="M5 17v-4l2-2h4a1 1 0 0 1 1 1v5" />
+      <path d="M12 13 16.5 7" />
+      <path d="M16.5 7 20 12" />
+      <path d="M20 12v2.5a1.5 1.5 0 0 1-1.5 1.5H16" />
     `,
   },
   ruler: {
