@@ -60,14 +60,15 @@ const gallery = await Promise.all(
 <section class="section projects" id="proiecte">
   <div class="container">
 
+    {/* Three direct grid children rather than two nested columns: the
+        eyebrow takes row 1 on its own, and the title and the lede share
+        row 2, which is what lines the lede up with "Șantiere în lucru"
+        instead of with the eyebrow above it. */}
     <div class="projects-head">
-      <div class="projects-head-title">
-        <span class="section-label projects-label">{projects.label}</span>
-        <h2 class="section-title projects-title">
-          {titleLead}{titleTrail && <><br />{titleTrail}</>}
-        </h2>
-      </div>
-
+      <span class="section-label projects-label">{projects.label}</span>
+      <h2 class="section-title projects-title">
+        {titleLead}{titleTrail && <><br />{titleTrail}</>}
+      </h2>
       <p class="projects-lede">{projects.description}</p>
     </div>
 

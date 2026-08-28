@@ -51,16 +51,26 @@
    Two columns doing different jobs rather than two columns of prose: the
    title claims the left, the lede answers on the right, and the rule
    under them opens the grid.
+
+   The eyebrow sits alone on row 1 so that row 2 holds the title and the
+   lede together — `align-items: start` then lines the lede's first line
+   up with the title's, at any viewport, without a hand-tuned offset that
+   would drift as the title's clamp() resizes it.
    ===================== */
 .projects-head {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 22px 64px;
+  column-gap: 64px;
+  row-gap: 0;
   align-items: start;
   padding-bottom: 28px;
   margin-bottom: 30px;
   border-bottom: 1px solid var(--projects-hairline);
 }
+
+.projects-label { grid-area: 1 / 1; }
+.projects-title { grid-area: 2 / 1; }
+.projects-lede  { grid-area: 2 / 2; }
 
 /* base.css sets --accent-ink for contrast on the light sections; on
    charcoal the brand gold already passes, so take it back. */
@@ -78,11 +88,12 @@
   text-wrap: balance;
 }
 
-/* Nudged down so its first line sits on the title's second, not on the
-   eyebrow above it. */
+/* The 6px absorbs the difference in half-leading between 37.6px/1.14
+   type and 15.5px/1.72 type, so the two first lines read as sitting on
+   the same line rather than merely starting in the same box. */
 .projects-lede {
   margin: 0;
-  padding-top: 8px;
+  padding-top: 6px;
   color: var(--projects-dim);
   font-size: 0.97rem;
   line-height: 1.72;
