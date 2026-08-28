@@ -143,6 +143,8 @@ body {
 .navbar :focus-visible,
 .footer :focus-visible,
 .about :focus-visible,
+.projects :focus-visible,
+.project-lightbox :focus-visible,
 .hero :focus-visible {
   outline-color: var(--accent-light);
   box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.45);

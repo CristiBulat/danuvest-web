@@ -3,14 +3,10 @@ import Base from '../layouts/Base.astro'
 import Navbar from '../components/Navbar.astro'
 import Hero from '../components/Hero.astro'
 import Services from '../components/Services.astro'
+import Projects from '../components/Projects.astro'
 import About from '../components/About.astro'
 import Contact from '../components/Contact.astro'
 import Footer from '../components/Footer.astro'
-
-// Projects.astro is intentionally NOT imported. It is fully built and has its
-// own CMS collection, but its six entries are stock photographs with invented
-// project names — shipping those under "Proiectele noastre" would be false
-// advertising. Wire it in once real project photos and details exist.
 ---
 
 <Base>
@@ -18,6 +14,7 @@ import Footer from '../components/Footer.astro'
   <main>
     <Hero />
     <Services />
+    <Projects />
     <About />
     <Contact />
   </main>

@@ -6,6 +6,7 @@
   "navLinks": [
     { "label": "Acasă", "href": "#acasa" },
     { "label": "Servicii", "href": "#servicii" },
+    { "label": "Proiecte", "href": "#proiecte" },
     { "label": "Despre Noi", "href": "#despre" },
     { "label": "Contact", "href": "#contact" }
   ],

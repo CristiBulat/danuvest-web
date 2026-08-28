@@ -38,9 +38,37 @@
     aspect-ratio: 4 / 3;
   }
 
-  .services-grid,
-  .projects-grid {
+  .services-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .projects-head {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .projects-head-side {
+    padding-top: 0;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Side by side, the description panel is what gets squeezed first, and
+     a 274px column of prose next to a shrinking photo helps neither. It
+     goes under the image instead. */
+  .lightbox-main {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 0;
+  }
+
+  .lightbox-about {
+    max-height: 24vh;
+    padding: 14px 0 0;
+    border-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
   }
 
   .contact-grid {
@@ -98,9 +126,41 @@
     font-size: 1.8rem;
   }
 
-  .services-grid,
-  .projects-grid {
+  .services-grid {
     grid-template-columns: 1fr;
+  }
+
+  .projects-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .lightbox-film button {
+    width: 84px;
+    height: 48px;
+  }
+
+  .lightbox-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* This line used to be dropped here because it crowded the name. It
+     carries the locality, the period and the beneficiary now, which is
+     the point of opening a project, so it wraps instead. */
+  .lightbox-place {
+    font-size: 0.74rem;
+    line-height: 1.5;
+  }
+
+  /* Image, caption and description all have to fit one phone screen, so
+     the scope chips are the first thing to give. */
+  .lightbox-scope {
+    display: none;
+  }
+
+  .lightbox-about {
+    max-height: 30vh;
   }
 
   /* Six single-column cards ran the services section to 2036px on a 375px

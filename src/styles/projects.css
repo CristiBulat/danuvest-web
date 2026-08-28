@@ -1,94 +1,608 @@
 /* =====================
    Projects
+
+   The one dark band in the middle of the page. Every other content
+   section here is white or cream, so this carries the portfolio on its
+   own value step — the site photographs are bright and high-contrast and
+   need a dark ground to sit against.
+
+   Local tokens rather than the global ones: the section needs a whole
+   on-dark scale (three surface steps, three text steps) that only exists
+   here, and --gray / --text-light are tuned for the light sections and
+   fail contrast on charcoal. --projects-dim and --projects-faint measure
+   6.6:1 and 4.9:1 on --projects-bg, so small print clears AA.
+
+   Cards carry a cover photo and three lines, nothing more. The
+   description and the scope of works live in the lightbox, which is
+   where a visitor who actually wants them has already clicked.
    ===================== */
 .projects {
-  background: var(--light);
+  --projects-bg: #16161c;
+  --projects-card: #1d1d25;
+  --projects-card-hover: #242430;
+  --projects-ink: #f3f0e7;
+  --projects-dim: #a49c8e;
+  --projects-faint: #8d8579;
+  --projects-live: #93c46e;
+  --projects-hairline: rgba(255, 255, 255, 0.10);
+
+  background: var(--projects-bg);
+  color: var(--projects-ink);
+  position: relative;
+  overflow: hidden;
 }
 
+/* Warm cast falling from the top-left, so the band is lit rather than flat. */
+.projects::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 70% at 12% -10%, rgba(201, 168, 76, 0.10), transparent 62%);
+}
+
+.projects .container {
+  position: relative;
+}
+
+/* =====================
+   Header
+
+   Two columns that do different jobs rather than two columns of prose:
+   the title claims the left, and the right stacks the lede over a strip
+   of counts. The counts are what the filter chips used to say out loud
+   ("Toate 6"), so removing the filters did not cost the reader the size
+   of the portfolio.
+   ===================== */
+.projects-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 26px 64px;
+  align-items: start;
+  padding-bottom: 30px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--projects-hairline);
+}
+
+/* base.css sets --accent-ink for contrast on the light sections; on
+   charcoal the brand gold already passes, so take it back. */
+.projects-label {
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.projects-title {
+  color: var(--projects-ink);
+  margin-bottom: 0;
+  font-size: clamp(1.75rem, 2.7vw, 2.35rem);
+  line-height: 1.14;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+}
+
+.projects-head-side {
+  padding-top: 6px;
+}
+
+.projects-lede {
+  margin: 0;
+  color: var(--projects-dim);
+  font-size: 0.97rem;
+  line-height: 1.72;
+  max-width: 54ch;
+}
+
+/* Rules on top rather than between, so the strip reads the same whether
+   the three cells sit in one row or stack on a phone. Dividers between
+   cells orphan themselves the moment one wraps. */
+.projects-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 34px;
+  margin: 22px 0 0;
+}
+
+.projects-stats > div {
+  padding-top: 11px;
+  border-top: 1px solid var(--projects-hairline);
+}
+
+.projects-stats dt {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.projects-stats dd {
+  margin: 4px 0 0;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--projects-faint);
+}
+
+/* =====================
+   Grid
+
+   Plain thirds. The six projects fill two rows exactly, and with the
+   category filter gone nothing changes how many cards are visible, so
+   the spans no longer need to be computed in JavaScript.
+   ===================== */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
 }
 
 .project-card {
-  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  background: var(--projects-card);
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 3px;
   overflow: hidden;
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
-  transition: var(--ease);
-}
-
-.project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
-}
-
-.project-img {
+  cursor: pointer;
   position: relative;
-  aspect-ratio: 4/3;
-  overflow: hidden;
+  transition: border-color 0.28s ease, background 0.28s ease, transform 0.28s ease;
 }
 
-.project-img img {
+/* Gold rule drawing across the top edge on hover. */
+.project-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 3;
+}
+
+.project-card:hover,
+.project-card:focus-visible {
+  background: var(--projects-card-hover);
+  border-color: rgba(201, 168, 76, 0.4);
+  transform: translateY(-3px);
+}
+
+.project-card:hover::after,
+.project-card:focus-visible::after {
+  width: 100%;
+}
+
+/* 16:9 because that is the frame every photo was cropped to. Matching
+   the two means object-fit never re-crops away the framing chosen for
+   the photograph, and it keeps the card short. */
+.project-shot {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0b0b0e;
+  flex: none;
+}
+
+.project-shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  filter: saturate(0.94) contrast(1.03);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
 }
 
-.project-card:hover .project-img img {
-  transform: scale(1.06);
+.project-card:hover .project-shot img {
+  transform: scale(1.045);
+  filter: saturate(1.02) contrast(1.05);
 }
 
-.project-overlay {
+/* Scrim: keeps the status and count pills legible over a bright sky. */
+.project-shot::after {
+  content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(28, 28, 36, 0.90) 0%, transparent 55%);
-  opacity: 0;
-  transition: var(--ease);
+  background: linear-gradient(
+    to top,
+    rgba(12, 12, 16, 0.70),
+    rgba(12, 12, 16, 0.04) 46%,
+    rgba(12, 12, 16, 0.34)
+  );
+}
+
+.project-status,
+.project-count {
+  position: absolute;
+  top: 10px;
+  z-index: 2;
+  color: var(--projects-ink);
+  background: rgba(12, 12, 16, 0.62);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+
+.project-status {
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px 4px 7px;
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-count {
+  right: 10px;
+  padding: 4px 8px;
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.project-count span {
+  color: var(--projects-faint);
+  font-size: 0.6rem;
+}
+
+/* "In progress" is the whole point of this portfolio, so the dot is live. */
+.project-dot {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--projects-live);
+  box-shadow: 0 0 0 0 rgba(147, 196, 110, 0.6);
+  animation: project-pulse 2.4s ease-out infinite;
+}
+
+@keyframes project-pulse {
+  70% { box-shadow: 0 0 0 7px rgba(147, 196, 110, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(147, 196, 110, 0); }
+}
+
+.project-open {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 2;
   display: flex;
-  align-items: flex-end;
-  padding: 20px;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(7px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.project-card:hover .project-overlay {
+.project-card:hover .project-open,
+.project-card:focus-visible .project-open {
   opacity: 1;
+  transform: none;
 }
 
-.project-overlay-text {
-  color: rgba(255, 255, 255, 0.88);
-  font-size: 0.82rem;
-  line-height: 1.55;
+/* =====================
+   Card body
+   ===================== */
+.project-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  padding: 13px 15px 15px;
 }
 
-.project-info {
-  padding: 18px 20px;
+.project-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 1px;
+  font-size: 0.66rem;
 }
 
 .project-category {
-  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--accent-dark);
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 5px;
+  color: var(--accent);
+}
+
+.project-period {
+  color: var(--projects-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .project-name {
-  font-size: 0.98rem;
+  margin: 0;
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--primary);
-  margin-bottom: 4px;
   line-height: 1.3;
+  letter-spacing: -0.018em;
+  color: var(--projects-ink);
 }
 
-.project-year {
+.project-place {
+  margin: 0;
   font-size: 0.8rem;
-  color: var(--gray);
+  line-height: 1.45;
+  color: var(--projects-dim);
 }
 
-.projects-more {
+/* =====================
+   Footer row
+   ===================== */
+.projects-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 34px;
+  padding-top: 26px;
+  border-top: 1px solid var(--projects-hairline);
+}
+
+.projects-note {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 0.8rem;
+  line-height: 1.72;
+  color: var(--projects-faint);
+}
+
+/* =====================
+   Lightbox
+
+   A project sheet, not just a photo viewer: the image and its caption
+   hold the left, the description and the scope of works the right.
+   ===================== */
+.lightbox-open,
+.lightbox-open body {
+  overflow: hidden;
+}
+
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 14px;
+  background: rgba(9, 9, 12, 0.97);
+  backdrop-filter: blur(14px);
+  animation: lightbox-in 0.26s ease;
+}
+
+.project-lightbox[hidden] {
+  display: none;
+}
+
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.lightbox-top {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex: none;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.lightbox-id {
+  min-width: 0;
+}
+
+.lightbox-category {
+  margin: 0 0 3px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.lightbox-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #f3f0e7;
+}
+
+.lightbox-place {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: #a49c8e;
+}
+
+.lightbox-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.lightbox-counter {
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  color: #a49c8e;
+  font-variant-numeric: tabular-nums;
+}
+
+.lightbox-counter b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.lightbox-close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f3f0e7;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.lightbox-close:hover {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.14);
+}
+
+.lightbox-main {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 26px;
+  padding-top: 14px;
+}
+
+.lightbox-view {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.lightbox-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.lightbox-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(20, 20, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f3f0e7;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.lightbox-arrow:hover {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.2);
+}
+
+.lightbox-arrow.prev { left: 4px; }
+.lightbox-arrow.next { right: 4px; }
+
+.lightbox-caption {
+  flex: none;
+  min-height: 1.4em;
+  margin: 0;
+  padding: 12px 0 0;
   text-align: center;
-  margin-top: 48px;
+  font-size: 0.85rem;
+  color: #a49c8e;
+}
+
+.lightbox-about {
+  min-width: 0;
+  overflow-y: auto;
+  padding-left: 24px;
+  border-left: 1px solid rgba(255, 255, 255, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-content: start;
+}
+
+.lightbox-desc {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.72;
+  color: #a49c8e;
+}
+
+.lightbox-scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lightbox-scope li {
+  padding: 4px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 2px;
+  font-size: 0.7rem;
+  color: #a49c8e;
+}
+
+.lightbox-film {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 14px;
+  padding: 12px 2px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  scrollbar-width: thin;
+}
+
+.lightbox-film button {
+  flex: none;
+  width: 104px;
+  height: 59px;
+  padding: 0;
+  overflow: hidden;
+  background: #0b0b0e;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 2px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.lightbox-film button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lightbox-film button:hover {
+  opacity: 0.85;
+}
+
+.lightbox-film button.is-on {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
 }

@@ -1,45 +1,319 @@
 ---
-// DORMANT: not imported by src/pages/index.astro, and must stay that way.
-// The six items in src/data/projects.json are Unsplash stock photos with
-// invented project names — they cannot ship as "our projects". This file
-// only exists so the CMS collection has something valid to point at, and
-// so the codebase compiles now that React (and .jsx) is gone. Do not wire
-// this into the page and do not touch projects.json.
+import { Image, getImage } from 'astro:assets'
 import projects from '../data/projects.json'
+
+// Every project photo, keyed by filename. The glob pattern has to be a
+// literal — Vite resolves it at build time — so pull the whole folder in
+// once and index it, rather than globbing per project.
+const files = import.meta.glob<ImageMetadata>('../assets/projects/*.jpg', {
+  eager: true,
+  import: 'default',
+})
+
+function photo(slug: string, n: number): ImageMetadata {
+  const key = `../assets/projects/${slug}-${n}.jpg`
+  const found = files[key]
+  // Fail the build rather than ship a card with a missing cover: a silent
+  // undefined here renders an empty <img> that nobody notices in review.
+  if (!found) throw new Error(`Projects: missing image ${key}`)
+  return found
+}
+
+const items = projects.items.map((p) => ({
+  ...p,
+  cover: photo(p.slug, 1),
+  count: p.photos.length,
+}))
+
+// Counted, not authored. Both numbers used to live in the filter chips;
+// with the filters gone they belong in the header, and a hand-written
+// "6 obiecte" would go stale the first time someone adds a project.
+const photoCount = items.reduce((n, p) => n + p.count, 0)
+const [titleLead, titleTrail] = projects.title.split('|')
+
+// The lightbox needs plain URLs it can assign to img.src, so the gallery
+// shots are resolved here at build time instead of being rendered as
+// <Image>.
+const gallery = await Promise.all(
+  items.map(async (p) => ({
+    slug: p.slug,
+    category: p.category,
+    name: p.name,
+    place: p.place,
+    period: p.period,
+    client: p.client,
+    desc: p.desc,
+    scope: p.scope,
+    shots: await Promise.all(
+      p.photos.map(async (caption, i) => ({
+        // 1100px is the widest the stage ever paints one (70vw of a
+        // 1440px window). Quality 62 rather than the default 80: these
+        // are site photographs, not product shots, and the difference is
+        // roughly half the bytes across 24 of them.
+        src: (await getImage({ src: photo(p.slug, i + 1), width: 1100, quality: 62, format: 'webp' })).src,
+        // Thumbnails are 104x59 in the filmstrip; sending the 1100px file
+        // there would download the whole gallery twice over.
+        thumb: (await getImage({ src: photo(p.slug, i + 1), width: 208, quality: 58, format: 'webp' })).src,
+        caption,
+      })),
+    ),
+  })),
+)
 ---
 
 <section class="section projects" id="proiecte">
   <div class="container">
-    <div class="section-header">
-      <span class="section-label">{projects.label}</span>
-      <h2 class="section-title">{projects.title}</h2>
-      <p class="section-desc">
-        {projects.description}
-      </p>
+
+    <div class="projects-head">
+      <div class="projects-head-title">
+        <span class="section-label projects-label">{projects.label}</span>
+        <h2 class="section-title projects-title">
+          {titleLead}{titleTrail && <><br />{titleTrail}</>}
+        </h2>
+      </div>
+
+      <div class="projects-head-side">
+        <p class="projects-lede">{projects.description}</p>
+        <dl class="projects-stats">
+          <div>
+            <dt>{items.length}</dt>
+            <dd>{projects.statProjectsLabel}</dd>
+          </div>
+          <div>
+            <dt>{photoCount}</dt>
+            <dd>{projects.statPhotosLabel}</dd>
+          </div>
+          <div>
+            <dt>{projects.statSpan}</dt>
+            <dd>{projects.statSpanLabel}</dd>
+          </div>
+        </dl>
+      </div>
     </div>
 
     <div class="projects-grid">
-      {projects.items.map((p) => (
-        <div class="project-card">
-          <div class="project-img">
-            <img src={p.img} alt={p.name} width="600" height="450" loading="lazy" />
-            <div class="project-overlay">
-              <span class="project-overlay-text">{p.desc}</span>
-            </div>
+      {items.map((p, i) => (
+        <article
+          class="project-card"
+          data-slug={p.slug}
+          tabindex="0"
+          role="button"
+          aria-label={`${projects.openLabel}: ${p.name}, ${p.place}`}
+        >
+          <div class="project-shot">
+            {/* `width` is pinned because without it the `src` fallback is
+                generated at the source's full 1400px — a file no browser in
+                use today ever fetches, since every one of them reads the
+                srcset. Six of those was a megabyte of dist/ nobody
+                downloads. Pinned to the smallest of the widths for the same
+                reason: the fallback should be the cheapest file, not the
+                dearest. */}
+            <Image
+              src={p.cover}
+              alt={`${p.name} — ${p.place}`}
+              widths={[400, 800]}
+              quality={62}
+              width={400}
+              height={225}
+              sizes="(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 380px"
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+            <span class="project-status">
+              <i class="project-dot" aria-hidden="true"></i>{p.status}
+            </span>
+            <span class="project-count">{p.count} <span>{projects.photoLabel}</span></span>
+            <span class="project-open">{projects.openLabel} <b aria-hidden="true">&rarr;</b></span>
           </div>
-          <div class="project-info">
-            <div class="project-category">{p.category}</div>
-            <div class="project-name">{p.name}</div>
-            <div class="project-year">{p.year}</div>
+
+          <div class="project-body">
+            <p class="project-meta">
+              <span class="project-category">{p.category}</span>
+              <span class="project-period">{p.period}</span>
+            </p>
+            <h3 class="project-name">{p.name}</h3>
+            <p class="project-place">{p.place}</p>
           </div>
-        </div>
+        </article>
       ))}
     </div>
 
-    <div class="projects-more">
-      <a href={projects.ctaHref} class="btn btn-outline-dark">
-        {projects.ctaLabel}
-      </a>
+    <div class="projects-foot">
+      <p class="projects-note">{projects.note}</p>
+      <a href={projects.ctaHref} class="btn btn-primary">{projects.ctaLabel}</a>
     </div>
   </div>
 </section>
+
+<div class="project-lightbox" id="project-lightbox" role="dialog" aria-modal="true" aria-label="Galerie proiect" hidden>
+  <div class="lightbox-top">
+    <div class="lightbox-id">
+      <p class="lightbox-category" id="lightbox-category"></p>
+      <p class="lightbox-name" id="lightbox-name"></p>
+      <p class="lightbox-place" id="lightbox-place"></p>
+    </div>
+    <div class="lightbox-tools">
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Închide galeria">&times;</button>
+    </div>
+  </div>
+
+  <div class="lightbox-main">
+    <div class="lightbox-view">
+      <div class="lightbox-stage">
+        <button type="button" class="lightbox-arrow prev" id="lightbox-prev" aria-label="Fotografia anterioară">&#8249;</button>
+        <img id="lightbox-image" alt="" />
+        <button type="button" class="lightbox-arrow next" id="lightbox-next" aria-label="Fotografia următoare">&#8250;</button>
+      </div>
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+
+    {/* The description lives here rather than on the card: it is what the
+        visitor came for once they opened a project, and keeping it out of
+        the grid is what lets the cards stay one photo and three lines. */}
+    <aside class="lightbox-about">
+      <p class="lightbox-desc" id="lightbox-desc"></p>
+      <ul class="lightbox-scope" id="lightbox-scope"></ul>
+    </aside>
+  </div>
+
+  <div class="lightbox-film" id="lightbox-film"></div>
+</div>
+
+{/* Build-time data for the lightbox: image URLs Astro has already hashed
+    and converted, so the client script never has to resolve an asset. */}
+<script is:inline type="application/json" id="projects-gallery" set:html={JSON.stringify(gallery)}></script>
+<script is:inline type="application/json" id="projects-labels" set:html={JSON.stringify({ client: projects.clientLabel })}></script>
+
+<script>
+  interface Shot { src: string; thumb: string; caption: string }
+  interface Entry {
+    slug: string
+    category: string
+    name: string
+    place: string
+    period: string
+    client: string
+    desc: string
+    scope: string[]
+    shots: Shot[]
+  }
+
+  const read = (id: string) => {
+    const raw = document.getElementById(id)?.textContent
+    return raw ? JSON.parse(raw) : null
+  }
+
+  const gallery: Entry[] = read('projects-gallery') ?? []
+  const labels: { client: string } = read('projects-labels') ?? { client: '' }
+  const byslug = new Map(gallery.map((g) => [g.slug, g]))
+
+  const cards = [...document.querySelectorAll<HTMLElement>('.project-card')]
+
+  const box = document.getElementById('project-lightbox')
+  const image = document.getElementById('lightbox-image') as HTMLImageElement | null
+  const counter = document.getElementById('lightbox-counter')
+  const caption = document.getElementById('lightbox-caption')
+  const scopeList = document.getElementById('lightbox-scope')
+  const film = document.getElementById('lightbox-film')
+  const closeBtn = document.getElementById('lightbox-close')
+
+  let shots: Shot[] = []
+  let at = 0
+  let opener: HTMLElement | null = null
+
+  const pad = (n: number) => String(n).padStart(2, '0')
+
+  function show(index: number) {
+    if (!shots.length || !image || !counter || !caption || !film) return
+    at = (index + shots.length) % shots.length
+    const shot = shots[at]
+    image.src = shot.src
+    image.alt = shot.caption
+    caption.textContent = shot.caption
+    counter.innerHTML = `<b>${pad(at + 1)}</b> / ${pad(shots.length)}`
+    ;[...film.children].forEach((thumb, i) => {
+      thumb.classList.toggle('is-on', i === at)
+      thumb.setAttribute('aria-selected', i === at ? 'true' : 'false')
+    })
+    film.children[at]?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' })
+  }
+
+  function open(card: HTMLElement) {
+    const entry = byslug.get(card.dataset.slug ?? '')
+    if (!entry || !box || !film || !scopeList) return
+
+    shots = entry.shots
+    const set = (id: string, text: string) => {
+      const el = document.getElementById(id)
+      if (el) el.textContent = text
+    }
+    set('lightbox-category', entry.category)
+    set('lightbox-name', entry.name)
+    // Only Rogob is named — the rest of the beneficiaries have not been
+    // asked, so the label is dropped rather than left empty.
+    const client = entry.client ? `${labels.client}: ${entry.client}` : ''
+    set('lightbox-place', [entry.place, entry.period, client].filter(Boolean).join('  ·  '))
+    set('lightbox-desc', entry.desc)
+
+    scopeList.replaceChildren(
+      ...entry.scope.map((s) => {
+        const li = document.createElement('li')
+        li.textContent = s
+        return li
+      }),
+    )
+
+    film.replaceChildren(
+      ...shots.map((shot, i) => {
+        const button = document.createElement('button')
+        button.type = 'button'
+        button.setAttribute('role', 'tab')
+        button.setAttribute('aria-label', `Fotografia ${i + 1}`)
+        const thumb = document.createElement('img')
+        thumb.src = shot.thumb
+        thumb.alt = ''
+        thumb.loading = 'lazy'
+        button.append(thumb)
+        button.addEventListener('click', () => show(i))
+        return button
+      }),
+    )
+
+    opener = card
+    box.hidden = false
+    document.documentElement.classList.add('lightbox-open')
+    show(0)
+    closeBtn?.focus()
+  }
+
+  function close() {
+    if (!box) return
+    box.hidden = true
+    document.documentElement.classList.remove('lightbox-open')
+    opener?.focus()
+  }
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => open(card))
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        open(card)
+      }
+    })
+  })
+
+  closeBtn?.addEventListener('click', close)
+  document.getElementById('lightbox-prev')?.addEventListener('click', () => show(at - 1))
+  document.getElementById('lightbox-next')?.addEventListener('click', () => show(at + 1))
+  box?.addEventListener('click', (event) => {
+    if (event.target === box) close()
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (!box || box.hidden) return
+    if (event.key === 'Escape') close()
+    else if (event.key === 'ArrowRight') show(at + 1)
+    else if (event.key === 'ArrowLeft') show(at - 1)
+  })
+</script>

@@ -112,14 +112,22 @@ collections:
               - { name: title, label: Title, widget: string }
               - { name: desc, label: Description, widget: text }
 
-  # NOT CURRENTLY ON THE SITE.
-  # This section is fully built but deliberately not rendered: its entries are
-  # stock photographs with invented project names, which cannot be published
-  # under the heading "Proiectele noastre". Replace every entry with a real
-  # completed project — real photo, real name, real year — and then ask a
-  # developer to switch the section on in src/pages/index.astro.
+  # PHOTOS ARE NOT EDITABLE HERE, and `slug` must not be changed.
+  # Each project's photos live in src/assets/projects/<slug>-1.jpg …
+  # -4.jpg and are processed at build time by astro:assets. The component
+  # resolves them from the slug, so editing a slug here breaks the build
+  # with "Projects: missing image". The number of photos must match the
+  # number of captions in "Photo captions" — caption 1 belongs to
+  # <slug>-1.jpg, which is also the card's cover. Adding or swapping
+  # photos is a developer task, and so is the 16:9 crop every one of them
+  # is cut to: the card frame is 16:9 as well, so an off-ratio file gets
+  # re-cropped by the browser and loses whatever it was framed on.
+  #
+  # THE TWO COUNTS IN THE HEADER ARE COUNTED, NOT TYPED. "6 obiecte" and
+  # "24 fotografii" come from this file's own contents, so adding a
+  # project updates them. Only the year span is written by hand.
   - name: "projects"
-    label: "Projects Section (not published)"
+    label: "Projects Section"
     delete: false
     editor: { preview: false }
     files:
@@ -129,19 +137,33 @@ collections:
         format: "json"
         fields:
           - { name: label, label: "Section label", widget: string }
-          - { name: title, label: Title, widget: string }
-          - { name: description, label: Description, widget: text }
+          - { name: title, label: "Title (use | for line break)", widget: string }
+          - { name: description, label: "Intro paragraph", widget: text }
+          - { name: statProjectsLabel, label: "Header stat — label under the project count", widget: string, hint: "The number itself is counted from the list below." }
+          - { name: statPhotosLabel, label: "Header stat — label under the photo count", widget: string, hint: "The number itself is counted from the captions below." }
+          - { name: statSpan, label: "Header stat — year span", widget: string, hint: "e.g. 2024 — 2026. This one is not derived; keep it in step with the periods below." }
+          - { name: statSpanLabel, label: "Header stat — label under the year span", widget: string }
+          - { name: note, label: "Footnote under the grid", widget: text }
+          - { name: photoLabel, label: "Card label for the photo count", widget: string, hint: "Shown after the number, e.g. '4 foto'" }
+          - { name: openLabel, label: "Gallery link label", widget: string }
+          - { name: clientLabel, label: "Gallery label before the beneficiary", widget: string, hint: "e.g. Beneficiar. Only shown for projects that have one filled in." }
           - { name: ctaLabel, label: "CTA Button Label", widget: string }
           - { name: ctaHref, label: "CTA Anchor / URL", widget: string }
           - name: items
-            label: "Project Cards"
+            label: "Projects"
             widget: list
+            summary: "{{fields.name}} — {{fields.place}}"
             fields:
-              - { name: img, label: "Image URL", widget: string }
-              - { name: category, label: Category, widget: string }
-              - { name: name, label: Name, widget: string }
-              - { name: year, label: Year, widget: string }
-              - { name: desc, label: Description, widget: text }
+              - { name: slug, label: "Slug (do not change)", widget: string, hint: "Matches the filenames in src/assets/projects/. Changing this breaks the build." }
+              - { name: category, label: Category, widget: string, hint: "The small gold tag on the card. Reuse an existing spelling — Comercial, Industrial, Rezidențial, Reconstrucție — rather than inventing a fourth wording for the same thing." }
+              - { name: name, label: Name, widget: string, hint: "The type of object, phrased the same way as the others: 'Centru comercial', 'Casă individuală de locuit'. The locality below is what tells two of the same type apart, so do not put it in here." }
+              - { name: place, label: Locality, widget: string, hint: "Smaller unit first, then the larger one: 'or. Cricova, mun. Chișinău'." }
+              - { name: period, label: Period, widget: string, hint: "e.g. 11.2024 — prezent" }
+              - { name: status, label: Status, widget: string, hint: "e.g. În execuție / Finalizat" }
+              - { name: client, label: "Beneficiary (optional)", widget: string, required: false, hint: "Shown in the gallery only. Leave empty unless the beneficiary has agreed to be named." }
+              - { name: desc, label: Description, widget: text, hint: "Shown in the gallery when someone opens the project. One or two sentences." }
+              - { name: scope, label: "Scope of works", widget: list, field: { name: item, label: Item, widget: string }, hint: "Shown in the gallery as small tags. Three or four short items read best." }
+              - { name: photos, label: "Photo captions", widget: list, field: { name: caption, label: Caption, widget: string }, hint: "One per photo, in order — four of them. Caption 1 belongs to <slug>-1.jpg, the card cover." }
 
   - name: "about"
     label: "About Section"
