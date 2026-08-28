@@ -17,7 +17,6 @@
   "actions": [
     {
       "icon": "phone",
-      "primary": true,
       "href": "tel:+37369463435",
       "label": "Sună acum",
       "value": "+373 69 463 435"
