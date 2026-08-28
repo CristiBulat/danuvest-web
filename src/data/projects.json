@@ -1,51 +1,119 @@
 {
   "label": "Portofoliu",
-  "title": "Proiectele noastre",
-  "description": "Peste 500 de proiecte finalizate cu succes în toată Republica Moldova. Iată câteva din lucrările noastre reprezentative.",
-  "ctaLabel": "Solicită un Proiect Similar",
+  "title": "Șantiere în lucru,|fotografiate pe teren",
+  "description": "Nicio randare și nicio imagine de stoc. Fiecare fotografie de mai jos este făcută de echipa noastră, pe un șantier aflat în execuție — de la săpătură și armare până la structura ridicată.",
+  "statProjectsLabel": "obiecte în execuție",
+  "statPhotosLabel": "fotografii de șantier",
+  "statSpan": "2024 — 2026",
+  "statSpanLabel": "perioada documentată",
+  "note": "Fotografiile provin din arhiva de șantier a companiei și arată stadiul lucrărilor la data la care au fost făcute.",
+  "photoLabel": "foto",
+  "openLabel": "Vezi galeria",
+  "clientLabel": "Beneficiar",
+  "ctaLabel": "Solicită un proiect similar",
   "ctaHref": "#contact",
   "items": [
     {
-      "img": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&auto=format&fit=crop&q=80",
-      "category": "Rezidențial",
-      "name": "Complex Rezidențial „Magnolia\"",
-      "year": "2023",
-      "desc": "Complex modern cu 48 de apartamente, Chișinău"
-    },
-    {
-      "img": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&auto=format&fit=crop&q=80",
+      "slug": "centru-comercial-stauceni",
       "category": "Comercial",
-      "name": "Sediu Corporativ „TechHub\"",
-      "year": "2023",
-      "desc": "Clădire de birouri pe 5 etaje, 3.200 m², Chișinău"
+      "name": "Centru comercial",
+      "place": "com. Stăuceni, mun. Chișinău",
+      "period": "11.2024 — prezent",
+      "status": "În execuție",
+      "client": "",
+      "desc": "Structură monolită din beton armat pe trei niveluri, turnată pe loc: fundații, stâlpi, grinzi și planșee. Lucrările continuă cu închiderile din zidărie.",
+      "scope": ["Fundații", "Structură din beton armat", "Zidărie"],
+      "photos": [
+        "Structura pe trei niveluri, dinspre stradă",
+        "Cofrajele de grindă pe planșeul etajului",
+        "Turnarea planșeului cu pompa de beton",
+        "Armarea planșeului înainte de turnare"
+      ]
     },
     {
-      "img": "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=600&auto=format&fit=crop&q=80",
-      "category": "Comercial",
-      "name": "Centru Comercial „Prut\"",
-      "year": "2022",
-      "desc": "Centru comercial cu 3 niveluri, Bălți"
+      "slug": "statie-110kv-negureni",
+      "category": "Industrial",
+      "name": "Stație de transformare 110/35 kV",
+      "place": "s. Negureni, r-nul Telenești",
+      "period": "2025 — prezent",
+      "status": "În execuție",
+      "client": "",
+      "desc": "Partea de construcții civile pentru stația unui parc fotovoltaic de 40 MW: fundații de echipamente, canalizație de cabluri, platforme și structura metalică a clădirii de comandă.",
+      "scope": ["Fundații echipamente", "Canalizație de cabluri", "Structuri metalice"],
+      "photos": [
+        "Transformatorul de putere pe fundația turnată",
+        "Structura metalică a clădirii de comandă",
+        "Canalizația de cabluri, tuburi pozate și armate",
+        "Cofrajele fundațiilor, cu parcul fotovoltaic în fundal"
+      ]
     },
     {
-      "img": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&auto=format&fit=crop&q=80",
+      "slug": "reconstructie-ion-nistor",
+      "category": "Reconstrucție",
+      "name": "Reconstrucție și extindere imobil",
+      "place": "str. Ion Nistor 27, mun. Chișinău",
+      "period": "02.2025 — prezent",
+      "status": "În execuție",
+      "client": "",
+      "desc": "Reconstrucția unui imobil existent, cu extindere pe verticală și pe orizontală, în țesut urban dens: desfaceri, cadru nou din beton armat și niveluri adăugate peste structura păstrată.",
+      "scope": ["Desfaceri", "Extindere pe verticală", "Planșee turnate pe loc"],
+      "photos": [
+        "Nivelurile adăugate peste structura existentă",
+        "Imobilul înainte de intervenție",
+        "Cofrarea centurii pe conturul extinderii",
+        "Extinderea pe orizontală, în cadre de beton armat"
+      ]
+    },
+    {
+      "slug": "statie-apa-rogob",
+      "category": "Industrial",
+      "name": "Stație de tratare a apei",
+      "place": "mun. Chișinău",
+      "period": "03.2026 — prezent",
+      "status": "În execuție",
+      "client": "Rogob",
+      "desc": "Bazine din beton armat turnate pe loc pentru stația de tratare a apei: demolarea platformei existente, excavații, armare, cofrare cu panouri de perete și turnare cu pompa.",
+      "scope": ["Demolări", "Bazine din beton armat", "Ziduri de sprijin"],
+      "photos": [
+        "Cofrajul de perete al bazinului, sprijinit cu popi",
+        "Excavația și demolarea platformei existente",
+        "Armarea radierului bazinului",
+        "Turnarea betonului cu pompa și autobetoniera"
+      ]
+    },
+    {
+      "slug": "casa-cricova",
       "category": "Rezidențial",
-      "name": "Vilă Privată în Codru",
-      "year": "2022",
-      "desc": "Vilă individuală de 280 m² cu piscină, Chișinău"
+      "name": "Casă individuală de locuit",
+      "place": "or. Cricova, mun. Chișinău",
+      "period": "04.2026 — prezent",
+      "status": "În execuție",
+      "client": "",
+      "desc": "Casă pe două niveluri, ridicată la roșu: planșeu peste subsol cofrat și turnat, cadru din beton armat, zidărie din blocuri ceramice și zid de sprijin pe conturul terenului.",
+      "scope": ["Subsol și fundații", "Structură din beton armat", "Zidărie"],
+      "photos": [
+        "Casa la roșu, dinspre stradă",
+        "Volumul dinspre curte și zidul de sprijin",
+        "Zidăria din blocuri ceramice între cadre",
+        "Cofrajul planșeului peste subsol"
+      ]
     },
     {
-      "img": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&auto=format&fit=crop&q=80",
-      "category": "Renovare",
-      "name": "Reabilitare Bloc Str. Trandafirilor",
-      "year": "2023",
-      "desc": "Renovare completă a unui bloc din 1985, Chișinău"
-    },
-    {
-      "img": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=80",
+      "slug": "casa-bucovina",
       "category": "Rezidențial",
-      "name": "Bloc de Locuințe „Panorama\"",
-      "year": "2021",
-      "desc": "64 apartamente cu vedere panoramică, Chișinău"
+      "name": "Casă individuală de locuit",
+      "place": "str. Bucovina, mun. Chișinău",
+      "period": "10.2025 — prezent",
+      "status": "În execuție",
+      "client": "",
+      "desc": "Casă pe două niveluri cu subsol: hidroizolarea structurii îngropate, cadre și planșee din beton armat turnate pe loc, zidărie de umplutură între stâlpi.",
+      "scope": ["Subsol hidroizolat", "Structură din beton armat", "Zidărie"],
+      "photos": [
+        "Structura pe două niveluri, dinspre curte",
+        "Cadrele de beton armat și zidăria de umplutură",
+        "Hidroizolarea subsolului",
+        "Cofrajul și popii planșeului peste subsol"
+      ]
     }
   ]
 }

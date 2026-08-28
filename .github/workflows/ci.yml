@@ -39,21 +39,51 @@ jobs:
       # phone). That is the single regression most likely to come back — a
       # well-meaning editor drops a photo straight off a DSLR into the repo
       # and nothing complains. This guard is here specifically to complain.
+      #
+      # It used to complain by capping dist/ at 2048 KB, which worked while
+      # the site had two photographs in it. The Proiecte section put 24 site
+      # photos in src/assets/, and astro:assets emits several derivatives of
+      # each — so dist/ now holds far more than any one visitor downloads:
+      # the browser picks a single width out of each srcset, and the 24
+      # gallery images load only when someone opens a lightbox.
+      #
+      # So the cap that actually catches the original regression is the
+      # per-file one. A correctly resized derivative of a site photo lands
+      # around 100-200 KB; anything past 450 KB has skipped astro:assets.
+      # The total is kept as a second, looser tripwire against the portfolio
+      # growing without anyone looking at the numbers.
       - name: Guard total page weight
         run: |
-          LIMIT_KB=2048
+          TOTAL_LIMIT_KB=7168
+          FILE_LIMIT_KB=450
           SIZE_KB=$(du -sk dist | cut -f1)
-          echo "dist/ is ${SIZE_KB} KB (limit ${LIMIT_KB} KB)"
+          echo "dist/ is ${SIZE_KB} KB (limit ${TOTAL_LIMIT_KB} KB)"
           echo ""
           echo "10 largest files:"
           find dist -type f -exec du -k {} + | sort -rn | head -10 \
             | awk '{printf "  %6s KB  %s\n", $1, $2}'
           echo ""
-          if [ "$SIZE_KB" -gt "$LIMIT_KB" ]; then
-            echo "::error::dist/ is ${SIZE_KB} KB, over the ${LIMIT_KB} KB budget."
+
+          FAIL=0
+
+          OVERSIZED=$(find dist -type f -exec du -k {} + \
+            | awk -v lim="$FILE_LIMIT_KB" '$1 > lim {print}')
+          if [ -n "$OVERSIZED" ]; then
+            echo "::error::Files over the ${FILE_LIMIT_KB} KB per-file budget:"
+            echo "$OVERSIZED" | awk '{printf "  %6s KB  %s\n", $1, $2}'
             echo "Large images belong in src/assets/ and must be rendered with"
             echo "astro:assets (<Image />), which emits resized WebP/AVIF."
             echo "Files dropped into public/ are copied verbatim, unoptimized."
-            exit 1
+            FAIL=1
           fi
+
+          if [ "$SIZE_KB" -gt "$TOTAL_LIMIT_KB" ]; then
+            echo "::error::dist/ is ${SIZE_KB} KB, over the ${TOTAL_LIMIT_KB} KB budget."
+            echo "If this is the portfolio growing rather than one bad file,"
+            echo "drop the widths or the quality in Projects.astro before"
+            echo "raising this number."
+            FAIL=1
+          fi
+
+          [ "$FAIL" -eq 0 ] || exit 1
           echo "Within budget."
