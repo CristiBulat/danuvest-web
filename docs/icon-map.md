@@ -43,7 +43,7 @@ free text — so an invalid name cannot be entered in the first place.
 | 🏘️ | `homes` | Construcții Rezidențiale |
 | 🏢 | `building` | Construcții Comerciale |
 | 🔧 | `wrench` | Renovări și Reabilitări |
-| 🎨 | `brush` | Lucrări de Finisare |
+| 🎨 | `excavator` | Terasamente și Demolări — was *Lucrări de Finisare*, on `brush` |
 | 📐 | `ruler` | Proiectare și Consultanță |
 
 ### Mission values — *section removed*
@@ -110,14 +110,18 @@ New in this version; these replaced the contact form.
 
 ## Full icon set
 
-`crane` · `homes` · `building` · `wrench` · `brush` · `ruler` · `trophy` ·
-`handshake` · `bolt` · `pin` · `phone` · `mail` · `clock` · `check` ·
-`facebook` · `instagram` · `linkedin` · `whatsapp` · `viber` ·
+`crane` · `excavator` · `homes` · `building` · `wrench` · `brush` · `ruler` ·
+`trophy` · `handshake` · `bolt` · `pin` · `phone` · `mail` · `clock` ·
+`check` · `facebook` · `instagram` · `linkedin` · `whatsapp` · `viber` ·
 `arrow-right` · `menu` · `close`
 
 Outline icons are adapted from [Lucide](https://lucide.dev) (ISC licence);
-brand marks from [Simple Icons](https://simpleicons.org) (CC0-1.0). `crane` is
-hand-authored — no equivalent exists in either set.
+brand marks from [Simple Icons](https://simpleicons.org) (CC0-1.0). `crane` and
+`excavator` are hand-authored — neither set has an equivalent, and a generic
+tool icon on an earthworks service reads as maintenance.
+
+`brush` is still in the set and still selectable, but no section uses it since
+finisajele were replaced by terasamente.
 
 ## Adding an icon
 

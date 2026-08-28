@@ -25,10 +25,6 @@ const items = projects.items.map((p) => ({
   count: p.photos.length,
 }))
 
-// Counted, not authored. Both numbers used to live in the filter chips;
-// with the filters gone they belong in the header, and a hand-written
-// "6 obiecte" would go stale the first time someone adds a project.
-const photoCount = items.reduce((n, p) => n + p.count, 0)
 const [titleLead, titleTrail] = projects.title.split('|')
 
 // The lightbox needs plain URLs it can assign to img.src, so the gallery
@@ -64,31 +60,16 @@ const gallery = await Promise.all(
 <section class="section projects" id="proiecte">
   <div class="container">
 
+    {/* Three direct grid children rather than two nested columns: the
+        eyebrow takes row 1 on its own, and the title and the lede share
+        row 2, which is what lines the lede up with "Șantiere în lucru"
+        instead of with the eyebrow above it. */}
     <div class="projects-head">
-      <div class="projects-head-title">
-        <span class="section-label projects-label">{projects.label}</span>
-        <h2 class="section-title projects-title">
-          {titleLead}{titleTrail && <><br />{titleTrail}</>}
-        </h2>
-      </div>
-
-      <div class="projects-head-side">
-        <p class="projects-lede">{projects.description}</p>
-        <dl class="projects-stats">
-          <div>
-            <dt>{items.length}</dt>
-            <dd>{projects.statProjectsLabel}</dd>
-          </div>
-          <div>
-            <dt>{photoCount}</dt>
-            <dd>{projects.statPhotosLabel}</dd>
-          </div>
-          <div>
-            <dt>{projects.statSpan}</dt>
-            <dd>{projects.statSpanLabel}</dd>
-          </div>
-        </dl>
-      </div>
+      <span class="section-label projects-label">{projects.label}</span>
+      <h2 class="section-title projects-title">
+        {titleLead}{titleTrail && <><br />{titleTrail}</>}
+      </h2>
+      <p class="projects-lede">{projects.description}</p>
     </div>
 
     <div class="projects-grid">

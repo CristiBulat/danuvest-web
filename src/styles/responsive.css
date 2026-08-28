@@ -44,10 +44,23 @@
 
   .projects-head {
     grid-template-columns: 1fr;
-    gap: 18px;
+    row-gap: 16px;
   }
 
-  .projects-head-side {
+  /* Hand back to auto-placement so the three stack in source order. The
+     label's own bottom margin would add to the row gap once it is a row
+     of its own. */
+  .projects-label,
+  .projects-title,
+  .projects-lede {
+    grid-area: auto;
+  }
+
+  .projects-label {
+    margin-bottom: 0;
+  }
+
+  .projects-lede {
     padding-top: 0;
   }
 

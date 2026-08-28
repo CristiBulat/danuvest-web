@@ -108,7 +108,7 @@ collections:
               - name: icon
                 label: Icon
                 widget: select
-                options: [crane, homes, building, wrench, brush, ruler, trophy, handshake, bolt, check]
+                options: [crane, excavator, homes, building, wrench, brush, ruler, trophy, handshake, bolt, check]
               - { name: title, label: Title, widget: string }
               - { name: desc, label: Description, widget: text }
 
@@ -122,10 +122,6 @@ collections:
   # photos is a developer task, and so is the 16:9 crop every one of them
   # is cut to: the card frame is 16:9 as well, so an off-ratio file gets
   # re-cropped by the browser and loses whatever it was framed on.
-  #
-  # THE TWO COUNTS IN THE HEADER ARE COUNTED, NOT TYPED. "6 obiecte" and
-  # "24 fotografii" come from this file's own contents, so adding a
-  # project updates them. Only the year span is written by hand.
   - name: "projects"
     label: "Projects Section"
     delete: false
@@ -139,10 +135,6 @@ collections:
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: "Title (use | for line break)", widget: string }
           - { name: description, label: "Intro paragraph", widget: text }
-          - { name: statProjectsLabel, label: "Header stat — label under the project count", widget: string, hint: "The number itself is counted from the list below." }
-          - { name: statPhotosLabel, label: "Header stat — label under the photo count", widget: string, hint: "The number itself is counted from the captions below." }
-          - { name: statSpan, label: "Header stat — year span", widget: string, hint: "e.g. 2024 — 2026. This one is not derived; keep it in step with the periods below." }
-          - { name: statSpanLabel, label: "Header stat — label under the year span", widget: string }
           - { name: note, label: "Footnote under the grid", widget: text }
           - { name: photoLabel, label: "Card label for the photo count", widget: string, hint: "Shown after the number, e.g. '4 foto'" }
           - { name: openLabel, label: "Gallery link label", widget: string }

@@ -48,21 +48,29 @@
 /* =====================
    Header
 
-   Two columns that do different jobs rather than two columns of prose:
-   the title claims the left, and the right stacks the lede over a strip
-   of counts. The counts are what the filter chips used to say out loud
-   ("Toate 6"), so removing the filters did not cost the reader the size
-   of the portfolio.
+   Two columns doing different jobs rather than two columns of prose: the
+   title claims the left, the lede answers on the right, and the rule
+   under them opens the grid.
+
+   The eyebrow sits alone on row 1 so that row 2 holds the title and the
+   lede together — `align-items: start` then lines the lede's first line
+   up with the title's, at any viewport, without a hand-tuned offset that
+   would drift as the title's clamp() resizes it.
    ===================== */
 .projects-head {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 26px 64px;
+  column-gap: 64px;
+  row-gap: 0;
   align-items: start;
-  padding-bottom: 30px;
-  margin-bottom: 32px;
+  padding-bottom: 28px;
+  margin-bottom: 30px;
   border-bottom: 1px solid var(--projects-hairline);
 }
+
+.projects-label { grid-area: 1 / 1; }
+.projects-title { grid-area: 2 / 1; }
+.projects-lede  { grid-area: 2 / 2; }
 
 /* base.css sets --accent-ink for contrast on the light sections; on
    charcoal the brand gold already passes, so take it back. */
@@ -80,49 +88,16 @@
   text-wrap: balance;
 }
 
-.projects-head-side {
-  padding-top: 6px;
-}
-
+/* The 6px absorbs the difference in half-leading between 37.6px/1.14
+   type and 15.5px/1.72 type, so the two first lines read as sitting on
+   the same line rather than merely starting in the same box. */
 .projects-lede {
   margin: 0;
+  padding-top: 6px;
   color: var(--projects-dim);
   font-size: 0.97rem;
   line-height: 1.72;
   max-width: 54ch;
-}
-
-/* Rules on top rather than between, so the strip reads the same whether
-   the three cells sit in one row or stack on a phone. Dividers between
-   cells orphan themselves the moment one wraps. */
-.projects-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 34px;
-  margin: 22px 0 0;
-}
-
-.projects-stats > div {
-  padding-top: 11px;
-  border-top: 1px solid var(--projects-hairline);
-}
-
-.projects-stats dt {
-  font-size: 1.35rem;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-
-.projects-stats dd {
-  margin: 4px 0 0;
-  font-size: 0.67rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--projects-faint);
 }
 
 /* =====================
