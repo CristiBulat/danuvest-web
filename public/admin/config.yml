@@ -225,7 +225,6 @@ collections:
               - { name: label, label: "Small label above (e.g. Sună acum)", widget: string }
               - { name: value, label: "Number or address shown", widget: string }
               - { name: href, label: "Link target", widget: string, hint: "tel:+373..., https://wa.me/373..., viber://chat?number=%2B373..., mailto:..." }
-              - { name: primary, label: "Emphasised (dark) style", widget: boolean, required: false, default: false }
               - { name: external, label: "Opens in a new tab", widget: boolean, required: false, default: false, hint: "On for https:// links only. Leave off for tel:, mailto: and viber:." }
 
   - name: "footer"

@@ -151,28 +151,3 @@
   overflow-wrap: anywhere;
 }
 
-/* Primary variant — the phone number, which is how most clients in this
-   market will actually get in touch. */
-.contact-action--primary {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.contact-action--primary:hover {
-  background: var(--primary-light);
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md);
-}
-
-.contact-action--primary .contact-action-icon {
-  background: rgba(201, 168, 76, 0.2);
-  color: var(--accent);
-}
-
-.contact-action--primary .contact-action-label {
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.contact-action--primary .contact-action-value {
-  color: var(--white);
-}
