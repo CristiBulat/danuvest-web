@@ -113,6 +113,46 @@ collections:
               - { name: desc, label: Description, widget: text }
 
   # PHOTOS ARE NOT EDITABLE HERE, and `slug` must not be changed.
+  # Each machine's photograph lives at src/assets/fleet/<slug>.jpg and is
+  # processed at build time by astro:assets. The component resolves it from
+  # the slug, so editing a slug here breaks the build with "Fleet: missing
+  # image". Every file is cut to 5:3, which is also the ratio of the frame
+  # on the page — an off-ratio file gets re-cropped by the browser and
+  # loses whatever it was framed on. Adding, removing or swapping a machine
+  # is a developer task; the order of this list is the order the showcase
+  # cycles through, grouped by what the machines do.
+  - name: "fleet"
+    label: "Fleet Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "fleet"
+        label: "Fleet"
+        file: "src/data/fleet.json"
+        format: "json"
+        fields:
+          - { name: label, label: "Section label", widget: string }
+          - { name: title, label: "Title (use | for line break)", widget: string }
+          - { name: description, label: "Intro paragraph", widget: text }
+          - { name: note, label: "Footnote under the showcase", widget: text }
+          - { name: hintLabel, label: "Badge on the photograph", widget: string, hint: "Use {n} where the number of machines should go, e.g. 'Vezi toate cele {n} utilaje'." }
+          - { name: countLabel, label: "Word after the counter", widget: string, hint: "Shown as '01 / 12 <this>'." }
+          - { name: openLabel, label: "Gallery button label", widget: string }
+          - { name: galleryLabel, label: "Gallery title (for screen readers)", widget: string }
+          - { name: ctaLabel, label: "Footer link label", widget: string }
+          - { name: ctaHref, label: "Footer link anchor / URL", widget: string }
+          - name: items
+            label: "Machines"
+            widget: list
+            summary: "{{fields.name}} — {{fields.model}}"
+            fields:
+              - { name: slug, label: "Slug (do not change)", widget: string, hint: "Matches the filename in src/assets/fleet/. Changing this breaks the build." }
+              - { name: category, label: Category, widget: string, hint: "The small gold tag above the name. Reuse an existing spelling — Terasamente, Manipulare, Ridicare, Procesare, Transport — rather than inventing a sixth wording." }
+              - { name: name, label: Name, widget: string, hint: "What the machine is: 'Excavator pe șenile', 'Autobasculantă 8x4'. The make goes in the field below, not here." }
+              - { name: model, label: "Make and model", widget: string, hint: "Only what is actually legible on the machine in the photograph. Write the make alone rather than inventing a model number, and do not add tonnages or bucket volumes." }
+              - { name: use, label: "What it is used for", widget: text, hint: "One sentence, factual. This is the line under the model on the page." }
+
+  # PHOTOS ARE NOT EDITABLE HERE, and `slug` must not be changed.
   # Each project's photos live in src/assets/projects/<slug>-1.jpg …
   # -4.jpg and are processed at build time by astro:assets. The component
   # resolves them from the slug, so editing a slug here breaks the build

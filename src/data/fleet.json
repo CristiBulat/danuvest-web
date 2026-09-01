@@ -1,0 +1,98 @@
+{
+  "label": "Dotare tehnică",
+  "title": "Parc de utilaje",
+  "description": "Dispunem de parc propriu de utilaje pentru terasamente, transport, ridicare și procesarea materialelor. Lucrările mecanizate se execută cu resurse proprii și cu operatori calificați ai companiei.",
+  "note": "Fotografiile sunt realizate în parcul companiei și pe șantierele aflate în execuție.",
+  "hintLabel": "Vezi toate cele {n} utilaje",
+  "countLabel": "utilaje",
+  "openLabel": "Vezi galeria completă",
+  "galleryLabel": "Galeria utilajelor",
+  "ctaLabel": "Vezi utilajele la lucru în proiecte",
+  "ctaHref": "#proiecte",
+  "items": [
+    {
+      "slug": "buldoexcavator",
+      "category": "Terasamente",
+      "name": "Buldoexcavator",
+      "model": "JCB 4CX eco",
+      "use": "Săpătură, încărcare și manevre de șantier cu un singur utilaj."
+    },
+    {
+      "slug": "excavator-senile",
+      "category": "Terasamente",
+      "name": "Excavator pe șenile",
+      "model": "Hitachi ZAXIS 210N",
+      "use": "Săpături de fundații, subsoluri și tranșee de rețele."
+    },
+    {
+      "slug": "miniexcavator",
+      "category": "Terasamente",
+      "name": "Miniexcavator",
+      "model": "Hitachi ZAXIS",
+      "use": "Săpături în spații înguste, între clădiri existente."
+    },
+    {
+      "slug": "buldozer",
+      "category": "Terasamente",
+      "name": "Buldozer pe șenile",
+      "model": "Caterpillar",
+      "use": "Decopertări și nivelări pe suprafețe mari."
+    },
+    {
+      "slug": "miniincarcator-senile",
+      "category": "Manipulare",
+      "name": "Miniîncărcător pe șenile",
+      "model": "Volvo, cu cupă",
+      "use": "Încărcare și manipulare pe terenuri cu portanță redusă."
+    },
+    {
+      "slug": "miniincarcator-roti",
+      "category": "Manipulare",
+      "name": "Miniîncărcător pe roți",
+      "model": "Volvo, cu furci",
+      "use": "Descărcarea și mutarea materialelor paletate pe șantier."
+    },
+    {
+      "slug": "automacara",
+      "category": "Ridicare",
+      "name": "Automacara",
+      "model": "Pe șasiu de mare tonaj",
+      "use": "Montaj de elemente prefabricate și descărcarea materialelor grele."
+    },
+    {
+      "slug": "camion-macara",
+      "category": "Ridicare",
+      "name": "Camion cu macara",
+      "model": "Volvo FM, cu remorcă",
+      "use": "Transport și descărcare de materiale cu macaraua proprie a autovehiculului."
+    },
+    {
+      "slug": "concasor",
+      "category": "Procesare",
+      "name": "Concasor mobil pe șenile",
+      "model": "CAMS",
+      "use": "Concasarea betonului și a molozului rezultat din demolări."
+    },
+    {
+      "slug": "autobasculanta",
+      "category": "Transport",
+      "name": "Autobasculantă 8×4",
+      "model": "IVECO EuroTrakker 410E42",
+      "use": "Evacuarea pământului excavat și aprovizionarea cu agregate."
+    },
+    {
+      "slug": "cap-tractor-trailer",
+      "category": "Transport",
+      "name": "Cap tractor și trailer agabaritic",
+      "model": "DAF CF 85.430, platformă joasă",
+      "use": "Transportul utilajelor pe șenile către punctele de lucru."
+    },
+    {
+      "slug": "semiremorca-basculanta",
+      "category": "Transport",
+      "name": "Semiremorcă basculantă",
+      "model": "Benalu, 3 axe, cuvă din aluminiu",
+      "use": "Volume mari de pământ și agregate, pe distanțe lungi."
+    }
+  ]
+}

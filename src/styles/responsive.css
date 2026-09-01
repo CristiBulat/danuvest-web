@@ -68,6 +68,39 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  /* Same stack as .projects-head above, for the same reason. */
+  .fleet-head {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+
+  .fleet-label,
+  .fleet-title,
+  .fleet-lede {
+    grid-area: auto;
+  }
+
+  .fleet-label {
+    margin-bottom: 0;
+  }
+
+  .fleet-lede {
+    padding-top: 0;
+  }
+
+  /* The head is stacked by now, so the showcase is the only grid left and
+     the rail's type has stepped down — it needs less of the row here, not
+     more, and the extra width keeps the frame from ending well above the
+     rail's foot. */
+  .fleet-showcase {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .fleet-name {
+    font-size: 1.2rem;
+  }
+
   /* Side by side, the description panel is what gets squeezed first, and
      a 274px column of prose next to a shrinking photo helps neither. It
      goes under the image instead. */
@@ -87,6 +120,29 @@
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 40px;
+  }
+}
+
+/* =====================
+   Fleet — the showcase stacks earlier than the rest of the page
+
+   Its own breakpoint because its two columns fail before anything else on
+   the page does. The frame is locked to 5:3 while the rail carries a
+   four-line footnote, so as the row narrows the frame loses height twice as
+   fast as the rail sheds it: at 820px the photograph was 429x257 and ended
+   88px above the rail's foot. Below 900px the photograph takes the full
+   width and the rail reads underneath it, which is both larger and level.
+   ===================== */
+@media (max-width: 900px) {
+  .fleet-showcase {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  /* One column has no slack to distribute, so the three blocks close up to
+     their own gap and `space-between` stops applying. */
+  .fleet-detail {
+    gap: 18px;
   }
 }
 
@@ -146,6 +202,21 @@
   .projects-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 18px;
+  }
+
+  .fleet-use {
+    margin-top: 14px;
+    padding-top: 13px;
+  }
+
+  .fleet-gallery-film button {
+    width: 84px;
+    height: 50px;
+  }
+
+  .fleet-gallery-arrow {
+    width: 40px;
+    height: 40px;
   }
 
   .lightbox-film button {
