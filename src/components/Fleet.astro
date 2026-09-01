@@ -1,0 +1,403 @@
+---
+import { Image, getImage } from 'astro:assets'
+import fleet from '../data/fleet.json'
+
+// One photograph per machine, keyed by slug. Same reasoning as Projects:
+// the glob pattern has to be a literal for Vite to resolve it at build
+// time, so the folder comes in once and gets indexed.
+const files = import.meta.glob<ImageMetadata>('../assets/fleet/*.jpg', {
+  eager: true,
+  import: 'default',
+})
+
+function photo(slug: string): ImageMetadata {
+  const key = `../assets/fleet/${slug}.jpg`
+  const found = files[key]
+  // Fail the build rather than ship a stage that fades to nothing.
+  if (!found) throw new Error(`Fleet: missing image ${key}`)
+  return found
+}
+
+const [titleLead, titleTrail] = fleet.title.split('|')
+const first = fleet.items[0]
+const total = fleet.items.length
+const hint = fleet.hintLabel.replace('{n}', String(total))
+
+// The showcase swaps `img.src` directly, so every frame has to be a plain
+// URL that Astro has already hashed and converted — the client script can
+// never resolve an asset itself. Both the stage and the gallery read the
+// same 1200px file: the stage never paints one wider than ~690 CSS px, the
+// gallery is the same photograph a moment later, and one file per machine
+// means opening the gallery costs nothing that has already been fetched.
+const machines = await Promise.all(
+  fleet.items.map(async (m) => ({
+    ...m,
+    src: (await getImage({ src: photo(m.slug), width: 1200, quality: 62, format: 'webp' })).src,
+    // 104x62 in the filmstrip; the full file there would download the
+    // whole fleet twice over.
+    thumb: (await getImage({ src: photo(m.slug), width: 208, quality: 58, format: 'webp' })).src,
+  })),
+)
+---
+
+<section class="section fleet" id="utilaje">
+  <div class="container">
+
+    {/* Same three-child head as Projects: the eyebrow takes row 1 alone so
+        the title and the lede share row 2 and their first lines align. */}
+    <div class="fleet-head">
+      <span class="section-label fleet-label">{fleet.label}</span>
+      <h2 class="section-title fleet-title">
+        {titleLead}{titleTrail && <><br />{titleTrail}</>}
+      </h2>
+      <p class="fleet-lede">{fleet.description}</p>
+    </div>
+
+    {/* The first machine and its details are rendered here, at build time.
+        With JavaScript off the section is one photograph with its caption
+        rather than an empty frame — the rotation, the ticks and the gallery
+        are the enhancement, not the content. */}
+    <div class="fleet-showcase">
+      <button
+        type="button"
+        class="fleet-stage"
+        id="fleet-stage"
+        aria-label={`${fleet.galleryLabel} — ${first.name}, ${first.model}`}
+      >
+        {/* Eager, like the first Projects card: this photograph is the
+            section, a lazy one leaves a grey box for anyone who scrolls here
+            quickly, and there is only one of it to pay for. The rotation's
+            own fetches still wait for the section to come into view. */}
+        <Image
+          id="fleet-layer-a"
+          src={photo(first.slug)}
+          alt={`${first.name} — ${first.model}`}
+          widths={[600, 900, 1200]}
+          quality={62}
+          width={600}
+          height={360}
+          sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1100px) 53vw, 611px"
+          loading="eager"
+        />
+        {/* The second layer starts empty; the script fades between the two. */}
+        <img id="fleet-layer-b" class="is-out" alt="" />
+        <span class="fleet-hint"><i aria-hidden="true"></i>{hint}</span>
+      </button>
+
+      <div class="fleet-detail">
+        <div class="fleet-detail-body" id="fleet-detail">
+          <span class="fleet-category" id="fleet-category">{first.category}</span>
+          <h3 class="fleet-name" id="fleet-name">{first.name}</h3>
+          <p class="fleet-model" id="fleet-model">{first.model}</p>
+          <p class="fleet-use" id="fleet-use">{first.use}</p>
+        </div>
+
+        <div class="fleet-nav">
+          <ul class="fleet-ticks" id="fleet-ticks">
+            {fleet.items.map((m, i) => (
+              <li>
+                <button
+                  type="button"
+                  class={i === 0 ? 'is-on' : undefined}
+                  aria-label={`${m.name}, ${m.model}`}
+                ></button>
+              </li>
+            ))}
+          </ul>
+          <div class="fleet-foot-row">
+            <span class="fleet-count" id="fleet-count">
+              <b>01</b> / {String(total).padStart(2, '0')} {fleet.countLabel}
+            </span>
+            <button type="button" class="fleet-all" id="fleet-all">
+              {fleet.openLabel} <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        {/* The footnote and the link to the portfolio close the column
+            rather than a band of their own under the photograph. A short
+            caption beside a 3:2 frame left roughly 250px of nothing in the
+            middle of this column and a near-empty strip below it; three
+            blocks spread down the height of the photograph use the same
+            space as structure. */}
+        <div class="fleet-foot">
+          <p class="fleet-note">{fleet.note}</p>
+          <a href={fleet.ctaHref} class="fleet-link">{fleet.ctaLabel} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div
+  class="fleet-gallery"
+  id="fleet-gallery"
+  role="dialog"
+  aria-modal="true"
+  aria-label={fleet.galleryLabel}
+  hidden
+>
+  <div class="fleet-gallery-top">
+    <div class="fleet-gallery-id">
+      <p class="fleet-gallery-category" id="fleet-gallery-category"></p>
+      <p class="fleet-gallery-name" id="fleet-gallery-name"></p>
+      <p class="fleet-gallery-model" id="fleet-gallery-model"></p>
+    </div>
+    <div class="fleet-gallery-tools">
+      <span class="fleet-gallery-counter" id="fleet-gallery-counter"></span>
+      <button type="button" class="fleet-gallery-close" id="fleet-gallery-close" aria-label="Închide galeria">&times;</button>
+    </div>
+  </div>
+
+  <div class="fleet-gallery-stage">
+    <button type="button" class="fleet-gallery-arrow prev" id="fleet-gallery-prev" aria-label="Utilajul anterior">&#8249;</button>
+    <img id="fleet-gallery-image" alt="" />
+    <button type="button" class="fleet-gallery-arrow next" id="fleet-gallery-next" aria-label="Utilajul următor">&#8250;</button>
+  </div>
+
+  <p class="fleet-gallery-use" id="fleet-gallery-use"></p>
+  <div class="fleet-gallery-film" id="fleet-gallery-film"></div>
+</div>
+
+{/* Build-time data for the showcase and the gallery: URLs Astro has
+    already hashed and converted. */}
+<script is:inline type="application/json" id="fleet-data" set:html={JSON.stringify(machines)}></script>
+<script is:inline type="application/json" id="fleet-labels" set:html={JSON.stringify({ count: fleet.countLabel, gallery: fleet.galleryLabel })}></script>
+
+<script>
+  interface Machine {
+    slug: string
+    category: string
+    name: string
+    model: string
+    use: string
+    src: string
+    thumb: string
+  }
+
+  const read = (id: string) => {
+    const raw = document.getElementById(id)?.textContent
+    return raw ? JSON.parse(raw) : null
+  }
+
+  const machines: Machine[] = read('fleet-data') ?? []
+  const labels: { count: string; gallery: string } = read('fleet-labels') ?? { count: '', gallery: '' }
+
+  const stage = document.getElementById('fleet-stage')
+  const layers = [
+    document.getElementById('fleet-layer-a') as HTMLImageElement | null,
+    document.getElementById('fleet-layer-b') as HTMLImageElement | null,
+  ]
+  const detail = document.getElementById('fleet-detail')
+  const ticks = [...document.querySelectorAll<HTMLButtonElement>('#fleet-ticks button')]
+
+  if (stage && layers[0] && layers[1] && detail && machines.length) {
+    // How long one machine holds the stage. Long enough to read the name
+    // and the line under it without the eye being pulled back to the photo.
+    const DWELL = 4600
+    // Matches the .fleet-detail-body opacity transition, so the text is at
+    // zero when it is swapped and the name is never seen on the wrong machine.
+    const FADE = 320
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const set = (id: string, text: string) => {
+      const el = document.getElementById(id)
+      if (el) el.textContent = text
+    }
+
+    let front = 0
+    let at = 0
+    let timer: number | null = null
+    let hovered = false
+    let primed = false
+
+    // The next photograph is fetched while the current one is still on
+    // screen, so the crossfade starts against a decoded image rather than
+    // an empty box on a slow connection.
+    function preload(index: number) {
+      const next = new Image()
+      next.src = machines[(index + 1) % machines.length].src
+    }
+
+    function paintDetail(m: Machine) {
+      set('fleet-category', m.category)
+      set('fleet-name', m.name)
+      set('fleet-model', m.model)
+      set('fleet-use', m.use)
+      const counter = document.getElementById('fleet-count')
+      if (counter) counter.innerHTML = `<b>${pad(at + 1)}</b> / ${pad(machines.length)} ${labels.count}`
+      ticks.forEach((tick, i) => tick.classList.toggle('is-on', i === at))
+    }
+
+    function go(index: number) {
+      at = (index + machines.length) % machines.length
+      const m = machines[at]
+      stage!.setAttribute('aria-label', `${labels.gallery} — ${m.name}, ${m.model}`)
+
+      const current = layers[front]!
+      const back = layers[1 - front]!
+
+      // The server-rendered first layer carries a srcset. Once the script
+      // starts swapping frames the srcset would keep winning over the src
+      // it is given, so it is dropped the first time each layer is used.
+      back.removeAttribute('srcset')
+      back.removeAttribute('sizes')
+      back.src = m.src
+      back.alt = `${m.name} — ${m.model}`
+
+      const swap = () => {
+        back.classList.remove('is-out')
+        current.classList.add('is-out')
+        front = 1 - front
+      }
+
+      if (back.complete) swap()
+      else back.addEventListener('load', swap, { once: true })
+
+      detail!.classList.add('is-fading')
+      window.setTimeout(() => {
+        paintDetail(m)
+        detail!.classList.remove('is-fading')
+      }, FADE)
+
+      preload(at)
+    }
+
+    function start() {
+      if (timer !== null || reduced.matches) return
+      // The first fetch waits for the section to be reachable, the same way
+      // the build-time first frame is `loading="lazy"`. Nobody who never
+      // scrolls this far pays for a photograph.
+      if (!primed) {
+        primed = true
+        preload(at)
+      }
+      timer = window.setInterval(() => {
+        if (!hovered) go(at + 1)
+      }, DWELL)
+    }
+
+    function stop() {
+      if (timer === null) return
+      window.clearInterval(timer)
+      timer = null
+    }
+
+    stage.addEventListener('mouseenter', () => { hovered = true })
+    stage.addEventListener('mouseleave', () => { hovered = false })
+
+    // Nothing rotates off-screen, in a hidden tab, or under reduced motion.
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()))
+    reduced.addEventListener('change', () => (reduced.matches ? stop() : start()))
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => entries.forEach((entry) => (entry.isIntersecting ? start() : stop())),
+        { threshold: 0.2 },
+      ).observe(stage)
+    } else {
+      start()
+    }
+
+    // =====================
+    // Gallery
+    // =====================
+    const box = document.getElementById('fleet-gallery')
+    const image = document.getElementById('fleet-gallery-image') as HTMLImageElement | null
+    const film = document.getElementById('fleet-gallery-film')
+    const closeBtn = document.getElementById('fleet-gallery-close')
+
+    let galleryAt = 0
+    let opener: HTMLElement | null = null
+
+    function show(index: number) {
+      if (!image || !film) return
+      galleryAt = (index + machines.length) % machines.length
+      const m = machines[galleryAt]
+      image.src = m.src
+      image.alt = `${m.name} — ${m.model}`
+      set('fleet-gallery-category', m.category)
+      set('fleet-gallery-name', m.name)
+      set('fleet-gallery-model', m.model)
+      set('fleet-gallery-use', m.use)
+      const counter = document.getElementById('fleet-gallery-counter')
+      if (counter) counter.innerHTML = `<b>${pad(galleryAt + 1)}</b> / ${pad(machines.length)}`
+      ;[...film.children].forEach((thumb, i) => {
+        thumb.classList.toggle('is-on', i === galleryAt)
+        thumb.setAttribute('aria-selected', i === galleryAt ? 'true' : 'false')
+      })
+      film.children[galleryAt]?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' })
+    }
+
+    function buildFilm() {
+      if (!film || film.children.length) return
+      film.replaceChildren(
+        ...machines.map((m, i) => {
+          const button = document.createElement('button')
+          button.type = 'button'
+          button.setAttribute('role', 'tab')
+          button.setAttribute('aria-label', m.name)
+          const thumb = document.createElement('img')
+          thumb.src = m.thumb
+          thumb.alt = ''
+          thumb.loading = 'lazy'
+          button.append(thumb)
+          button.addEventListener('click', () => show(i))
+          return button
+        }),
+      )
+    }
+
+    function open(index: number, from: HTMLElement | null) {
+      if (!box) return
+      buildFilm()
+      opener = from
+      box.hidden = false
+      document.documentElement.classList.add('lightbox-open')
+      stop()
+      show(index)
+      closeBtn?.focus()
+    }
+
+    function close() {
+      if (!box) return
+      box.hidden = true
+      document.documentElement.classList.remove('lightbox-open')
+      // Leave the showcase on whichever machine the visitor was looking at,
+      // so the section does not jump underneath them on the way out.
+      if (galleryAt !== at) go(galleryAt)
+      start()
+      opener?.focus()
+    }
+
+    stage.addEventListener('click', () => open(at, stage))
+    document.getElementById('fleet-all')?.addEventListener('click', (event) =>
+      open(at, event.currentTarget as HTMLElement),
+    )
+
+    ticks.forEach((tick, i) =>
+      tick.addEventListener('click', () => {
+        go(i)
+        // Restart the dwell from here rather than pulling the visitor on a
+        // moment after they chose a machine themselves.
+        stop()
+        start()
+      }),
+    )
+
+    closeBtn?.addEventListener('click', close)
+    document.getElementById('fleet-gallery-prev')?.addEventListener('click', () => show(galleryAt - 1))
+    document.getElementById('fleet-gallery-next')?.addEventListener('click', () => show(galleryAt + 1))
+    box?.addEventListener('click', (event) => {
+      if (event.target === box) close()
+    })
+
+    document.addEventListener('keydown', (event) => {
+      if (!box || box.hidden) return
+      if (event.key === 'Escape') close()
+      else if (event.key === 'ArrowRight') show(galleryAt + 1)
+      else if (event.key === 'ArrowLeft') show(galleryAt - 1)
+    })
+  }
+</script>

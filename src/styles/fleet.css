@@ -1,0 +1,589 @@
+/* =====================
+   Fleet
+
+   Follows Projects and leads into Contact, on --light. It is the one
+   intermediate value step the page had left, and it is what lifts the page
+   back out of the portfolio's charcoal: dark, then cream, then white,
+   rather than two photo bands sharing a ground and reading as one long
+   section.
+
+   The claim here is ownership, not a catalogue: twelve equal cards made
+   every machine equally important and turned the section into a price
+   list. One large photograph at a time is what lets a visitor actually
+   read the machine — the boom, the tracks, the make on the cab.
+   ===================== */
+.fleet {
+  background: var(--light);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Warm cast from the top-right — the mirror of the one falling from the
+   top-left over Projects directly above, so the two photo sections are lit
+   from opposite corners rather than reading as one band twice. */
+.fleet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(110% 60% at 88% -14%, rgba(201, 168, 76, 0.16), transparent 60%);
+}
+
+.fleet .container {
+  position: relative;
+}
+
+/* =====================
+   Header
+
+   Same three-child skeleton as .projects-head: the eyebrow holds row 1 on
+   its own so the title and the lede share row 2 and their first lines
+   align at any viewport.
+
+   The columns are the showcase's, not the portfolio's, so the section runs
+   on one grid: the lede starts exactly where the rail below it starts, and
+   the title column is the width of the photograph. Two right-hand columns
+   beginning 89px apart was the section's loudest misalignment.
+   ===================== */
+.fleet-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: 32px;
+  row-gap: 0;
+  align-items: start;
+  padding-bottom: 22px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fleet-label { grid-area: 1 / 1; }
+.fleet-title { grid-area: 2 / 1; }
+.fleet-lede  { grid-area: 2 / 2; }
+
+.fleet-label {
+  margin-bottom: 12px;
+}
+
+.fleet-title {
+  margin-bottom: 0;
+  font-size: clamp(1.75rem, 2.7vw, 2.35rem);
+  line-height: 1.14;
+  letter-spacing: -0.032em;
+  text-wrap: balance;
+}
+
+/* The 6px absorbs the difference in half-leading between the title and the
+   lede, so their first lines sit on the same line rather than merely
+   starting in the same row. Same value, same reason, as .projects-lede. */
+.fleet-lede {
+  margin: 0;
+  padding-top: 6px;
+  color: var(--text-light);
+  font-size: 0.97rem;
+  line-height: 1.72;
+}
+
+/* =====================
+   Showcase
+
+   The photograph holds the left and its details the right. Setting the
+   type over the photo instead was the obvious move and the wrong one:
+   these are working photographs of a yard, not studio plates with clean
+   space to set into.
+   ===================== */
+/* 1.2 rather than the 1.62 this started at. The frame's height follows its
+   width, so every pixel added to the photograph was two-thirds of a pixel
+   the column beside it had to fill — the blank space was a proportion
+   problem before it was a spacing one. Narrowing the frame and widening the
+   rail closes it from both ends, and at 611px the photograph is still the
+   largest thing on the page. */
+.fleet-showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: stretch;
+}
+
+/* A <button>, so the whole photograph is one keyboard-reachable control
+   rather than a div with a click handler nobody can tab to. */
+.fleet-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  /* `stretch` would let the row's height win over the aspect ratio wherever
+     the rail is the taller column — at ~900px that squeezed the frame to
+     1.38 and object-fit cropped 17% off the sides of every machine. The
+     frame keeps its own ratio; the rail is the one that stretches. */
+  align-self: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  /* 5:3, and the twelve source files are re-cut to 5:3, so object-fit
+     never re-crops away the framing chosen for the photograph. The wider
+     frame is what lets the rail beside it reach its own foot: at 3:2 the
+     same column ran 180px short. */
+  aspect-ratio: 5 / 3;
+  overflow: hidden;
+  background: #d8d5cd;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fleet-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.95) contrast(1.04);
+  transition: opacity 0.9s ease, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Two stacked layers; the script fades between them. */
+.fleet-stage img.is-out {
+  opacity: 0;
+}
+
+.fleet-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(16, 16, 22, 0.42),
+    rgba(16, 16, 22, 0) 34%,
+    rgba(16, 16, 22, 0.24)
+  );
+}
+
+.fleet-stage:hover img {
+  transform: scale(1.03);
+}
+
+.fleet-hint {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: rgba(14, 14, 18, 0.58);
+  backdrop-filter: blur(7px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f6f3ea;
+  font-size: 0.69rem;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.fleet-stage:hover .fleet-hint,
+.fleet-stage:focus-visible .fleet-hint {
+  background: rgba(201, 168, 76, 0.92);
+  border-color: rgba(201, 168, 76, 0.92);
+  color: #241f0d;
+}
+
+.fleet-hint i {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: fleet-cycle 2.6s ease-in-out infinite;
+}
+
+.fleet-stage:hover .fleet-hint i {
+  background: #241f0d;
+  animation: none;
+}
+
+@keyframes fleet-cycle {
+  50% { opacity: 0.25; }
+}
+
+/* =====================
+   Details column
+   ===================== */
+/* Three blocks down the full height of the photograph: what the machine
+   is, where you are in the fleet, and the section's own footnote. The slack
+   is divided between them instead of collecting in one hole above the
+   ticks. */
+.fleet-detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.fleet-detail-body {
+  transition: opacity 0.32s ease;
+}
+
+.fleet-detail-body.is-fading {
+  opacity: 0;
+}
+
+.fleet-category {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+/* Sized against the section title above it rather than the small print
+   below: this is the name of the thing the visitor is looking at, and at
+   1.35rem it read as a photo caption instead of the second column's
+   heading. */
+.fleet-name {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.6vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.16;
+  letter-spacing: -0.028em;
+  color: var(--primary);
+  text-wrap: balance;
+}
+
+.fleet-model {
+  margin: 7px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.fleet-use {
+  margin: 18px 0 0;
+  padding-top: 17px;
+  border-top: 1px solid var(--border);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--text-light);
+}
+
+/* No `margin-top: auto` any more — the column distributes its own slack,
+   so pushing this block to the bottom would only recreate the hole. */
+.fleet-nav {
+  flex: none;
+}
+
+.fleet-ticks {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.fleet-ticks li {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.fleet-ticks button {
+  flex: 1;
+  height: 3px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.fleet-ticks button:hover {
+  background: var(--accent-ink);
+}
+
+.fleet-ticks button.is-on {
+  background: var(--accent);
+}
+
+.fleet-foot-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.fleet-count {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.fleet-count b {
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.fleet-all {
+  padding: 0 0 1px;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(127, 106, 46, 0.35);
+  font-family: inherit;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.fleet-all:hover {
+  border-bottom-color: currentColor;
+}
+
+/* =====================
+   Footnote
+
+   Closes the rail. Stacked rather than the two-across band it used to be:
+   at rail width the note wraps to three or four lines and a link sitting
+   beside it would be a 90px column of its own.
+   ===================== */
+.fleet-foot {
+  flex: none;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.fleet-note {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  line-height: 1.66;
+  color: var(--text-light);
+}
+
+.fleet-link {
+  display: inline-block;
+  padding-bottom: 1px;
+  border-bottom: 1px solid rgba(127, 106, 46, 0.35);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.fleet-link:hover {
+  border-bottom-color: currentColor;
+}
+
+/* =====================
+   Gallery
+
+   All twelve behind one click, in the same language as the Projects
+   lightbox — the visitor has already learned this overlay by the time
+   they reach it. Leaner, though: a machine has one photograph and one
+   line, so there is no caption strip and no scope list.
+
+   The scroll lock is .lightbox-open from projects.css. The rule is
+   generic and the two overlays are never open at once, so it is shared
+   rather than duplicated.
+   ===================== */
+.fleet-gallery {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 14px;
+  background: rgba(9, 9, 12, 0.97);
+  backdrop-filter: blur(14px);
+  animation: lightbox-in 0.26s ease;
+}
+
+.fleet-gallery[hidden] {
+  display: none;
+}
+
+.fleet-gallery-top {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex: none;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.fleet-gallery-id {
+  min-width: 0;
+}
+
+.fleet-gallery-category {
+  margin: 0 0 3px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.fleet-gallery-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #f3f0e7;
+}
+
+.fleet-gallery-model {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: #a49c8e;
+}
+
+.fleet-gallery-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+
+.fleet-gallery-counter {
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  color: #a49c8e;
+  font-variant-numeric: tabular-nums;
+}
+
+.fleet-gallery-counter b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.fleet-gallery-close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f3f0e7;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.fleet-gallery-close:hover {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.14);
+}
+
+/* Flex centring rather than the grid the Projects lightbox uses. On a grid
+   the row is auto-sized to the image, so the image's own `max-height: 100%`
+   resolves against a track that grew to fit it and never constrains
+   anything — a 1200x800 frame stayed 800px tall inside a 655px stage and
+   pushed the filmstrip off the bottom of the screen. Projects never hits
+   this because its 16:9 frames are capped by `max-width` first. In a flex
+   container with a definite height the percentage resolves against the
+   content box, which is what makes tall photographs fit. */
+.fleet-gallery-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 14px;
+}
+
+.fleet-gallery-stage img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 2px;
+}
+
+.fleet-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(20, 20, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f3f0e7;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.fleet-gallery-arrow:hover {
+  border-color: var(--accent);
+  background: rgba(201, 168, 76, 0.2);
+}
+
+.fleet-gallery-arrow.prev { left: 4px; }
+.fleet-gallery-arrow.next { right: 4px; }
+
+.fleet-gallery-use {
+  flex: none;
+  min-height: 1.4em;
+  margin: 0;
+  padding: 12px 0 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #a49c8e;
+}
+
+.fleet-gallery-film {
+  flex: none;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-top: 12px;
+  padding: 12px 2px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  scrollbar-width: thin;
+}
+
+/* 104x62 rather than the portfolio's 104x59: these thumbnails are 5:3. */
+.fleet-gallery-film button {
+  flex: none;
+  width: 104px;
+  height: 62px;
+  padding: 0;
+  overflow: hidden;
+  background: #0b0b0e;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 2px;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.fleet-gallery-film button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fleet-gallery-film button:hover {
+  opacity: 0.85;
+}
+
+.fleet-gallery-film button.is-on {
+  opacity: 1;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}

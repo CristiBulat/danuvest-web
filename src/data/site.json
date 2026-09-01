@@ -5,9 +5,10 @@
   "metaDescription": "Danuvest — companie de construcții din Republica Moldova cu experiență de peste 18 ani. Construcții rezidențiale și comerciale de calitate înaltă, termene respectate.",
   "navLinks": [
     { "label": "Acasă", "href": "#acasa" },
+    { "label": "Despre Noi", "href": "#despre" },
     { "label": "Servicii", "href": "#servicii" },
     { "label": "Proiecte", "href": "#proiecte" },
-    { "label": "Despre Noi", "href": "#despre" },
+    { "label": "Utilaje", "href": "#utilaje" },
     { "label": "Contact", "href": "#contact" }
   ],
   "ctaLabel": "Solicită Consultație"
