@@ -6,3 +6,6 @@ src/env.d.ts
 *.local
 .env
 .env.*
+
+# graphify knowledge graph (regenerate with: graphify update .)
+graphify-out/
