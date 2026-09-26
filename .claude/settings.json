@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(npm run build)",
+      "Bash(npm run check)",
+      "Bash(npm run preview)",
+      "Bash(npx astro check:*)",
+      "Bash(npx astro build:*)",
+      "Bash(node scripts/build-brand.mjs)"
+    ]
+  },
+  "enableAllProjectMcpServers": false
+}

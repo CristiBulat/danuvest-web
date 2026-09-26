@@ -1,6 +1,12 @@
 ---
 import Icon from './Icon.astro'
-import services from '../data/services.json'
+import { getContent, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { services } = getContent(Astro.props.lang)
 ---
 
 <section class="section services" id="servicii">

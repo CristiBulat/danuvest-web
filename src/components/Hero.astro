@@ -2,7 +2,13 @@
 import { getImage } from 'astro:assets'
 import heroBg from '../assets/hero-bg.jpg'
 import Icon from './Icon.astro'
-import hero from '../data/hero.json'
+import { getContent, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { hero } = getContent(Astro.props.lang)
 
 // LCP background image — routed through astro:assets so it's hashed,
 // compressed, and served as WebP instead of being a hardcoded /assets/...

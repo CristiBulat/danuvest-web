@@ -7,14 +7,18 @@
 import '../styles/fonts.css'
 import '../styles/main.css'
 import Seo from '../components/Seo.astro'
-import site from '../data/site.json'
+import Tracking from '../components/Tracking.astro'
+import { getContent, LOCALE, type Lang } from '../i18n'
 
 interface Props {
+  lang?: Lang
   title?: string
   description?: string
   image?: string
 }
 
+const { lang = 'ro' } = Astro.props
+const { site } = getContent(lang)
 const { title = site.metaTitle, description = site.metaDescription, image } = Astro.props
 
 // '/' normally; '/danuvest-web/' on the GitHub Pages mirror build.
@@ -24,7 +28,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 ---
 
 <!DOCTYPE html>
-<html lang="ro">
+<html lang={LOCALE[lang].html}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,11 +44,12 @@ const base = import.meta.env.BASE_URL.endsWith('/')
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <Seo title={title} description={description} image={image} />
+    <Seo lang={lang} title={title} description={description} image={image} />
 
     <slot name="head" />
   </head>
   <body>
     <slot />
+    <Tracking lang={lang} />
   </body>
 </html>

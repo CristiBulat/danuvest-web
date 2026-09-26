@@ -1,6 +1,13 @@
 ---
 import { Image, getImage } from 'astro:assets'
-import projects from '../data/projects.json'
+import { getContent, getUi, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { projects } = getContent(Astro.props.lang)
+const ui = getUi(Astro.props.lang)
 
 // Every project photo, keyed by filename. The glob pattern has to be a
 // literal — Vite resolves it at build time — so pull the whole folder in
@@ -125,7 +132,7 @@ const gallery = await Promise.all(
   </div>
 </section>
 
-<div class="project-lightbox" id="project-lightbox" role="dialog" aria-modal="true" aria-label="Galerie proiect" hidden>
+<div class="project-lightbox" id="project-lightbox" role="dialog" aria-modal="true" aria-label={ui.projectGallery} hidden>
   <div class="lightbox-top">
     <div class="lightbox-id">
       <p class="lightbox-category" id="lightbox-category"></p>
@@ -134,16 +141,16 @@ const gallery = await Promise.all(
     </div>
     <div class="lightbox-tools">
       <span class="lightbox-counter" id="lightbox-counter"></span>
-      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Închide galeria">&times;</button>
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label={ui.closeGallery}>&times;</button>
     </div>
   </div>
 
   <div class="lightbox-main">
     <div class="lightbox-view">
       <div class="lightbox-stage">
-        <button type="button" class="lightbox-arrow prev" id="lightbox-prev" aria-label="Fotografia anterioară">&#8249;</button>
+        <button type="button" class="lightbox-arrow prev" id="lightbox-prev" aria-label={ui.prevPhoto}>&#8249;</button>
         <img id="lightbox-image" alt="" />
-        <button type="button" class="lightbox-arrow next" id="lightbox-next" aria-label="Fotografia următoare">&#8250;</button>
+        <button type="button" class="lightbox-arrow next" id="lightbox-next" aria-label={ui.nextPhoto}>&#8250;</button>
       </div>
       <p class="lightbox-caption" id="lightbox-caption"></p>
     </div>
@@ -163,7 +170,7 @@ const gallery = await Promise.all(
 {/* Build-time data for the lightbox: image URLs Astro has already hashed
     and converted, so the client script never has to resolve an asset. */}
 <script is:inline type="application/json" id="projects-gallery" set:html={JSON.stringify(gallery)}></script>
-<script is:inline type="application/json" id="projects-labels" set:html={JSON.stringify({ client: projects.clientLabel })}></script>
+<script is:inline type="application/json" id="projects-labels" set:html={JSON.stringify({ client: projects.clientLabel, photo: ui.photo })}></script>
 
 <script>
   interface Shot { src: string; thumb: string; caption: string }
@@ -185,7 +192,7 @@ const gallery = await Promise.all(
   }
 
   const gallery: Entry[] = read('projects-gallery') ?? []
-  const labels: { client: string } = read('projects-labels') ?? { client: '' }
+  const labels: { client: string; photo: string } = read('projects-labels') ?? { client: '', photo: '' }
   const byslug = new Map(gallery.map((g) => [g.slug, g]))
 
   const cards = [...document.querySelectorAll<HTMLElement>('.project-card')]
@@ -249,7 +256,7 @@ const gallery = await Promise.all(
         const button = document.createElement('button')
         button.type = 'button'
         button.setAttribute('role', 'tab')
-        button.setAttribute('aria-label', `Fotografia ${i + 1}`)
+        button.setAttribute('aria-label', `${labels.photo} ${i + 1}`)
         const thumb = document.createElement('img')
         thumb.src = shot.thumb
         thumb.alt = ''

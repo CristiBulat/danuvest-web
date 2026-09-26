@@ -1,0 +1,251 @@
+---
+// Google Analytics 4 and the Meta Pixel, behind a consent banner.
+//
+// Configured by src/data/tracking.json (editable in the CMS). With both IDs
+// empty this renders nothing at all: no banner, no third-party request, and
+// the page is byte-for-byte what it was before tracking existed.
+//
+// With an ID set, NOTHING from Google or Meta loads until the visitor
+// presses Accept. That is Google's "basic" consent mode — the stricter of
+// the two: no cookieless pings before consent, so visitors who decline are
+// simply not counted. The choice is remembered in localStorage and can be
+// changed from the "Setări cookie" link in the footer.
+//
+// What gets measured, once accepted: page views, plus one event per click on
+// a direct-contact link, anywhere on the page —
+//   click_phone     tel:
+//   click_whatsapp  wa.me / api.whatsapp.com
+//   click_viber     viber:
+//   click_email     mailto:
+// each with `link_location` (which section the link was in) and
+// `page_language`. In GA4, mark these as key events; Google Ads can then
+// import them as conversions. The Meta Pixel receives the standard `Contact`
+// event for the same clicks.
+import tracking from '../data/tracking.json'
+import { getUi, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const ui = getUi(lang)
+
+// The CMS may drop a field it saved empty, so a missing key means "off".
+const config: { ga4Id?: string; metaPixelId?: string } = tracking
+const ga4Id = (config.ga4Id ?? '').trim()
+const metaPixelId = (config.metaPixelId ?? '').trim()
+
+// Same policy as the image and icon guards: a malformed ID fails the build
+// loudly instead of shipping a tracker that silently records nothing.
+if (ga4Id && !/^G-[A-Z0-9]{4,}$/.test(ga4Id)) {
+  throw new Error(
+    `Tracking: "${ga4Id}" in src/data/tracking.json is not a GA4 measurement ID. ` +
+      'It starts with G- followed by capital letters and digits, e.g. G-AB12CD34EF.',
+  )
+}
+if (metaPixelId && !/^\d{10,20}$/.test(metaPixelId)) {
+  throw new Error(
+    `Tracking: "${metaPixelId}" in src/data/tracking.json is not a Meta Pixel ID. ` +
+      'It is digits only, usually 15 or 16 of them.',
+  )
+}
+
+const enabled = Boolean(ga4Id || metaPixelId)
+const tools = [ga4Id && 'Google Analytics', metaPixelId && 'Meta Pixel'].filter(Boolean).join(', ')
+const text = ui.consentText.replace('{tools}', tools)
+---
+
+{enabled && (
+  <div class="consent" id="consent" role="region" aria-label={ui.consentSettings} hidden>
+    <p class="consent-text">{text}</p>
+    <div class="consent-actions">
+      <button type="button" class="btn consent-btn consent-decline" data-consent="denied">{ui.consentDecline}</button>
+      <button type="button" class="btn btn-primary consent-btn" data-consent="granted">{ui.consentAccept}</button>
+    </div>
+  </div>
+  <script is:inline type="application/json" id="tracking-config" set:html={JSON.stringify({ ga4Id, metaPixelId, lang })}></script>
+)}
+
+<script>
+  // Astro bundles this script whenever the component is on the page, even
+  // when the markup above did not render — so everything hangs off the
+  // config block, and with no config it does nothing.
+
+  type Fn = (...args: unknown[]) => void
+  interface MetaQueue extends Fn {
+    callMethod?: Fn
+    queue: unknown[]
+    push: MetaQueue
+    loaded: boolean
+    version: string
+  }
+  interface TrackingWindow {
+    dataLayer: unknown[]
+    gtag?: Fn
+    fbq?: MetaQueue
+    _fbq?: MetaQueue
+  }
+  interface Config {
+    ga4Id: string
+    metaPixelId: string
+    lang: string
+  }
+
+  const STORAGE_KEY = 'danuvest-consent'
+  const w = window as unknown as TrackingWindow
+
+  const raw = document.getElementById('tracking-config')?.textContent
+  const config: Config | null = raw ? JSON.parse(raw) : null
+  const banner = document.getElementById('consent')
+
+  // Storage can be missing or throw (private windows, blocked site data).
+  // A visitor we cannot remember is asked again next time — never tracked
+  // without an answer.
+  function readChoice(): string | null {
+    try {
+      return window.localStorage.getItem(STORAGE_KEY)
+    } catch {
+      return null
+    }
+  }
+
+  function saveChoice(choice: 'granted' | 'denied') {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, choice)
+    } catch {
+      /* not remembered; asked again on the next visit */
+    }
+  }
+
+  function loadScript(src: string) {
+    const s = document.createElement('script')
+    s.async = true
+    s.src = src
+    document.head.append(s)
+  }
+
+  function loadGa4(id: string) {
+    w.dataLayer = w.dataLayer || []
+    // gtag must push the `arguments` object itself, not an array copy —
+    // gtag.js tells commands from data layer events by that difference.
+    w.gtag = function gtag() {
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer.push(arguments)
+    }
+    w.gtag('js', new Date())
+    w.gtag('config', id)
+    loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`)
+  }
+
+  // Meta's standard base code, unminified. Commands issued before
+  // fbevents.js arrives are queued and replayed once it loads.
+  function loadMetaPixel(id: string) {
+    if (w.fbq) return
+    const fbq = function () {
+      // Same as gtag above: the queue holds `arguments` objects.
+      // eslint-disable-next-line prefer-rest-params
+      if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments)
+      // eslint-disable-next-line prefer-rest-params
+      else fbq.queue.push(arguments)
+    } as unknown as MetaQueue
+    fbq.push = fbq
+    fbq.loaded = true
+    fbq.version = '2.0'
+    fbq.queue = []
+    w.fbq = fbq
+    w._fbq = fbq
+    loadScript('https://connect.facebook.net/en_US/fbevents.js')
+    fbq('init', id)
+    fbq('track', 'PageView')
+  }
+
+  let active = false
+
+  function enable() {
+    if (active || !config) return
+    active = true
+    if (config.ga4Id) loadGa4(config.ga4Id)
+    if (config.metaPixelId) loadMetaPixel(config.metaPixelId)
+  }
+
+  // Withdrawing consent after it was given: stop both scripts, drop the
+  // cookies they set, then reload so neither is left running in this page.
+  // Stopping comes first — gtag.js rewrites its session cookie (_ga_<id>) as
+  // the page unloads, so a cookie deleted while it is still live comes
+  // straight back. `ga-disable-<id>` is Google's documented opt-out switch.
+  function withdraw() {
+    if (config?.ga4Id) (window as unknown as Record<string, unknown>)[`ga-disable-${config.ga4Id}`] = true
+    w.fbq?.('consent', 'revoke')
+    const names = document.cookie
+      .split(';')
+      .map((c) => c.split('=')[0].trim())
+      .filter((n) => /^(_ga|_gid|_gat|_fbp|_fbc)/.test(n))
+    const host = window.location.hostname
+    const domains = ['', host, `.${host.replace(/^www\./, '')}`]
+    for (const name of names) {
+      for (const domain of domains) {
+        document.cookie = `${name}=; Max-Age=0; path=/${domain ? `; domain=${domain}` : ''}`
+      }
+    }
+    window.location.reload()
+  }
+
+  function channelOf(href: string): string | null {
+    if (href.startsWith('tel:')) return 'phone'
+    if (href.startsWith('viber:')) return 'viber'
+    if (href.startsWith('mailto:')) return 'email'
+    if (/^https:\/\/(wa\.me|api\.whatsapp\.com)\//.test(href)) return 'whatsapp'
+    return null
+  }
+
+  // Where on the page the click happened, so a call from the hero can be
+  // told apart from one from the contact section or the footer.
+  function locationOf(link: Element): string {
+    const section = link.closest('section[id]')
+    if (section) return section.id
+    if (link.closest('footer')) return 'footer'
+    if (link.closest('nav, .mobile-menu')) return 'navbar'
+    return 'other'
+  }
+
+  if (config && banner) {
+    const choice = readChoice()
+    if (choice === 'granted') enable()
+    else if (choice !== 'denied') banner.hidden = false
+
+    banner.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const next = button.dataset.consent === 'granted' ? 'granted' : 'denied'
+        const previous = readChoice()
+        saveChoice(next)
+        banner.hidden = true
+        if (next === 'granted') enable()
+        else if (previous === 'granted' || active) withdraw()
+      })
+    })
+
+    document.querySelectorAll('[data-consent-open]').forEach((button) => {
+      button.addEventListener('click', () => {
+        banner.hidden = false
+        banner.querySelector<HTMLButtonElement>('[data-consent="granted"]')?.focus()
+      })
+    })
+
+    // One delegated listener covers every contact link on the page,
+    // including any an editor adds later through the CMS.
+    document.addEventListener('click', (event) => {
+      if (!active) return
+      const link = (event.target as Element | null)?.closest('a[href]')
+      if (!link) return
+      const channel = channelOf(link.getAttribute('href') ?? '')
+      if (!channel) return
+
+      w.gtag?.('event', `click_${channel}`, {
+        link_location: locationOf(link),
+        page_language: config.lang,
+      })
+      w.fbq?.('track', 'Contact', { content_name: channel })
+    })
+  }
+</script>

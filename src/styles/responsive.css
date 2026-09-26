@@ -146,11 +146,14 @@
   }
 }
 
-@media (max-width: 768px) {
-  :root {
-    --section-py: 64px;
-  }
-
+/* The navbar collapses to the hamburger below 1024px, well above the
+   768px layout breakpoint. Six section links, the CTA and the language
+   switch need ~960px side by side (Romanian: logo 165 + links 495 + switch
+   and CTA 266 + two 16px gaps); below that the row overlapped, and before
+   the switch existed it already ran 39px past the container at 769px. A
+   tablet gets the same menu as a phone — the panel is full-width and works
+   at any size. */
+@media (max-width: 1023px) {
   .navbar-links,
   .navbar-cta {
     display: none;
@@ -158,6 +161,12 @@
 
   .hamburger {
     display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-py: 64px;
   }
 
   /* The cap is the desktop curve evaluated at this breakpoint: 768 * 0.055

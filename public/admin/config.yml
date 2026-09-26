@@ -32,9 +32,17 @@ site_url: https://danuvest.md
 display_url: https://danuvest.md
 logo_url: /favicon.png
 
+# LANGUAGES. Every section exists twice: the Romanian collections (RO ·)
+# edit src/data/*.json, which is the site at /, and the Russian ones (RU ·)
+# edit src/data/ru/*.json, the site at /ru/. The Russian forms reuse the
+# Romanian field lists through YAML anchors (&site_fields … *site_fields),
+# so a field added or changed once below applies to both languages — the
+# two can never drift apart in shape. src/i18n.ts enforces the same thing
+# at build time.
+
 collections:
   - name: "site"
-    label: "Site & Navigation"
+    label: "RO · Site & Navigation"
     delete: false
     editor: { preview: false }
     files:
@@ -42,7 +50,7 @@ collections:
         label: "Site Settings"
         file: "src/data/site.json"
         format: "json"
-        fields:
+        fields: &site_fields
           - { name: brandName, label: "Brand Name", widget: string }
           - { name: brandSplit, label: "Brand Split (use | between two parts)", widget: string, hint: "e.g. DANU|VEST renders DANU + styled VEST" }
           - { name: metaTitle, label: "Meta Title (browser tab)", widget: string }
@@ -56,7 +64,7 @@ collections:
           - { name: ctaLabel, label: "Header CTA Button Label", widget: string }
 
   - name: "hero"
-    label: "Hero Section"
+    label: "RO · Hero Section"
     delete: false
     editor: { preview: false }
     files:
@@ -64,7 +72,7 @@ collections:
         label: "Hero"
         file: "src/data/hero.json"
         format: "json"
-        fields:
+        fields: &hero_fields
           - { name: titleLead, label: "Title — leading text", widget: string }
           - { name: titleAccent, label: "Title — accent (gold) word", widget: string }
           - { name: titleTrail, label: "Title — trailing line", widget: string }
@@ -90,7 +98,7 @@ collections:
               - { name: label, label: Label, widget: string }
 
   - name: "services"
-    label: "Services Section"
+    label: "RO · Services Section"
     delete: false
     editor: { preview: false }
     files:
@@ -98,7 +106,7 @@ collections:
         label: "Services"
         file: "src/data/services.json"
         format: "json"
-        fields:
+        fields: &services_fields
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: Title, widget: string }
           - name: items
@@ -122,7 +130,7 @@ collections:
   # is a developer task; the order of this list is the order the showcase
   # cycles through, grouped by what the machines do.
   - name: "fleet"
-    label: "Fleet Section"
+    label: "RO · Fleet Section"
     delete: false
     editor: { preview: false }
     files:
@@ -130,7 +138,7 @@ collections:
         label: "Fleet"
         file: "src/data/fleet.json"
         format: "json"
-        fields:
+        fields: &fleet_fields
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: "Title (use | for line break)", widget: string }
           - { name: description, label: "Intro paragraph", widget: text }
@@ -163,7 +171,7 @@ collections:
   # is cut to: the card frame is 16:9 as well, so an off-ratio file gets
   # re-cropped by the browser and loses whatever it was framed on.
   - name: "projects"
-    label: "Projects Section"
+    label: "RO · Projects Section"
     delete: false
     editor: { preview: false }
     files:
@@ -171,7 +179,7 @@ collections:
         label: "Projects"
         file: "src/data/projects.json"
         format: "json"
-        fields:
+        fields: &projects_fields
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: "Title (use | for line break)", widget: string }
           - { name: description, label: "Intro paragraph", widget: text }
@@ -198,7 +206,7 @@ collections:
               - { name: photos, label: "Photo captions", widget: list, field: { name: caption, label: Caption, widget: string }, hint: "One per photo, in order — four of them. Caption 1 belongs to <slug>-1.jpg, the card cover." }
 
   - name: "about"
-    label: "About Section"
+    label: "RO · About Section"
     delete: false
     editor: { preview: false }
     files:
@@ -206,7 +214,7 @@ collections:
         label: "About"
         file: "src/data/about.json"
         format: "json"
-        fields:
+        fields: &about_fields
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: "Title (use | for line break)", widget: string }
           - name: paragraphs
@@ -216,7 +224,7 @@ collections:
           - { name: imageAlt, label: "Image Alt Text", widget: string, hint: "The photo itself is set in code." }
 
   - name: "contact"
-    label: "Contact Section"
+    label: "RO · Contact Section"
     delete: false
     editor: { preview: false }
     files:
@@ -224,7 +232,7 @@ collections:
         label: "Contact"
         file: "src/data/contact.json"
         format: "json"
-        fields:
+        fields: &contact_fields
           - { name: label, label: "Section label", widget: string }
           - { name: title, label: Title, widget: string }
           - { name: description, label: Description, widget: text }
@@ -260,7 +268,7 @@ collections:
               - { name: external, label: "Opens in a new tab", widget: boolean, required: false, default: false, hint: "On for https:// links only. Leave off for tel:, mailto: and viber:." }
 
   - name: "footer"
-    label: "Footer"
+    label: "RO · Footer"
     delete: false
     editor: { preview: false }
     files:
@@ -268,7 +276,7 @@ collections:
         label: "Footer"
         file: "src/data/footer.json"
         format: "json"
-        fields:
+        fields: &footer_fields
           # The social block is commented out in Footer.astro because all three
           # links are placeholders. Put real profile URLs in here and ask a
           # developer to uncomment it. Dead social icons read as an abandoned
@@ -294,3 +302,111 @@ collections:
               - { name: text, label: Text, widget: string }
               - { name: href, label: "Link (optional)", widget: string, required: false }
           - { name: copyright, label: "Copyright Line", widget: string }
+
+  # ── Russian (/ru/) ────────────────────────────────────────────────────
+  # Same forms as above. In RU · Fleet and RU · Projects the slugs must stay
+  # identical to the Romanian ones: the photos are found by slug, and a
+  # different slug breaks the build exactly as it would in Romanian.
+  - name: "site_ru"
+    label: "RU · Site & Navigation"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "site"
+        label: "Site Settings (русский)"
+        file: "src/data/ru/site.json"
+        format: "json"
+        fields: *site_fields
+
+  - name: "hero_ru"
+    label: "RU · Hero Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "hero"
+        label: "Hero (русский)"
+        file: "src/data/ru/hero.json"
+        format: "json"
+        fields: *hero_fields
+
+  - name: "services_ru"
+    label: "RU · Services Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "services"
+        label: "Services (русский)"
+        file: "src/data/ru/services.json"
+        format: "json"
+        fields: *services_fields
+
+  - name: "fleet_ru"
+    label: "RU · Fleet Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "fleet"
+        label: "Fleet (русский)"
+        file: "src/data/ru/fleet.json"
+        format: "json"
+        fields: *fleet_fields
+
+  - name: "projects_ru"
+    label: "RU · Projects Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "projects"
+        label: "Projects (русский)"
+        file: "src/data/ru/projects.json"
+        format: "json"
+        fields: *projects_fields
+
+  - name: "about_ru"
+    label: "RU · About Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "about"
+        label: "About (русский)"
+        file: "src/data/ru/about.json"
+        format: "json"
+        fields: *about_fields
+
+  - name: "contact_ru"
+    label: "RU · Contact Section"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "contact"
+        label: "Contact (русский)"
+        file: "src/data/ru/contact.json"
+        format: "json"
+        fields: *contact_fields
+
+  - name: "footer_ru"
+    label: "RU · Footer"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "footer"
+        label: "Footer (русский)"
+        file: "src/data/ru/footer.json"
+        format: "json"
+        fields: *footer_fields
+
+  # Tracking IDs. Empty = no tracking script and no cookie banner at all.
+  # A malformed ID fails the build (components/Tracking.astro), so the
+  # patterns below catch the typo here first, before it is saved.
+  - name: "tracking"
+    label: "Tracking (Google Analytics, Meta)"
+    delete: false
+    editor: { preview: false }
+    files:
+      - name: "tracking"
+        label: "Tracking IDs"
+        file: "src/data/tracking.json"
+        format: "json"
+        fields:
+          - { name: ga4Id, label: "Google Analytics 4 — Measurement ID", widget: string, required: false, pattern: ['^(G-[A-Z0-9]{4,})?$', "Starts with G- then capital letters and digits, e.g. G-AB12CD34EF"], hint: "GA4 → Admin → Data streams → your web stream. Leave empty to switch Google Analytics off." }
+          - { name: metaPixelId, label: "Meta Pixel ID", widget: string, required: false, pattern: ['^([0-9]{10,20})?$', "Digits only, usually 15 or 16"], hint: "Meta Events Manager → Data sources → your pixel. Leave empty to switch the pixel off." }
