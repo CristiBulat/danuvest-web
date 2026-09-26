@@ -1,7 +1,13 @@
 ---
 import { Image } from 'astro:assets'
 import aboutImg from '../assets/about.jpg'
-import about from '../data/about.json'
+import { getContent, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { about } = getContent(Astro.props.lang)
 
 const [titleA, titleB] = about.title.split('|')
 ---

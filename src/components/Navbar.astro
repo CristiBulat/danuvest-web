@@ -1,11 +1,24 @@
 ---
 import BrandMark from './BrandMark.astro'
-import site from '../data/site.json'
+import { getContent, getUi, homePath, LOCALE, otherLang, type Lang } from '../i18n'
 
+interface Props {
+  lang: Lang
+}
+
+const { lang } = Astro.props
+const { site } = getContent(lang)
+const ui = getUi(lang)
 const [brandLeft, brandRight] = site.brandSplit.split('|')
+
+// The switch offers the other language only: two languages make a toggle,
+// and one short label is all the tight 769–900px navbar has room for.
+const alt = otherLang(lang)
+const altHref = homePath(alt)
+const altCode = alt.toUpperCase()
 ---
 
-<nav class="navbar transparent" aria-label="Navigare principală">
+<nav class="navbar transparent" aria-label={ui.mainNav}>
   <div class="container navbar-inner">
 
     <!-- Mark + wordmark. The mark is aria-hidden and the wordmark beside it
@@ -24,8 +37,16 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
       ))}
     </ul>
 
-    <!-- Desktop CTA -->
+    <!-- Desktop CTA, with the language switch beside it -->
     <div class="navbar-cta">
+      <a
+        href={altHref}
+        class="lang-switch"
+        hreflang={LOCALE[alt].html}
+        lang={LOCALE[alt].html}
+        aria-label={ui.switchTo}
+        title={ui.switchTo}
+      >{altCode}</a>
       <a href="#contact" class="btn btn-primary">{site.ctaLabel}</a>
     </div>
 
@@ -35,7 +56,9 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
       class="hamburger"
       aria-expanded="false"
       aria-controls="mobile-menu"
-      aria-label="Deschide meniu"
+      aria-label={ui.menuOpen}
+      data-label-open={ui.menuClose}
+      data-label-closed={ui.menuOpen}
     >
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
@@ -55,6 +78,12 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
     <a href={link.href} class="nav-link">{link.label}</a>
   ))}
   <a href="#contact" class="btn btn-primary">{site.ctaLabel}</a>
+  <a
+    href={altHref}
+    class="nav-link mobile-lang-switch"
+    hreflang={LOCALE[alt].html}
+    lang={LOCALE[alt].html}
+  >{altCode} · {ui.switchTo}</a>
 </div>
 
 <script>
@@ -67,8 +96,9 @@ const [brandLeft, brandRight] = site.brandSplit.split('|')
   const scrim = document.querySelector<HTMLElement>('.mobile-menu-scrim')
 
   const SCROLL_THRESHOLD = 60
-  const LABEL_CLOSED = 'Deschide meniu'
-  const LABEL_OPEN = 'Închide meniu'
+  // Labels come from the markup so the script stays language-neutral.
+  const LABEL_CLOSED = hamburger?.dataset.labelClosed ?? ''
+  const LABEL_OPEN = hamburger?.dataset.labelOpen ?? ''
 
   function handleScroll() {
     if (!navbar) return

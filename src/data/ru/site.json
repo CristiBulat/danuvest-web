@@ -1,0 +1,15 @@
+{
+  "brandName": "DANUVEST",
+  "brandSplit": "DANU|VEST",
+  "metaTitle": "Danuvest | Строительная компания в Молдове",
+  "metaDescription": "Danuvest — строительная компания в Молдове с опытом более 18 лет. Жилые и коммерческие объекты под ключ, земляные работы, собственная спецтехника.",
+  "navLinks": [
+    { "label": "Главная", "href": "#acasa" },
+    { "label": "О нас", "href": "#despre" },
+    { "label": "Услуги", "href": "#servicii" },
+    { "label": "Проекты", "href": "#proiecte" },
+    { "label": "Техника", "href": "#utilaje" },
+    { "label": "Контакты", "href": "#contact" }
+  ],
+  "ctaLabel": "Консультация"
+}

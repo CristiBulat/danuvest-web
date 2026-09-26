@@ -1,6 +1,6 @@
 ---
 import Icon from './Icon.astro'
-import contact from '../data/contact.json'
+import { getContent, type Lang } from '../i18n'
 
 // `href` is optional on an info entry — public/admin/config.yml declares it
 // required: false — but TypeScript infers the shape from whatever happens to
@@ -15,6 +15,11 @@ interface ContactInfoItem {
   href?: string
 }
 
+interface Props {
+  lang: Lang
+}
+
+const { contact } = getContent(Astro.props.lang)
 const info: ContactInfoItem[] = contact.info
 ---
 

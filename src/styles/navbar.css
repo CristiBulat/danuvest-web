@@ -29,16 +29,19 @@
 }
 
 /* `justify-content: space-between` across three unequal children never
-   centred the links: the row's midpoint sits (cta − logo) / 2 = 24px left
-   of the container's, so the "centered" links in Navbar.astro read visibly
-   off-axis. A 1fr auto 1fr grid centres column 2 on the container regardless
-   of how wide the logo and CTA are. Only above the mobile breakpoint — below
-   it the links and CTA are display:none and the hamburger would fall into
-   the centre column. */
-@media (min-width: 769px) {
+   centred the links: the row's midpoint sits (cta − logo) / 2 left of the
+   container's, so the links read visibly off-axis. A 1fr auto 1fr grid
+   centres column 2 on the container regardless of how wide the logo and
+   CTA are, whenever both side columns have room to be equal; when they do
+   not, the grid gives the wider side what it needs and the column gap
+   keeps the links from touching either neighbour. Only from 1024px up —
+   below it the links and CTA are display:none (responsive.css) and the
+   hamburger would fall into the centre column. */
+@media (min-width: 1024px) {
   .navbar-inner {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
+    column-gap: 16px;
   }
 
   /* Without this the <a> stretches across the whole 1fr column and the dead
@@ -49,31 +52,6 @@
 
   .navbar-cta {
     justify-self: end;
-  }
-}
-
-/* Just above the hamburger breakpoint the three columns nearly fill the bar:
-   at 769px the logo (165) + links (337) + CTA (212) leave 7px of free space,
-   so the links ended up touching the CTA and could not centre. Because the
-   middle column is centred, the two gaps differ by exactly (cta − logo), and
-   an even 24px of clearance needs ~857px of viewport. Trimming the link and
-   button padding across this band buys that back instead of handing tablets
-   a hamburger. Above 900px the default padding has room and this lifts.
-
-   The lift is a step, not a curve: the gap goes 89px at 900 to 46px at 901.
-   That is inherent — the tightened row is a fixed 44px narrower than the
-   default one at every width, so no breakpoint makes the two regimes meet.
-   900 is chosen because it leaves the largest post-step gap. Unlike the
-   .hero-title clamp discontinuity this one repositions nothing and inverts
-   no type size; only internal padding changes. */
-@media (min-width: 769px) and (max-width: 900px) {
-  .nav-link {
-    padding: 8px 10px;
-  }
-
-  .navbar-cta .btn {
-    padding: 12px 18px;
-    font-size: 0.88rem;
   }
 }
 
@@ -224,4 +202,42 @@
 
 html.nav-open {
   overflow: hidden;
+}
+
+/* Language switch. Offers the other language only (RU on the Romanian page,
+   RO on the Russian one), so it stays one short label: the full desktop row
+   only fits from 1024px up as it is (see responsive.css). */
+.navbar-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 6px;
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: var(--ease);
+}
+
+.lang-switch:hover {
+  color: var(--accent-light);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* In the mobile panel the switch sits under the CTA, set apart from the
+   section links above it. */
+.mobile-menu .mobile-lang-switch {
+  margin-top: 8px;
+  border-bottom: none;
+  text-align: center;
+  font-size: 0.9rem;
 }

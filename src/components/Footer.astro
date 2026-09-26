@@ -1,7 +1,20 @@
 ---
 import Icon from './Icon.astro'
 import BrandMark from './BrandMark.astro'
-import footer from '../data/footer.json'
+import tracking from '../data/tracking.json'
+import { getContent, getUi, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { footer } = getContent(Astro.props.lang)
+const ui = getUi(Astro.props.lang)
+
+// Only offered when there is something to consent to. With both IDs empty
+// no tracking script is rendered, and a settings button would be a lie.
+const trackingIds: { ga4Id?: string; metaPixelId?: string } = tracking
+const hasTracking = Boolean(trackingIds.ga4Id?.trim() || trackingIds.metaPixelId?.trim())
 ---
 
 <footer class="footer">
@@ -45,6 +58,9 @@ import footer from '../data/footer.json'
 
     <div class="footer-bottom">
       <span>© {new Date().getFullYear()} {footer.copyright}</span>
+      {hasTracking && (
+        <button type="button" class="footer-consent" data-consent-open>{ui.consentSettings}</button>
+      )}
     </div>
   </div>
 </footer>

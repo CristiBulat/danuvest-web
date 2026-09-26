@@ -1,0 +1,14 @@
+{
+  "social": [
+    { "label": "Facebook", "icon": "facebook", "href": "#" },
+    { "label": "Instagram", "icon": "instagram", "href": "#" },
+    { "label": "LinkedIn", "icon": "linkedin", "href": "#" }
+  ],
+  "contactItems": [
+    { "icon": "pin", "text": "ул. Конструкторилор, Ставчены, MD-4839" },
+    { "icon": "phone", "text": "+373 69 463 435", "href": "tel:+37369463435" },
+    { "icon": "mail", "text": "contact@danuvest.md", "href": "mailto:contact@danuvest.md" },
+    { "icon": "clock", "text": "Понедельник – пятница: 08:00 – 18:00" }
+  ],
+  "copyright": "Danuvest SRL — с 2008 года. Все права защищены."
+}

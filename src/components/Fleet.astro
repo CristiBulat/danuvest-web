@@ -1,6 +1,13 @@
 ---
 import { Image, getImage } from 'astro:assets'
-import fleet from '../data/fleet.json'
+import { getContent, getUi, type Lang } from '../i18n'
+
+interface Props {
+  lang: Lang
+}
+
+const { fleet } = getContent(Astro.props.lang)
+const ui = getUi(Astro.props.lang)
 
 // One photograph per machine, keyed by slug. Same reasoning as Projects:
 // the glob pattern has to be a literal for Vite to resolve it at build
@@ -145,14 +152,14 @@ const machines = await Promise.all(
     </div>
     <div class="fleet-gallery-tools">
       <span class="fleet-gallery-counter" id="fleet-gallery-counter"></span>
-      <button type="button" class="fleet-gallery-close" id="fleet-gallery-close" aria-label="Închide galeria">&times;</button>
+      <button type="button" class="fleet-gallery-close" id="fleet-gallery-close" aria-label={ui.closeGallery}>&times;</button>
     </div>
   </div>
 
   <div class="fleet-gallery-stage">
-    <button type="button" class="fleet-gallery-arrow prev" id="fleet-gallery-prev" aria-label="Utilajul anterior">&#8249;</button>
+    <button type="button" class="fleet-gallery-arrow prev" id="fleet-gallery-prev" aria-label={ui.prevMachine}>&#8249;</button>
     <img id="fleet-gallery-image" alt="" />
-    <button type="button" class="fleet-gallery-arrow next" id="fleet-gallery-next" aria-label="Utilajul următor">&#8250;</button>
+    <button type="button" class="fleet-gallery-arrow next" id="fleet-gallery-next" aria-label={ui.nextMachine}>&#8250;</button>
   </div>
 
   <p class="fleet-gallery-use" id="fleet-gallery-use"></p>

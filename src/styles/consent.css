@@ -1,0 +1,65 @@
+/* =====================
+   Consent banner — rendered only when src/data/tracking.json holds a GA4 or
+   Meta Pixel ID (see components/Tracking.astro).
+
+   A corner card, not a full-width wall: it must not hide the hero CTA or the
+   contact buttons it exists to measure. Above the navbar (1000) so it is
+   never tucked under it, below the two lightboxes (1100) so an open gallery
+   stays on top. Accept and Refuse are the same size — declining has to be as
+   easy as accepting.
+   ===================== */
+.consent {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1050;
+  max-width: 440px;
+  padding: 18px 20px;
+  background: var(--primary);
+  color: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.consent[hidden] {
+  display: none;
+}
+
+.consent-text {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.consent-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.consent-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.consent-decline {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
+.consent-decline:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--white);
+}
+
+@media (max-width: 480px) {
+  .consent {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+}

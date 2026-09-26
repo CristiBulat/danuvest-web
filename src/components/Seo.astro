@@ -6,9 +6,10 @@
 // <title>/<meta name="description">, so the two never drift apart.
 import { getImage } from 'astro:assets'
 import defaultShareImage from '../assets/hero-bg.jpg'
-import site from '../data/site.json'
+import { getContent, homePath, LANGS, LOCALE, type Lang } from '../i18n'
 
 interface Props {
+  lang?: Lang
   title?: string
   description?: string
   /** Relative path or absolute URL. Defaults to the hero image. */
@@ -16,6 +17,9 @@ interface Props {
   /** Set to false for pages that should not be indexed (none exist today). */
   index?: boolean
 }
+
+const { lang = 'ro' } = Astro.props
+const { site } = getContent(lang)
 
 const {
   title = site.metaTitle,
@@ -35,6 +39,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 // the site's ranking signals, so the mirror is marked noindex at build time.
 const isMirror = (Astro.site?.hostname ?? '').endsWith('github.io')
 
+// hreflang: every language version lists every version, itself included,
+// plus x-default for searchers whose language matches neither. Romanian is
+// the default because it is the state language and the root URL.
+const alternates = LANGS.map((l) => ({
+  hreflang: LOCALE[l].html,
+  href: new URL(homePath(l), Astro.site).href,
+}))
+const defaultHref = new URL(homePath('ro'), Astro.site).href
+
 // Only process the default asset through Astro's image pipeline when the
 // caller didn't supply one — an author-supplied `image` prop is an
 // arbitrary path/URL we can't safely (or need to) probe here.
@@ -51,6 +64,8 @@ if (image) {
 
 <link rel="canonical" href={canonicalURL} />
 <meta name="robots" content={index && !isMirror ? 'index, follow' : 'noindex, nofollow'} />
+{alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+<link rel="alternate" hreflang="x-default" href={defaultHref} />
 
 <!-- Open Graph (Facebook, WhatsApp, Viber link previews) -->
 <meta property="og:type" content="website" />
@@ -60,7 +75,8 @@ if (image) {
 <meta property="og:image" content={resolvedImage} />
 {defaultImageMeta && <meta property="og:image:width" content={String(defaultImageMeta.attributes.width)} />}
 {defaultImageMeta && <meta property="og:image:height" content={String(defaultImageMeta.attributes.height)} />}
-<meta property="og:locale" content="ro_RO" />
+<meta property="og:locale" content={LOCALE[lang].og} />
+{LANGS.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={LOCALE[l].og} />)}
 <meta property="og:site_name" content={site.brandName} />
 
 <!-- Twitter Card -->
@@ -83,6 +99,7 @@ if (image) {
     name: 'Danuvest SRL',
     foundingDate: '2008',
     url: 'https://danuvest.md',
+    knowsLanguage: ['ro', 'ru'],
     email: 'contact@danuvest.md',
     telephone: ['+373 69 463 435', '+373 68 182 803'],
     address: {

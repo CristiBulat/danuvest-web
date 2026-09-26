@@ -4,8 +4,20 @@
     {
       "name": "danuvest-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 4321
+    },
+    {
+      "name": "danuvest-cms",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "cms"
+      ],
+      "port": 8081
     }
   ]
 }

@@ -22,7 +22,18 @@ export default defineConfig({
     ? `https://${GITHUB_USER.toLowerCase()}.github.io`
     : 'https://danuvest.md',
   base: isPagesBuild ? `/${REPO_NAME}` : undefined,
-  integrations: [sitemap()],
+  // `i18n` makes the sitemap pair / with /ru/ through xhtml:link alternates,
+  // the same pairing the <link rel="alternate" hreflang> tags in Seo.astro
+  // declare in each page's head. The locale is read from the URL prefix, so
+  // Romanian, which has none, is the default.
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'ro',
+        locales: { ro: 'ro', ru: 'ru' },
+      },
+    }),
+  ],
   output: 'static',
   build: {
     assets: 'assets',

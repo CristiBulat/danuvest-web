@@ -1,0 +1,44 @@
+{
+  "label": "Контакты",
+  "title": "Давайте обсудим ваш проект",
+  "description": "Свяжитесь с нами для бесплатной консультации. Наша команда готова ответить на все ваши вопросы.",
+  "info": [
+    {
+      "icon": "pin",
+      "title": "Адрес",
+      "lines": ["ул. Конструкторилор", "Ставчены, MD-4839", "Республика Молдова"]
+    },
+    {
+      "icon": "clock",
+      "title": "Часы работы",
+      "lines": ["Понедельник – пятница: 08:00 – 18:00", "Суббота: 09:00 – 14:00"]
+    }
+  ],
+  "actions": [
+    {
+      "icon": "phone",
+      "href": "tel:+37369463435",
+      "label": "Позвонить",
+      "value": "+373 69 463 435"
+    },
+    {
+      "icon": "whatsapp",
+      "href": "https://wa.me/37369463435",
+      "external": true,
+      "label": "Написать в WhatsApp",
+      "value": "+373 69 463 435"
+    },
+    {
+      "icon": "viber",
+      "href": "viber://chat?number=%2B37369463435",
+      "label": "Написать в Viber",
+      "value": "+373 69 463 435"
+    },
+    {
+      "icon": "mail",
+      "href": "mailto:contact@danuvest.md",
+      "label": "Отправить email",
+      "value": "contact@danuvest.md"
+    }
+  ]
+}
